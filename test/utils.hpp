@@ -2,24 +2,49 @@
 #define TEST_UTILS_HPP
 
 #include <string>
+#include <iostream>
+#include <functional>
 
-template <typename T1, typename T2>
-bool Test(const std::string &name, T1 out, T2 expected) {
+template <typename T>
+bool Test(const std::string &name, T out, T expected, void (*print)(T) = nullptr) {
   std::cout << name << " test result: ";
+  bool ret = false;
   if (out == expected) {
     std::cout << "success" << std::endl;
-    return true;
+    ret = true;
   } else {
     std::cout << "failure" << std::endl;
-    return false;
+    ret = false;
+    if (print) {
+      std::cout << "expected: " << std::endl;
+      print(expected);
+      std::cout << "but got: " << std::endl;
+      print(out);
+    }
   }
-  return false;
+  return ret;
 }
 
-template <typename T1, typename T2>
-bool Test(const std::string &name, T2 (*func)(T1), T1 in, T2 expected) {
-  T2 out = func(in);
-  return Test(name, out, expected);
+template <typename IN_TYPE, typename OUT_TYPE>
+bool Test(const std::string &name, OUT_TYPE (*func)(IN_TYPE), IN_TYPE in, OUT_TYPE expected,
+          void (*print)(OUT_TYPE) = nullptr) {
+  std::cout << name << " test result: ";
+  bool ret = false;
+  OUT_TYPE out = func(in);
+  if (out == expected) {
+    std::cout << "success" << std::endl;
+    ret = true;
+  } else {
+    std::cout << "failure" << std::endl;
+    ret = false;
+    if (print) {
+      std::cout << "expected: " << std::endl;
+      print(expected);
+      std::cout << "but got: " << std::endl;
+      print(out);
+    }
+  }
+  return ret;
 }
 
 #endif  //  TEST_UTILS_HPP

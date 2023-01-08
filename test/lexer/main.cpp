@@ -1,0 +1,123 @@
+#include <string>
+#include <vector>
+#include <functional>
+
+#include "test/utils.hpp"
+#include "lexer/token.hpp"
+#include "lexer/lexer.hpp"
+
+static void Printer(std::vector<Token> ts) {
+  for (auto t : ts) {
+    std::cout << t << std::endl;
+  }
+}
+
+static void Test1() {
+  std::string input;
+
+  std::vector<Token> expected{
+    Token{TokenType::END, ""}
+  };
+
+  Test("empty input", StrToTokens, input, expected);
+}
+
+static void Test2() {
+  std::string input = "\n";
+
+  std::vector<Token> expected{
+    Token{TokenType::END, ""}
+  };
+
+  Test("all whitespace input1", StrToTokens, input, expected);
+}
+
+static void Test3() {
+  std::string input = "\t\n \r";
+
+  std::vector<Token> expected{
+    Token{TokenType::END, ""}
+  };
+
+  Test("all whitespace input2", StrToTokens, input, expected);
+}
+
+static void Test4() {
+  std::string input = R"(
+=;(),+{}
+)";
+
+  std::vector<Token> expected{
+    Token{TokenType::ASSIGN, "="},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::LPAREN, "("},
+    Token{TokenType::RPAREN, ")"},
+    Token{TokenType::COMMA, ","},
+    Token{TokenType::PLUS, "+"},
+    Token{TokenType::LBRACE, "{"},
+    Token{TokenType::RBRACE, "}"},
+    Token{TokenType::END, ""}
+  };
+
+  Test("signs input", StrToTokens, input, expected);
+}
+
+static void Test5() {
+  std::string input = R"(let five = 5;
+let ten = 10;
+let add = fn(x, y) {
+  x + y;
+};
+let result = add(five, ten);
+)";
+
+  std::vector<Token> expected{
+    Token{TokenType::LET, "let"},
+    Token{TokenType::IDENT, "five"},
+    Token{TokenType::ASSIGN, "="},
+    Token{TokenType::INT, "5"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::LET, "let"},
+    Token{TokenType::IDENT, "ten"},
+    Token{TokenType::ASSIGN, "="},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::LET, "let"},
+    Token{TokenType::IDENT, "add"},
+    Token{TokenType::ASSIGN, "="},
+    Token{TokenType::FUNCTION, "fn"},
+    Token{TokenType::LPAREN, "("},
+    Token{TokenType::IDENT, "x"},
+    Token{TokenType::COMMA, ","},
+    Token{TokenType::IDENT, "y"},
+    Token{TokenType::RPAREN, ")"},
+    Token{TokenType::LBRACE, "{"},
+    Token{TokenType::IDENT, "x"},
+    Token{TokenType::PLUS, "+"},
+    Token{TokenType::IDENT, "y"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::RBRACE, "}"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::LET, "let"},
+    Token{TokenType::IDENT, "result"},
+    Token{TokenType::ASSIGN, "="},
+    Token{TokenType::IDENT, "add"},
+    Token{TokenType::LPAREN, "("},
+    Token{TokenType::IDENT, "five"},
+    Token{TokenType::COMMA, ","},
+    Token{TokenType::IDENT, "ten"},
+    Token{TokenType::RPAREN, ")"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::END, ""}
+  };
+
+  Test("case1", StrToTokens, input, expected, Printer);
+}
+
+int main () {
+  Test1();
+  Test2();
+  Test3();
+  Test4();
+  Test5();
+}
