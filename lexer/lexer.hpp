@@ -12,6 +12,7 @@ public:
   Token NextToken();
 private:
   void ReadChar();
+  char PeekChar();
   void SkipWhiteSpace();
   std::string ReadIdentifier();
   std::string ReadNumber();
@@ -20,8 +21,6 @@ private:
   int read_pos = 0;
   char ch;
 };
-
-TokenType LookUpIdent(const std::string &id);
 
 std::vector<Token> StrToTokens(std::string);
 

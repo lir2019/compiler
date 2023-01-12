@@ -114,10 +114,67 @@ let result = add(five, ten);
   Test("case1", StrToTokens, input, expected, Printer);
 }
 
+static void Test6() {
+  std::string input = R"(!-/*5;
+5 < 10 > 5;
+if (5 < 10) {
+  return true;
+} else {
+  return false;
+}
+10 == 10;
+10 != 9;
+)";
+
+  std::vector<Token> expected{
+    Token{TokenType::BANG, "!"},
+    Token{TokenType::MINUS, "-"},
+    Token{TokenType::SLASH, "/"},
+    Token{TokenType::ASTERISK, "*"},
+    Token{TokenType::INT, "5"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::INT, "5"},
+    Token{TokenType::LT, "<"},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::GT, ">"},
+    Token{TokenType::INT, "5"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::IF, "if"},
+    Token{TokenType::LPAREN, "("},
+    Token{TokenType::INT, "5"},
+    Token{TokenType::LT, "<"},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::RPAREN, ")"},
+    Token{TokenType::LBRACE, "{"},
+    Token{TokenType::RETURN, "return"},
+    Token{TokenType::TRUE, "true"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::RBRACE, "}"},
+    Token{TokenType::ELSE, "else"},
+    Token{TokenType::LBRACE, "{"},
+    Token{TokenType::RETURN, "return"},
+    Token{TokenType::FALSE, "false"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::RBRACE, "}"},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::EQ, "=="},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::INT, "10"},
+    Token{TokenType::NE, "!="},
+    Token{TokenType::INT, "9"},
+    Token{TokenType::SEMICOLON, ";"},
+    Token{TokenType::END, ""},
+  };
+
+  Test("case2", StrToTokens, input, expected, Printer);
+}
+
 int main () {
   Test1();
   Test2();
   Test3();
   Test4();
   Test5();
+  Test6();
 }

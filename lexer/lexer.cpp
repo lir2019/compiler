@@ -1,7 +1,6 @@
 #include "lexer/lexer.hpp"
 
 #include <vector>
-#include <map>
 #include <algorithm>
 
 #include "lexer/utils.hpp"
@@ -15,39 +14,53 @@ void Lexer::ReadChar() {
   this->read_pos++;
 }
 
+char Lexer::PeekChar() {
+  if (this->read_pos >= this->input.size()) {
+    return '\0';
+  }
+  return this->input[this->read_pos];
+}
+
 Token Lexer::NextToken() {
   this->SkipWhiteSpace();
   Token tok{TokenType::ILLEGAL, ""};
   tok.literal.push_back(this->ch);
+#define CASE_CHAR_TOKEN(C, T) case C : { tok.type = TokenType::T; } break;
   switch (this->ch) {
     case '\0': {
       tok.type = TokenType::END;
       tok.literal = "";
     } break;
     case '=' : {
-      tok.type = TokenType::ASSIGN;
+      if (PeekChar() == '=') {
+        ReadChar();
+        tok.literal.push_back(this->ch);
+        tok.type = TokenType::EQ;
+      } else {
+        tok.type = TokenType::ASSIGN;
+      }
     } break;
-    case ';' : {
-      tok.type = TokenType::SEMICOLON;
+    case '!' : {
+      if (PeekChar() == '=') {
+        ReadChar();
+        tok.literal.push_back(this->ch);
+        tok.type = TokenType::NE;
+      } else {
+        tok.type = TokenType::BANG;
+      }
     } break;
-    case '(' : {
-      tok.type = TokenType::LPAREN;
-    } break;
-    case ')' : {
-      tok.type = TokenType::RPAREN;
-    } break;
-    case ',' : {
-      tok.type = TokenType::COMMA;
-    } break;
-    case '+' : {
-      tok.type = TokenType::PLUS;
-    } break;
-    case '{' : {
-      tok.type = TokenType::LBRACE;
-    } break;
-    case '}' : {
-      tok.type = TokenType::RBRACE;
-    } break;
+    CASE_CHAR_TOKEN(';', SEMICOLON)
+    CASE_CHAR_TOKEN('(', LPAREN)
+    CASE_CHAR_TOKEN(')', RPAREN)
+    CASE_CHAR_TOKEN(',', COMMA)
+    CASE_CHAR_TOKEN('+', PLUS)
+    CASE_CHAR_TOKEN('{', LBRACE)
+    CASE_CHAR_TOKEN('}', RBRACE)
+    CASE_CHAR_TOKEN('-', MINUS)
+    CASE_CHAR_TOKEN('*', ASTERISK)
+    CASE_CHAR_TOKEN('/', SLASH)
+    CASE_CHAR_TOKEN('<', LT)
+    CASE_CHAR_TOKEN('>', GT)
     default: {
       if (IsLetter(this->ch)) {
         tok.literal = this->ReadIdentifier();
@@ -61,6 +74,7 @@ Token Lexer::NextToken() {
       }
     } break;
   }
+#undef CASE_CHAR_TOKEN
   this->ReadChar();
   return tok;
 }
@@ -88,18 +102,6 @@ std::string Lexer::ReadNumber() {
   }
   int end = this->read_pos - 1;
   return this->input.substr(begin, end - begin);
-}
-
-TokenType LookUpIdent(const std::string &id) {
-  static const std::map<std::string, TokenType> keywords{
-    {"fn", TokenType::FUNCTION},
-    {"let", TokenType::LET},
-  };
-  auto found_iter = keywords.find(id);
-  if (found_iter != keywords.end()) {
-    return found_iter->second;
-  }
-  return TokenType::IDENT;
 }
 
 std::vector<Token> StrToTokens(std::string input) {
