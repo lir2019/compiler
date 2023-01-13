@@ -2,6 +2,7 @@
 #include <vector>
 #include <functional>
 
+#include "common/utils.hpp"
 #include "test/utils.hpp"
 #include "lexer/token.hpp"
 #include "lexer/lexer.hpp"
@@ -171,10 +172,12 @@ if (5 < 10) {
 }
 
 int main () {
+  LOG;
   Test1();
   Test2();
   Test3();
   Test4();
   Test5();
   Test6();
+  LOG;
 }
