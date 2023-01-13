@@ -2,7 +2,6 @@
 
 set -x
 
-rm build -r
 ./build.sh
 
 log=tmp_log
