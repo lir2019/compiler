@@ -1,12 +1,10 @@
 #!/bin/bash
 
 set -x
+set -e
 
 ./build.sh
 
-log=tmp_log
+cd build
 
-./build/test_configure_file 2>&1 | tee $log
-./build/test_lexer 2>&1 | tee -a $log
-echo ====================== failed cases ========================
-grep failure $log
+ctest -j 20

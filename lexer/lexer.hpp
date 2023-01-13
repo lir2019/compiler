@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "lexer/token.hpp"
+#include "token.hpp"
 
 class Lexer {
 public:

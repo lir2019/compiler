@@ -1,4 +1,4 @@
-#include "lexer/token.hpp"
+#include "token.hpp"
 
 #include <map>
 

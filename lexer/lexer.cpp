@@ -1,9 +1,9 @@
-#include "lexer/lexer.hpp"
+#include "lexer.hpp"
 
 #include <vector>
 #include <algorithm>
 
-#include "lexer/utils.hpp"
+#include "utils.hpp"
 
 void Lexer::ReadChar() {
   if (this->read_pos_ >= this->input_.size()) {

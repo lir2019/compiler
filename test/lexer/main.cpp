@@ -171,13 +171,20 @@ if (5 < 10) {
   Test("case2", StrToTokens, input, expected, Printer);
 }
 
-int main () {
-  LOG;
-  Test1();
-  Test2();
-  Test3();
-  Test4();
-  Test5();
-  Test6();
-  LOG;
+int main (int argc, char *argv[]) {
+  if (argc != 2) {
+    return 1;
+  }
+  std::string num_str(argv[1]);
+  int num = std::stoi(num_str);
+  switch (num) {
+    case 1: Test1(); break;
+    case 2: Test2(); break;
+    case 3: Test3(); break;
+    case 4: Test4(); break;
+    case 5: Test5(); break;
+    case 6: Test6(); break;
+    default: break;
+  }
+  return 0;
 }
