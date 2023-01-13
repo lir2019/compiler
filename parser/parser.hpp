@@ -3,13 +3,22 @@
 
 #include <memory>
 
-#include "lexer/lexer.hpp"
+#include "../lexer/token.hpp"
+#include "../lexer/lexer.hpp"
+#include "program.hpp"
 
 class Parser {
 public:
-  Parser(std::shared_ptr<Lexer> l) : lex_(l) {}
-  void NextToken();
+  Parser(std::shared_ptr<Lexer> l) : lex_(l) {
+    cur_tok_ = l->NextToken();
+    next_tok_ = l->NextToken();
+  }
+  Program ParseProgram();
 private:
+  void NextToken();
+  std::shared_ptr<IStatement> ParseStatement();
+  std::shared_ptr<IStatement> ParseLetStatement();
+
   std::shared_ptr<Lexer> lex_;
   Token cur_tok_;
   Token next_tok_;
