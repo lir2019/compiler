@@ -8,7 +8,7 @@
 
 class Lexer {
 public:
-  Lexer(std::string str) : input(str) { this->ReadChar(); };
+  Lexer(std::string str) : input_(str) { this->ReadChar(); };
   Token NextToken();
 private:
   void ReadChar();
@@ -17,9 +17,9 @@ private:
   std::string ReadIdentifier();
   std::string ReadNumber();
 
-  std::string input;
-  int read_pos = 0;
-  char ch;
+  std::string input_;
+  int read_pos_ = 0;
+  char ch_;
 };
 
 std::vector<Token> StrToTokens(std::string);

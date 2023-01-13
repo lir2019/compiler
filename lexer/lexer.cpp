@@ -6,27 +6,27 @@
 #include "lexer/utils.hpp"
 
 void Lexer::ReadChar() {
-  if (this->read_pos >= this->input.size()) {
-    ch = '\0';
+  if (this->read_pos_ >= this->input_.size()) {
+    ch_ = '\0';
   } else {
-    ch = this->input[this->read_pos];
+    ch_ = this->input_[this->read_pos_];
   }
-  this->read_pos++;
+  this->read_pos_++;
 }
 
 char Lexer::PeekChar() {
-  if (this->read_pos >= this->input.size()) {
+  if (this->read_pos_ >= this->input_.size()) {
     return '\0';
   }
-  return this->input[this->read_pos];
+  return this->input_[this->read_pos_];
 }
 
 Token Lexer::NextToken() {
   this->SkipWhiteSpace();
   Token tok{TokenType::ILLEGAL, ""};
-  tok.literal.push_back(this->ch);
+  tok.literal.push_back(this->ch_);
 #define CASE_CHAR_TOKEN(C, T) case C : { tok.type = TokenType::T; } break;
-  switch (this->ch) {
+  switch (this->ch_) {
     case '\0': {
       tok.type = TokenType::END;
       tok.literal = "";
@@ -34,7 +34,7 @@ Token Lexer::NextToken() {
     case '=' : {
       if (PeekChar() == '=') {
         ReadChar();
-        tok.literal.push_back(this->ch);
+        tok.literal.push_back(this->ch_);
         tok.type = TokenType::EQ;
       } else {
         tok.type = TokenType::ASSIGN;
@@ -43,7 +43,7 @@ Token Lexer::NextToken() {
     case '!' : {
       if (PeekChar() == '=') {
         ReadChar();
-        tok.literal.push_back(this->ch);
+        tok.literal.push_back(this->ch_);
         tok.type = TokenType::NE;
       } else {
         tok.type = TokenType::BANG;
@@ -62,12 +62,12 @@ Token Lexer::NextToken() {
     CASE_CHAR_TOKEN('<', LT)
     CASE_CHAR_TOKEN('>', GT)
     default: {
-      if (IsLetter(this->ch)) {
+      if (IsLetter(this->ch_)) {
         tok.literal = this->ReadIdentifier();
         tok.type = LookUpIdent(tok.literal);
         return tok;
       // TODO(lirui): support float
-      } else if (IsNumber(this->ch)) {
+      } else if (IsNumber(this->ch_)) {
         tok.literal = this->ReadNumber();
         tok.type = TokenType::INT;
         return tok;
@@ -80,32 +80,32 @@ Token Lexer::NextToken() {
 }
 
 void Lexer::SkipWhiteSpace() {
-  while (std::find(white_space_chars.begin(), white_space_chars.end(), this->ch) !=
+  while (std::find(white_space_chars.begin(), white_space_chars.end(), this->ch_) !=
          white_space_chars.end()) {
     this->ReadChar();
   }
 }
 
 std::string Lexer::ReadIdentifier() {
-  int begin = this->read_pos - 1;
-  while (IsLetter(this->ch)) {
+  int begin = this->read_pos_ - 1;
+  while (IsLetter(this->ch_)) {
     ReadChar();
   }
-  int end = this->read_pos - 1;
-  return this->input.substr(begin, end - begin);
+  int end = this->read_pos_ - 1;
+  return this->input_.substr(begin, end - begin);
 }
 
 std::string Lexer::ReadNumber() {
-  int begin = this->read_pos - 1;
-  while (IsNumber(this->ch)) {
+  int begin = this->read_pos_ - 1;
+  while (IsNumber(this->ch_)) {
     ReadChar();
   }
-  int end = this->read_pos - 1;
-  return this->input.substr(begin, end - begin);
+  int end = this->read_pos_ - 1;
+  return this->input_.substr(begin, end - begin);
 }
 
-std::vector<Token> StrToTokens(std::string input) {
-  Lexer l(input);
+std::vector<Token> StrToTokens(std::string input_) {
+  Lexer l(input_);
   std::vector<Token> token_vec;
   Token tok;
   do {
