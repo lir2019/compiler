@@ -1,6 +1,6 @@
 #include "parser.hpp"
 
-#include "program.hpp"
+#include "../ast/program.hpp"
 
 void Parser::NextToken() {
   cur_tok_ = next_tok_;

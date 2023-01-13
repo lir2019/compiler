@@ -5,7 +5,7 @@
 
 #include "../lexer/token.hpp"
 #include "../lexer/lexer.hpp"
-#include "program.hpp"
+#include "../ast/program.hpp"
 
 class Parser {
 public:

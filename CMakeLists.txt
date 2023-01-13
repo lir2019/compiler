@@ -7,6 +7,7 @@ message(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 message(PROJECT_BINARY_DIR="${PROJECT_BINARY_DIR}")
 
 add_subdirectory(lexer)
+add_subdirectory(ast)
 add_subdirectory(parser)
 
 configure_file(MonkeyCompilerConfig.h.in MonkeyCompilerConfig.h)
