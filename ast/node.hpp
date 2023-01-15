@@ -27,15 +27,21 @@ public:
 
 class Identifier : public IExpression {
 public:
+  Identifier(Token tok) : tok_(tok) {}
+
   virtual std::string TokenLiteral() override;
   virtual void ExpressionNode() override;
 private:
   Token tok_;  // TokenType::INDENT
-  std::string value_;
 };
 
 class LetStmt : public IStatement {
 public:
+  LetStmt(Token tok, std::shared_ptr<Identifier> ident, std::shared_ptr<IExpression> v) :
+      tok_(tok), ident_(ident), value_(v) {}
+
+  std::string GetIdent();
+
   virtual std::string TokenLiteral() override;
   virtual void StatementNode() override;
 private:

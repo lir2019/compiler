@@ -13,3 +13,7 @@ std::string LetStmt::TokenLiteral() {
 
 void LetStmt::StatementNode() {
 }
+
+std::string LetStmt::GetIdent() {
+  return ident_->TokenLiteral();
+}

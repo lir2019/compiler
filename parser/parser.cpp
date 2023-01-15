@@ -15,7 +15,25 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
 }
 
 std::shared_ptr<IStatement> Parser::ParseLetStatement() {
-  return nullptr;
+  if (cur_tok_.type != TokenType::LET) {
+    return nullptr;
+  }
+  if (next_tok_.type != TokenType::IDENT) {
+    return nullptr;
+  }
+  auto tok = cur_tok_;
+  NextToken();
+  auto ident = std::make_shared<Identifier>(cur_tok_);
+  if (next_tok_.type != TokenType::ASSIGN) {
+    return nullptr;
+  }
+  NextToken();
+  // TODO(lirui): deal with expression
+  if (next_tok_.type != TokenType::SEMICOLON) {
+    return nullptr;
+  }
+
+  return std::make_shared<LetStmt>(tok, ident, nullptr);
 }
 
 Program Parser::ParseProgram() {

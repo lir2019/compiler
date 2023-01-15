@@ -19,6 +19,10 @@ add_executable(test_lexer test/lexer/main.cpp)
 target_include_directories(test_lexer PUBLIC ${PROJECT_SOURCE_DIR})
 target_link_libraries(test_lexer PUBLIC lexer)
 
+add_executable(test_parser test/parser/main.cpp)
+target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})
+target_link_libraries(test_parser PUBLIC parser)
+
 enable_testing()
 add_test(NAME TestCMakeConfig COMMAND test_configure_file)
 set_tests_properties(TestCMakeConfig PROPERTIES PASS_REGULAR_EXPRESSION "success.*success")
@@ -34,3 +38,6 @@ do_lexer_test(3)
 do_lexer_test(4)
 do_lexer_test(5)
 do_lexer_test(6)
+
+add_test(NAME TestParser COMMAND test_parser)
+set_tests_properties(TestCMakeConfig PROPERTIES PASS_REGULAR_EXPRESSION "success.*success")
