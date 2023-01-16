@@ -22,9 +22,7 @@ public:
   }
 
   std::shared_ptr<IStatement> GetStmt(int64_t idx) const {
-    if (idx < 0 || idx >= stmts_.size()) {
-      throw;
-    }
+    CHECK(idx < 0 || idx >= stmts_.size());
     return stmts_[idx];
   }
 private:

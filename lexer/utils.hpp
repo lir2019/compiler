@@ -6,17 +6,6 @@
 #include <stdexcept>
 #include <iostream>
 
-#define CHECK(X) do {                                                                         \
-  auto res = X;                                                                               \
-  if (!res) {                                                                                 \
-    std::string ex("check ");                                                                 \
-    ex.append(#X);                                                                           \
-    ex.append(" failed");                                                                     \
-    std::cerr << __FILE__ << ": " << __LINE__  << ex << std::endl;                            \
-    throw std::logic_error(ex.c_str());                                                       \
-  }                                                                                           \
-} while (0)
-
 const std::vector<char> white_space_chars{'\n', ' ', '\t', '\r'};
 
 inline bool IsLetter(char c) {

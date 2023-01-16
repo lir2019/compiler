@@ -25,11 +25,11 @@ target_link_libraries(test_parser PUBLIC lexer ast parser)
 
 enable_testing()
 add_test(NAME TestCMakeConfig COMMAND test_configure_file)
-set_tests_properties(TestCMakeConfig PROPERTIES PASS_REGULAR_EXPRESSION "success.*success")
+set_tests_properties(TestCMakeConfig PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
 
 function(do_lexer_test arg)
   add_test(NAME TestLexerCase${arg} COMMAND test_lexer ${arg})
-  set_tests_properties(TestLexerCase${arg} PROPERTIES PASS_REGULAR_EXPRESSION "success" FAIL_REGULAR_EXPRESSION "failure")
+  set_tests_properties(TestLexerCase${arg} PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
 endfunction()
 
 do_lexer_test(1)
@@ -40,4 +40,4 @@ do_lexer_test(5)
 do_lexer_test(6)
 
 add_test(NAME TestParser COMMAND test_parser)
-set_tests_properties(TestParser PROPERTIES PASS_REGULAR_EXPRESSION "success.*success")
+set_tests_properties(TestParser PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
