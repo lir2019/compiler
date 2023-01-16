@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include "../common/utils.hpp"
+
 std::string ToString(TokenType t) {
 #define CASE_TOKENTYPE_TOSTRING(T) case TokenType::T : return #T;
   switch (t) {
@@ -37,10 +39,9 @@ std::string ToString(TokenType t) {
   return "";
 }
 
-std::ostream &operator<<(std::ostream &os, Token tok) {
-  os << "Token(" << ToString(tok.type) << ": " << tok.literal << ")";
-  return os;
-}
+DEFINE_DUMP_FUNCS(Token, {
+  os << "Token(" << ::ToString(this->type) << ": " << this->literal << ")";
+})
 
 bool operator==(const Token &t1, const Token &t2) {
   return t1.type == t2.type && t1.literal == t2.literal;

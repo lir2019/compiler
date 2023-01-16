@@ -4,14 +4,17 @@
 #include <vector>
 #include <memory>
 
+#include "../common/utils.hpp"
 #include "node.hpp"
 
 class Program : public INode {
 public:
   Program() {}
 
+  DECL_DUMP_FUNCS(Program)
+
   virtual std::string TokenLiteral() const override;
-  virtual void Print(std::ostream &os) const override;
+  virtual void PrintNode(std::ostream &os) const override;
 
   void AppendStmt(std::shared_ptr<IStatement> s) {
     stmts_.push_back(s);
@@ -28,7 +31,5 @@ public:
 private:
   std::vector<std::shared_ptr<IStatement>> stmts_;
 };
-
-std::ostream &operator<<(std::ostream &os, const Program &program);
 
 #endif  // PARSER_PROGRAM_HPP

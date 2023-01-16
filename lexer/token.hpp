@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 
+#include "../common/utils.hpp"
+
 enum class TokenType {
   ILLEGAL,
   END,
@@ -38,11 +40,12 @@ enum class TokenType {
 std::string ToString(TokenType t);
 
 struct Token {
+  DECL_DUMP_FUNCS(Token)
+
   TokenType type;
   std::string literal;
 };
 
-std::ostream &operator<<(std::ostream &os, Token tok);
 bool operator==(const Token &t1, const Token &t2);
 
 TokenType LookUpIdent(const std::string &id);

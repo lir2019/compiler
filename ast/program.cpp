@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "../common/utils.hpp"
+
 std::string Program::TokenLiteral() const {
   if (stmts_.size() > 0) {
     return stmts_.front()->TokenLiteral();
@@ -9,16 +11,15 @@ std::string Program::TokenLiteral() const {
   return "";
 }
 
-void Program::Print(std::ostream &os) const {
+DEFINE_DUMP_FUNCS(Program, {
   os << "Program(\n";
   for (auto stmt : stmts_) {
-    stmt->Print(os);
+    stmt->PrintNode(os);
     os << "\n";
   }
   os << ")\n";
-}
+})
 
-std::ostream &operator<<(std::ostream &os, const Program &program) {
-  program.Print(os);
-  return os;
+void Program::PrintNode(std::ostream &os) const {
+  Print(os);
 }

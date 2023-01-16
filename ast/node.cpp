@@ -9,13 +9,10 @@ std::string Identifier::TokenLiteral() const {
 void Identifier::ExpressionNode() {
 }
 
-void Identifier::Print(std::ostream &os) const {
-  os << "Identifier(" << tok_ << ")";
-}
+DEFINE_DUMP_FUNCS(Identifier, { os << "Identifier(" << tok_ << ")"; })
 
-std::ostream &operator<<(std::ostream &os, const Identifier &ident) {
-  ident.Print(os);
-  return os;
+void Identifier::PrintNode(std::ostream &os) const {
+  Print(os);
 }
 
 std::string LetStmt::TokenLiteral() const {
@@ -25,13 +22,10 @@ std::string LetStmt::TokenLiteral() const {
 void LetStmt::StatementNode() {
 }
 
-void LetStmt::Print(std::ostream &os) const {
-  os << "LetStmt(" << tok_ << ", " << *ident_ << ")";
-}
+DEFINE_DUMP_FUNCS(LetStmt, { os << "LetStmt(" << tok_ << ", " << *ident_ << ")"; })
 
-std::ostream &operator<<(std::ostream &os, const LetStmt &let_stmt) {
-  let_stmt.Print(os);
-  return os;
+void LetStmt::PrintNode(std::ostream &os) const {
+  Print(os);
 }
 
 std::string LetStmt::GetIdent() {

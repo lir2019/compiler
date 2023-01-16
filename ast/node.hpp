@@ -13,7 +13,7 @@ public:
   ~INode() {}
 
   virtual std::string TokenLiteral() const = 0;
-  virtual void Print(std::ostream &os) const = 0;
+  virtual void PrintNode(std::ostream &os) const = 0;
 };
 
 class IStatement : public INode {
@@ -30,8 +30,10 @@ class Identifier : public IExpression {
 public:
   Identifier(Token tok) : tok_(tok) {}
 
+  DECL_DUMP_FUNCS(Identifier)
+
   virtual std::string TokenLiteral() const override;
-  virtual void Print(std::ostream &os) const override;
+  virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() override;
 private:
   Token tok_;  // TokenType::INDENT
@@ -42,19 +44,17 @@ public:
   LetStmt(Token tok, std::shared_ptr<Identifier> ident, std::shared_ptr<IExpression> v) :
       tok_(tok), ident_(ident), value_(v) {}
 
+  DECL_DUMP_FUNCS(LetStmt)
+
   std::string GetIdent();
 
   virtual std::string TokenLiteral() const override;
-  virtual void Print(std::ostream &os) const override;
+  virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() override;
 private:
   Token tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
   std::shared_ptr<IExpression> value_;
 };
-
-std::ostream &operator<<(std::ostream &os, const Identifier &ident);
-
-std::ostream &operator<<(std::ostream &os, const LetStmt &let_stmt);
 
 #endif  // PARSER_NODE_HPP
