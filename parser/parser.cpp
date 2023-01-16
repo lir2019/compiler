@@ -16,20 +16,17 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
 
 std::shared_ptr<IStatement> Parser::ParseLetStatement() {
   CHECK(cur_tok_.type == TokenType::LET, "unexpected Token for LetStmt");
-  if (next_tok_.type != TokenType::IDENT) {
-    return nullptr;
-  }
+  CHECK(next_tok_.type == TokenType::IDENT,
+        "expect next TokenType to be IDENT, but got " + next_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   auto ident = std::make_shared<Identifier>(cur_tok_);
-  if (next_tok_.type != TokenType::ASSIGN) {
-    return nullptr;
-  }
+  CHECK(next_tok_.type == TokenType::ASSIGN,
+        "expect next TokenType to be ASSIGN, but got " + next_tok_.ToString());
   NextToken();
   // TODO(lirui): deal with expression
-  if (next_tok_.type != TokenType::SEMICOLON) {
-    return nullptr;
-  }
+  CHECK(next_tok_.type == TokenType::SEMICOLON,
+        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
 
   return std::make_shared<LetStmt>(tok, ident, nullptr);
 }

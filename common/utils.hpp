@@ -11,11 +11,10 @@
   do {                                                                                          \
     auto res = predicate;                                                                       \
     if (!res) {                                                                                 \
-      std::string ex("check ");                                                                 \
-      ex.append(#predicate);                                                                    \
-      ex.append(" failed");                                                                     \
-      std::cerr << __FILE__ << ": " << __LINE__ << " " << ex << ": " << #comment << std::endl;  \
-      throw std::runtime_error(ex.c_str());                                                     \
+      std::stringstream ss;                                                                     \
+      ss << "check " << #predicate << " failed: " << comment;                                   \
+      std::cerr << __FILE__ << ": " << __LINE__ << "  " << ss.str() << std::endl;               \
+      throw std::runtime_error(ss.str().c_str());                                               \
     }                                                                                           \
   } while (false)
 

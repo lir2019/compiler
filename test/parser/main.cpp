@@ -8,7 +8,7 @@ static void Printer(size_t s) {
   std::cout << s << std::endl;
 }
 
-void Test1() {
+static void Test1() {
   std::string input = R"(
     let x = ;
     let y = ;
@@ -44,6 +44,66 @@ void Test1() {
   }
 }
 
+static void Test2() {
+  std::string input = R"(
+    let = ;
+    let x ;
+    let temp = ,
+  )";
+  auto l = std::make_shared<Lexer>(input);
+  Parser p(l);
+  std::string err_log;
+  std::string expected_err_log("check next_tok_.type == TokenType::IDENT failed: "
+                               "expect next TokenType to be IDENT, but got Token(ASSIGN: =)");
+  try {
+    Program res = p.ParseProgram();
+  } catch (std::runtime_error err) {
+    err_log = err.what();
+  }
+  Test("error log match", err_log, expected_err_log);
+}
+
+static void Test3() {
+  std::string input = R"(
+    let x ;
+    let = ;
+    let temp = ,
+  )";
+  auto l = std::make_shared<Lexer>(input);
+  Parser p(l);
+  std::string err_log;
+  std::string expected_err_log("check next_tok_.type == TokenType::ASSIGN failed: "
+                               "expect next TokenType to be ASSIGN, but got Token(SEMICOLON: ;)");
+  try {
+    Program res = p.ParseProgram();
+  } catch (std::runtime_error err) {
+    err_log = err.what();
+  }
+  Test("error log match", err_log, expected_err_log);
+}
+
+static void Test4() {
+  std::string input = R"(
+    let temp = ,
+    let x ;
+    let = ;
+  )";
+  auto l = std::make_shared<Lexer>(input);
+  Parser p(l);
+  std::string err_log;
+  std::string expected_err_log("check next_tok_.type == TokenType::SEMICOLON failed: "
+                               "expect next TokenType to be SEMICOLON, but got Token(COMMA: ,)");
+  try {
+    Program res = p.ParseProgram();
+  } catch (std::runtime_error err) {
+    err_log = err.what();
+  }
+  Test("error log match", err_log, expected_err_log);
+}
+
 int main() {
   Test1();
+  Test2();
+  Test3();
+  Test4();
 }
