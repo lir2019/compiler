@@ -38,7 +38,7 @@ std::string ToString(TokenType t) {
 }
 
 std::ostream &operator<<(std::ostream &os, Token tok) {
-  os << ToString(tok.type) << ": " << tok.literal;
+  os << "Token(" << ToString(tok.type) << ": " << tok.literal << ")";
   return os;
 }
 

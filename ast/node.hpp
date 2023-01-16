@@ -12,7 +12,8 @@ class INode {
 public:
   ~INode() {}
 
-  virtual std::string TokenLiteral() = 0;
+  virtual std::string TokenLiteral() const = 0;
+  virtual void Print(std::ostream &os) const = 0;
 };
 
 class IStatement : public INode {
@@ -29,7 +30,8 @@ class Identifier : public IExpression {
 public:
   Identifier(Token tok) : tok_(tok) {}
 
-  virtual std::string TokenLiteral() override;
+  virtual std::string TokenLiteral() const override;
+  virtual void Print(std::ostream &os) const override;
   virtual void ExpressionNode() override;
 private:
   Token tok_;  // TokenType::INDENT
@@ -42,12 +44,17 @@ public:
 
   std::string GetIdent();
 
-  virtual std::string TokenLiteral() override;
+  virtual std::string TokenLiteral() const override;
+  virtual void Print(std::ostream &os) const override;
   virtual void StatementNode() override;
 private:
   Token tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
   std::shared_ptr<IExpression> value_;
 };
+
+std::ostream &operator<<(std::ostream &os, const Identifier &ident);
+
+std::ostream &operator<<(std::ostream &os, const LetStmt &let_stmt);
 
 #endif  // PARSER_NODE_HPP

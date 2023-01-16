@@ -2,12 +2,16 @@
 #define COMMON_UTILS_HPP
 
 #include <iostream>
+#include <memory>
 
 #define LOG do { std::cout << __FILE__ << ": " << __LINE__ << std::endl; } while (false)
 
 template <typename T, typename First>
 bool IsA(std::shared_ptr<T> sptr) {
-  if (dynamic_cast<First *>(sptr.get())) {
+  if (sptr == nullptr) {
+    return false;
+  }
+  if (std::dynamic_pointer_cast<First>(sptr)) {
     return true;
   }
   return false;
@@ -15,7 +19,10 @@ bool IsA(std::shared_ptr<T> sptr) {
 
 template <typename T, typename First, typename Second, typename ...Rest>
 bool IsA(std::shared_ptr<T> sptr) {
-  if (dynamic_cast<First *>(sptr.get())) {
+  if (sptr == nullptr) {
+    return false;
+  }
+  if (std::dynamic_pointer_cast<First>(sptr)) {
     return true;
   }
   return IsA<T, Second, Rest...>(sptr);
