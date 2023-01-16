@@ -18,12 +18,12 @@ public:
 
 class IStatement : public INode {
 public:
-  virtual void StatementNode() = 0;
+  virtual void StatementNode() const = 0;
 };
 
 class IExpression : public INode {
 public:
-  virtual void ExpressionNode() = 0;
+  virtual void ExpressionNode() const = 0;
 };
 
 class Identifier : public IExpression {
@@ -34,7 +34,7 @@ public:
 
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() override;
+  virtual void ExpressionNode() const override;
 private:
   Token tok_;  // TokenType::INDENT
 };
@@ -50,7 +50,7 @@ public:
 
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() override;
+  virtual void StatementNode() const override;
 private:
   Token tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
@@ -65,10 +65,24 @@ public:
 
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() override;
+  virtual void StatementNode() const override;
 private:
   Token tok_;  // TokenType::RETURN
   std::shared_ptr<IExpression> value_;
+};
+
+class ExpressionStmt : public IStatement {
+public:
+  ExpressionStmt(Token tok, std::shared_ptr<IExpression> exp) : tok_(tok), expression_(exp) {}
+
+  DECL_DUMP_FUNCS(ExpressionStmt)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void StatementNode() const override;
+private:
+  Token tok_; // first Token in expression
+  std::shared_ptr<IExpression> expression_;
 };
 
 #endif  // PARSER_NODE_HPP

@@ -11,6 +11,7 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
   switch (cur_tok_.type) {
     case TokenType::LET: return ParseLetStatement();
     case TokenType::RETURN: return ParseReturnStatement();
+    default: return ParseExpressionStatement();
   }
   return nullptr;
 }
@@ -43,6 +44,22 @@ std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
   NextToken();
 
   return std::make_shared<ReturnStmt>(tok, nullptr);
+}
+
+std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
+  auto tok = cur_tok_;
+  auto exp = ParseExpression();
+  return std::make_shared<ExpressionStmt>(tok, exp);
+}
+
+std::shared_ptr<IExpression> Parser::ParseExpression() {
+  CHECK(cur_tok_.type == TokenType::IDENT,
+        "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
+  CHECK(next_tok_.type == TokenType::SEMICOLON,
+        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  auto tok = cur_tok_;
+  NextToken();
+  return std::make_shared<Identifier>(tok);
 }
 
 Program Parser::ParseProgram() {

@@ -19,6 +19,8 @@ private:
   std::shared_ptr<IStatement> ParseStatement();
   std::shared_ptr<IStatement> ParseLetStatement();
   std::shared_ptr<IStatement> ParseReturnStatement();
+  std::shared_ptr<IStatement> ParseExpressionStatement();
+  std::shared_ptr<IExpression> ParseExpression();
 
   std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;
