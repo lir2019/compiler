@@ -6,13 +6,13 @@
 
 #define LOG do { std::cout << __FILE__ << ": " << __LINE__ << std::endl; } while (false)
 
-#define CHECK(X) do {                                                                         \
-  auto res = X;                                                                               \
+#define CHECK(predicate, comment) do {                                                        \
+  auto res = predicate;                                                                       \
   if (!res) {                                                                                 \
     std::string ex("check ");                                                                 \
-    ex.append(#X);                                                                            \
+    ex.append(#predicate);                                                                    \
     ex.append(" failed");                                                                     \
-    std::cerr << __FILE__ << ": " << __LINE__  << ex << std::endl;                            \
+    std::cerr << __FILE__ << ": " << __LINE__ << " " << ex << ": " << #comment << std::endl;  \
     throw std::runtime_error(ex.c_str());                                                     \
   }                                                                                           \
 } while (0)

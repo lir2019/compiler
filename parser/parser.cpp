@@ -15,9 +15,7 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
 }
 
 std::shared_ptr<IStatement> Parser::ParseLetStatement() {
-  if (cur_tok_.type != TokenType::LET) {
-    return nullptr;
-  }
+  CHECK(cur_tok_.type == TokenType::LET, "unexpected Token for LetStmt");
   if (next_tok_.type != TokenType::IDENT) {
     return nullptr;
   }

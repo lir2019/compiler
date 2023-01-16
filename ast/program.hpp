@@ -22,7 +22,7 @@ public:
   }
 
   std::shared_ptr<IStatement> GetStmt(int64_t idx) const {
-    CHECK(idx < 0 || idx >= stmts_.size());
+    CHECK(idx < 0 || idx >= stmts_.size(), "index out of range");
     return stmts_[idx];
   }
 private:
