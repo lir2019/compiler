@@ -57,4 +57,18 @@ private:
   std::shared_ptr<IExpression> value_;
 };
 
+class ReturnStmt : public IStatement {
+public:
+  ReturnStmt(Token tok, std::shared_ptr<IExpression> v) : tok_(tok), value_(v) {}
+
+  DECL_DUMP_FUNCS(ReturnStmt)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void StatementNode() override;
+private:
+  Token tok_;  // TokenType::RETURN
+  std::shared_ptr<IExpression> value_;
+};
+
 #endif  // PARSER_NODE_HPP

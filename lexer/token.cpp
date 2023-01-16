@@ -40,7 +40,7 @@ std::string ToString(TokenType t) {
 }
 
 DEFINE_DUMP_FUNCS(Token, {
-  os << "Token(" << ::ToString(this->type) << ": " << this->literal << ")";
+  os << "Token(" << ::ToString(this->type) << ": \"" << this->literal << "\")";
 })
 
 bool operator==(const Token &t1, const Token &t2) {

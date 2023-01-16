@@ -10,6 +10,7 @@ void Parser::NextToken() {
 std::shared_ptr<IStatement> Parser::ParseStatement() {
   switch (cur_tok_.type) {
     case TokenType::LET: return ParseLetStatement();
+    case TokenType::RETURN: return ParseReturnStatement();
   }
   return nullptr;
 }
@@ -27,14 +28,28 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
   // TODO(lirui): deal with expression
   CHECK(next_tok_.type == TokenType::SEMICOLON,
         "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  NextToken();
 
   return std::make_shared<LetStmt>(tok, ident, nullptr);
+}
+
+std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
+  CHECK(cur_tok_.type == TokenType::RETURN,
+        "expect current TokenType to be RETURN, but got " + cur_tok_.ToString());
+  auto tok = cur_tok_;
+  // TODO(lirui): deal with expression
+  CHECK(next_tok_.type == TokenType::SEMICOLON,
+        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  NextToken();
+
+  return std::make_shared<ReturnStmt>(tok, nullptr);
 }
 
 Program Parser::ParseProgram() {
   Program program;
   while (cur_tok_.type != TokenType::END) {
     auto stmt = ParseStatement();
+    CHECK(stmt != nullptr, "unrecognized statement");
     if (stmt) {
       program.AppendStmt(stmt);
     }

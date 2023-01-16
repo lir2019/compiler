@@ -18,6 +18,7 @@ private:
   void NextToken();
   std::shared_ptr<IStatement> ParseStatement();
   std::shared_ptr<IStatement> ParseLetStatement();
+  std::shared_ptr<IStatement> ParseReturnStatement();
 
   std::shared_ptr<Lexer> lex_;
   Token cur_tok_;
