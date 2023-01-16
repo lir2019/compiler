@@ -41,8 +41,8 @@ private:
 
 class LetStmt : public IStatement {
 public:
-  LetStmt(Token tok, std::shared_ptr<Identifier> ident, std::shared_ptr<IExpression> v) :
-      tok_(tok), ident_(ident), value_(v) {}
+  LetStmt(const Token &tok, const Identifier &ident) :
+      tok_(tok), ident_(std::make_shared<Identifier>(ident)) {}
 
   DECL_DUMP_FUNCS(LetStmt)
 
@@ -54,7 +54,7 @@ public:
 private:
   Token tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
-  std::shared_ptr<IExpression> value_;
+  std::shared_ptr<IExpression> value_ = nullptr;
 };
 
 class ReturnStmt : public IStatement {

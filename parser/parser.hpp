@@ -9,9 +9,9 @@
 
 class Parser {
 public:
-  Parser(std::shared_ptr<Lexer> l) : lex_(l) {
-    cur_tok_ = l->NextToken();
-    next_tok_ = l->NextToken();
+  Parser(const Lexer &l) : lexer_(std::make_shared<Lexer>(l)) {
+    cur_tok_ = lexer_->NextToken();
+    next_tok_ = lexer_->NextToken();
   }
   Program ParseProgram();
 private:
@@ -20,7 +20,7 @@ private:
   std::shared_ptr<IStatement> ParseLetStatement();
   std::shared_ptr<IStatement> ParseReturnStatement();
 
-  std::shared_ptr<Lexer> lex_;
+  std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;
   Token next_tok_;
 };

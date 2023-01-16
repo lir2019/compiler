@@ -4,7 +4,7 @@
 
 void Parser::NextToken() {
   cur_tok_ = next_tok_;
-  next_tok_ = lex_->NextToken();
+  next_tok_ = lexer_->NextToken();
 }
 
 std::shared_ptr<IStatement> Parser::ParseStatement() {
@@ -21,7 +21,7 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
         "expect next TokenType to be IDENT, but got " + next_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
-  auto ident = std::make_shared<Identifier>(cur_tok_);
+  Identifier ident(cur_tok_);
   CHECK(next_tok_.type == TokenType::ASSIGN,
         "expect next TokenType to be ASSIGN, but got " + next_tok_.ToString());
   NextToken();
@@ -30,7 +30,7 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
         "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   NextToken();
 
-  return std::make_shared<LetStmt>(tok, ident, nullptr);
+  return std::make_shared<LetStmt>(tok, ident);
 }
 
 std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
