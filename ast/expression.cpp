@@ -53,3 +53,25 @@ DEFINE_DUMP_FUNCS(PrefixExpression, {
 void PrefixExpression::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// InfixExpression
+//===----------------------------------------------------------------------===//
+
+std::string InfixExpression::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void InfixExpression::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(InfixExpression, {
+  os << "InfixExpression(" << tok_ << ", ";
+  left_->PrintNode(os);
+  os << ", ";
+  right_->PrintNode(os);
+  os << ")";
+})
+
+void InfixExpression::PrintNode(std::ostream &os) const {
+  Print(os);
+}

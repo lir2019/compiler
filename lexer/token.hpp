@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <map>
 
 #include "../common/utils.hpp"
 
@@ -36,6 +37,33 @@ enum class TokenType {
   ELSE,
   RETURN
 };
+
+enum class Precedence : unsigned short {
+  LOWEST,
+  EQUAL, // ==
+  LESSGREATER, // >, <
+  SUM, // +, -
+  PRODUCT, // *, /
+  PREFIX, // !
+  CALL, // func(args)
+};
+
+inline Precedence GetPrecedence(TokenType t) {
+  static std::map<TokenType, Precedence> token_precedence_map = {
+    {TokenType::EQ, Precedence::EQUAL},
+    {TokenType::NE, Precedence::EQUAL},
+    {TokenType::LT, Precedence::LESSGREATER},
+    {TokenType::GT, Precedence::LESSGREATER},
+    {TokenType::PLUS, Precedence::SUM},
+    {TokenType::MINUS, Precedence::SUM},
+    {TokenType::SLASH, Precedence::PRODUCT},
+    {TokenType::ASTERISK, Precedence::PRODUCT},
+  };
+  if (token_precedence_map.find(t) != token_precedence_map.end()) {
+    return token_precedence_map[t];
+  }
+  return Precedence::LOWEST;
+}
 
 std::string ToString(TokenType t);
 

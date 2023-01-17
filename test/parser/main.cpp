@@ -176,6 +176,22 @@ ExpressionStmt(Token(BANG: "!"), PrefixExpression(Token(BANG: "!"), PrefixExpres
   TestBase("parse expression statement", input, expected);
 }
 
+static void Test10() {
+  std::string input = R"(
+    5+ 5;
+    a / 55;
+    5 * a + 55;
+  )";
+  std::string expected = R"(Program(
+ExpressionStmt(Token(BANG: "!"), PrefixExpression(Token(BANG: "!"), IntegerLiteral(Token(INT: "5"))))
+ExpressionStmt(Token(MINUS: "-"), PrefixExpression(Token(MINUS: "-"), Identifier(Token(IDENT: "a"))))
+ExpressionStmt(Token(MINUS: "-"), PrefixExpression(Token(MINUS: "-"), PrefixExpression(Token(MINUS: "-"), Identifier(Token(IDENT: "tmp")))))
+ExpressionStmt(Token(BANG: "!"), PrefixExpression(Token(BANG: "!"), PrefixExpression(Token(BANG: "!"), PrefixExpression(Token(BANG: "!"), IntegerLiteral(Token(INT: "10"))))))
+)
+)";
+  TestBase("parse expression statement", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -186,4 +202,5 @@ int main() {
   Test7();
   Test8();
   Test9();
+  Test10();
 }

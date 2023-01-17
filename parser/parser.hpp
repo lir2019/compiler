@@ -5,7 +5,6 @@
 #include <map>
 #include <functional>
 
-
 #include "../lexer/token.hpp"
 #include "../lexer/lexer.hpp"
 #include "../ast/program.hpp"
@@ -35,7 +34,7 @@ private:
   std::shared_ptr<IStatement> ParseLetStatement();
   std::shared_ptr<IStatement> ParseReturnStatement();
   std::shared_ptr<IStatement> ParseExpressionStatement();
-  std::shared_ptr<IExpression> ParseExpression();
+  std::shared_ptr<IExpression> ParseExpression(Precedence pre_preced = Precedence::LOWEST);
   std::shared_ptr<IExpression> ParseIdentifier();
   std::shared_ptr<IExpression> ParseIntegerLiteral();
   std::shared_ptr<IExpression> ParsePrefixExpression();

@@ -56,4 +56,20 @@ private:
   std::shared_ptr<IExpression> right_;
 };
 
+class InfixExpression : public IExpression {
+public:
+  InfixExpression(Token tok, std::shared_ptr<IExpression> left, std::shared_ptr<IExpression> right)
+      : tok_(tok), left_(left), right_(right) {}
+
+  DECL_DUMP_FUNCS(InfixExpression)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+private:
+  Token tok_;  // binary operator, like +, -, *, /, ==, etc.
+  std::shared_ptr<IExpression> left_;
+  std::shared_ptr<IExpression> right_;
+};
+
 #endif  // PARSER_EXPRESSION_HPP

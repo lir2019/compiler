@@ -58,18 +58,24 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
   return std::make_shared<ExpressionStmt>(tok, exp);
 }
 
-std::shared_ptr<IExpression> Parser::ParseExpression() {
+std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
   CHECK(prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end(),
         "can not find parse func");
-  auto parse_func = prefix_parse_funcs_[cur_tok_.type];
-  return parse_func();
+  auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
+  auto left_exp = prefix_parse_func();
+  auto cur_preced = GetPrecedence(cur_tok_.type);
+  while (cur_tok_.type != TokenType::SEMICOLON && pre_preced < cur_preced) {
+    auto infix_tok = cur_tok_;
+    NextToken();
+    auto right_exp = ParseExpression(cur_preced);
+    left_exp = std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
+  }
+  return left_exp;
 }
 
 std::shared_ptr<IExpression> Parser::ParseIdentifier() {
   CHECK(cur_tok_.type == TokenType::IDENT,
         "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
-  CHECK(next_tok_.type == TokenType::SEMICOLON,
-        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   return std::make_shared<Identifier>(tok);
@@ -78,8 +84,6 @@ std::shared_ptr<IExpression> Parser::ParseIdentifier() {
 std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
   CHECK(cur_tok_.type == TokenType::INT,
         "expect current TokenType to be INT, but got " + cur_tok_.ToString());
-  CHECK(next_tok_.type == TokenType::SEMICOLON,
-        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   return std::make_shared<IntegerLiteral>(tok);
@@ -90,7 +94,7 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
         "expect current TokenType to be BANG or MINUS, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
-  auto right = ParseExpression();
+  auto right = ParseExpression(GetPrecedence(tok.type));
   return std::make_shared<PrefixExpression>(tok, right);
 }
 
