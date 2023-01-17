@@ -32,8 +32,6 @@ static void Test1() {
   Program res = parser.ParseProgram();
   auto expected_stmts = expected.GetStmts();
   auto res_stmts = res.GetStmts();
-  res.Print(std::cout);
-  expected.Print(std::cout);
   Test("size equal", res_stmts.size(), expected_stmts.size(), Printer);
   if (res_stmts.size() == expected_stmts.size()) {
     for (int64_t i = 0; i < res_stmts.size(); i++) {
@@ -110,8 +108,6 @@ static void TestBase(const std::string &name, const std::string &input, const st
   Parser parser(lexer);
   Program program = parser.ParseProgram();
   std::string res = program.ToString();
-  std::cout << res << std::endl;
-  std::cout << expected << std::endl;
   Test(name, res, expected);
 }
 
@@ -127,7 +123,7 @@ LetStmt(Token(LET: "let"), Identifier(Token(IDENT: "a")))
 ReturnStmt(Token(RETURN: "return"))
 )
 )";
-  TestBase("parse let and return", input, expected);
+  TestBase("parse let and return statements", input, expected);
 }
 
 static void Test6() {
@@ -147,6 +143,17 @@ static void Test6() {
   Test("error log match", err_log, expected_err_log);
 }
 
+static void Test7() {
+  std::string input = R"(
+    foobar;
+  )";
+  std::string expected = R"(Program(
+ExpressionStmt(Token(IDENT: "foobar"), Identifier(Token(IDENT: "foobar")))
+)
+)";
+  TestBase("parse expression statement", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -154,4 +161,5 @@ int main() {
   Test4();
   Test5();
   Test6();
+  Test7();
 }
