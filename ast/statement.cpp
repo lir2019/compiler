@@ -1,18 +1,4 @@
-#include <iostream>
-
-#include "node.hpp"
-
-std::string Identifier::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void Identifier::ExpressionNode() const {}
-
-DEFINE_DUMP_FUNCS(Identifier, { os << "Identifier(" << tok_ << ")"; })
-
-void Identifier::PrintNode(std::ostream &os) const {
-  Print(os);
-}
+#include "statement.hpp"
 
 std::string LetStmt::TokenLiteral() const {
   return tok_.literal;

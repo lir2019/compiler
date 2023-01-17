@@ -6,6 +6,7 @@
 
 #include "../common/utils.hpp"
 #include "node.hpp"
+#include "statement.hpp"
 
 class Program : public INode {
 public:
