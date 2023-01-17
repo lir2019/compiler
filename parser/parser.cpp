@@ -1,5 +1,7 @@
 #include "parser.hpp"
 
+#include <map>
+
 #include "../ast/program.hpp"
 
 void Parser::NextToken() {
@@ -53,6 +55,13 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
 }
 
 std::shared_ptr<IExpression> Parser::ParseExpression() {
+  CHECK(prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end(),
+        "can not find parse func");
+  auto parse_func = prefix_parse_funcs_[cur_tok_.type];
+  return parse_func();
+}
+
+std::shared_ptr<IExpression> Parser::ParseIdentifier() {
   CHECK(cur_tok_.type == TokenType::IDENT,
         "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
   CHECK(next_tok_.type == TokenType::SEMICOLON,
