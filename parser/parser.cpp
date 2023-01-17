@@ -4,6 +4,10 @@
 
 #include "../ast/program.hpp"
 
+//===----------------------------------------------------------------------===//
+// Parser
+//===----------------------------------------------------------------------===//
+
 void Parser::NextToken() {
   cur_tok_ = next_tok_;
   next_tok_ = lexer_->NextToken();
@@ -69,6 +73,16 @@ std::shared_ptr<IExpression> Parser::ParseIdentifier() {
   auto tok = cur_tok_;
   NextToken();
   return std::make_shared<Identifier>(tok);
+}
+
+std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
+  CHECK(cur_tok_.type == TokenType::INT,
+        "expect current TokenType to be INT, but got " + cur_tok_.ToString());
+  CHECK(next_tok_.type == TokenType::SEMICOLON,
+        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  auto tok = cur_tok_;
+  NextToken();
+  return std::make_shared<IntegerLiteral>(tok);
 }
 
 Program Parser::ParseProgram() {

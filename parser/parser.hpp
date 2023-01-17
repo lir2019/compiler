@@ -17,8 +17,14 @@ public:
   Parser(const Lexer &l) : lexer_(std::make_shared<Lexer>(l)) {
     cur_tok_ = lexer_->NextToken();
     next_tok_ = lexer_->NextToken();
-    PARSE_EXP_FUNC_TYPE pre_parse_ident = std::bind(&Parser::ParseIdentifier, this);
-    prefix_parse_funcs_.insert(std::make_pair(TokenType::IDENT, pre_parse_ident));
+    PARSE_EXP_FUNC_TYPE parse_func;
+#define REGISTER_PRE_PARSE_FUNC(TOKEN_TYPE, PRE_PARSE_FUNC)                        \
+    parse_func = std::bind(&Parser::PRE_PARSE_FUNC, this);                         \
+    prefix_parse_funcs_.insert(std::make_pair(TokenType::TOKEN_TYPE, parse_func));
+
+    REGISTER_PRE_PARSE_FUNC(IDENT, ParseIdentifier)
+    REGISTER_PRE_PARSE_FUNC(INT, ParseIntegerLiteral)
+#undef REGISTER_PRE_PARSE_FUNC
   }
   Program ParseProgram();
 private:
@@ -29,6 +35,7 @@ private:
   std::shared_ptr<IStatement> ParseExpressionStatement();
   std::shared_ptr<IExpression> ParseExpression();
   std::shared_ptr<IExpression> ParseIdentifier();
+  std::shared_ptr<IExpression> ParseIntegerLiteral();
 
   std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;

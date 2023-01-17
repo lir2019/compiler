@@ -27,4 +27,18 @@ private:
   Token tok_;  // TokenType::INDENT
 };
 
+class IntegerLiteral : public IExpression {
+public:
+  IntegerLiteral(Token tok) : tok_(tok), value_(std::stol(tok.literal)) {}
+
+  DECL_DUMP_FUNCS(IntegerLiteral)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+private:
+  Token tok_;  // TokenType::INT
+  int64_t value_;
+};
+
 #endif  // PARSER_EXPRESSION_HPP

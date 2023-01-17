@@ -2,11 +2,7 @@
 #include "ast/program.hpp"
 #include "parser/parser.hpp"
 
-static void Printer(size_t s) {
-  std::cout << s << std::endl;
-}
-
-static void Printer(const std::string &s) {
+static void Printer(std::string s) {
   std::cout << s << std::endl;
 }
 
@@ -30,7 +26,7 @@ static void Test1() {
   Program res = parser.ParseProgram();
   auto expected_stmts = expected.GetStmts();
   auto res_stmts = res.GetStmts();
-  Test("size equal", res_stmts.size(), expected_stmts.size(), Printer);
+  Test("size equal", res_stmts.size(), expected_stmts.size());
   if (res_stmts.size() == expected_stmts.size()) {
     for (int64_t i = 0; i < res_stmts.size(); i++) {
       Test("is LetStmt", IsA<IStatement, LetStmt>(res_stmts[i]), true);
@@ -106,7 +102,7 @@ static void TestBase(const std::string &name, const std::string &input, const st
   Parser parser(lexer);
   Program program = parser.ParseProgram();
   std::string res = program.ToString();
-  Test(name, res, expected);
+  Test(name, res, expected, Printer);
 }
 
 static void Test5() {
@@ -152,6 +148,17 @@ ExpressionStmt(Token(IDENT: "foobar"), Identifier(Token(IDENT: "foobar")))
   TestBase("parse expression statement", input, expected);
 }
 
+static void Test8() {
+  std::string input = R"(
+    5;
+  )";
+  std::string expected = R"(Program(
+ExpressionStmt(Token(INT: "5"), IntegerLiteral(Token(INT: "5")))
+)
+)";
+  TestBase("parse expression statement", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -160,4 +167,5 @@ int main() {
   Test5();
   Test6();
   Test7();
+  Test8();
 }

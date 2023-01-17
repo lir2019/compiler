@@ -1,5 +1,9 @@
 #include "statement.hpp"
 
+//===----------------------------------------------------------------------===//
+// LetStmt
+//===----------------------------------------------------------------------===//
+
 std::string LetStmt::TokenLiteral() const {
   return tok_.literal;
 }
@@ -16,6 +20,10 @@ std::string LetStmt::GetIdent() {
   return ident_->TokenLiteral();
 }
 
+//===----------------------------------------------------------------------===//
+// ReturnStmt
+//===----------------------------------------------------------------------===//
+
 std::string ReturnStmt::TokenLiteral() const {
   return tok_.literal;
 }
@@ -27,6 +35,10 @@ DEFINE_DUMP_FUNCS(ReturnStmt, { os << "ReturnStmt(" << tok_ << ")"; })
 void ReturnStmt::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// ExpressionStmt
+//===----------------------------------------------------------------------===//
 
 void ExpressionStmt::StatementNode() const {}
 
