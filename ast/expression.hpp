@@ -41,4 +41,19 @@ private:
   int64_t value_;
 };
 
+class PrefixExpression : public IExpression {
+public:
+  PrefixExpression(Token tok, std::shared_ptr<IExpression> right)
+      : tok_(tok), right_(right) {}
+
+  DECL_DUMP_FUNCS(PrefixExpression)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+private:
+  Token tok_;  // TokenType::BANG or TokenType::MINUS
+  std::shared_ptr<IExpression> right_;
+};
+
 #endif  // PARSER_EXPRESSION_HPP

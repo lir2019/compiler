@@ -33,3 +33,23 @@ DEFINE_DUMP_FUNCS(IntegerLiteral, { os << "IntegerLiteral(" << tok_ << ")"; })
 void IntegerLiteral::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// PrefixExpression
+//===----------------------------------------------------------------------===//
+
+std::string PrefixExpression::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void PrefixExpression::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(PrefixExpression, {
+  os << "PrefixExpression(" << tok_ << ", ";
+  right_->PrintNode(os);
+  os << ")";
+})
+
+void PrefixExpression::PrintNode(std::ostream &os) const {
+  Print(os);
+}

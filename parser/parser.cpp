@@ -85,6 +85,15 @@ std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
   return std::make_shared<IntegerLiteral>(tok);
 }
 
+std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
+  CHECK(cur_tok_.type == TokenType::BANG || cur_tok_.type == TokenType::MINUS,
+        "expect current TokenType to be BANG or MINUS, but got " + cur_tok_.ToString());
+  auto tok = cur_tok_;
+  NextToken();
+  auto right = ParseExpression();
+  return std::make_shared<PrefixExpression>(tok, right);
+}
+
 Program Parser::ParseProgram() {
   Program program;
   while (cur_tok_.type != TokenType::END) {
