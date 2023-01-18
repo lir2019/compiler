@@ -41,13 +41,13 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
   CHECK(next_tok_.type == TokenType::ASSIGN,
         "expect next TokenType to be ASSIGN, but got " + next_tok_.ToString());
   NextToken();
-  // TODO(lirui): deal with expression
-  CHECK(
-      next_tok_.type == TokenType::SEMICOLON,
-      "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   NextToken();
+  auto exp = ParseExpression();
+  CHECK(
+      cur_tok_.type == TokenType::SEMICOLON,
+      "expect current TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
 
-  return std::make_shared<LetStmt>(tok, ident);
+  return std::make_shared<LetStmt>(tok, ident, exp);
 }
 
 std::shared_ptr<IStatement> Parser::ParseReturnStatement() {

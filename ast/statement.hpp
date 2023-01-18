@@ -12,8 +12,9 @@ class IStatement : public INode {
 
 class LetStmt : public IStatement {
  public:
-  LetStmt(const Token &tok, const Identifier &ident)
-      : tok_(tok), ident_(std::make_shared<Identifier>(ident)) {}
+  LetStmt(const Token &tok, const Identifier &ident, std::shared_ptr<IExpression> value)
+      : tok_(tok), ident_(std::make_shared<Identifier>(ident)),
+          value_(value) {}
   virtual ~LetStmt();
 
   DECL_DUMP_FUNCS(LetStmt)

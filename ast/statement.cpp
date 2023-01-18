@@ -16,8 +16,8 @@ void LetStmt::StatementNode() const {}
 
 DEFINE_DUMP_FUNCS(LetStmt, {
   os << tok_.literal << " " << *ident_ << " = ";
-  os << "(";
-  os << ");";
+  value_->PrintNode(os);
+  os << ";";
 })
 
 void LetStmt::PrintNode(std::ostream &os) const {
