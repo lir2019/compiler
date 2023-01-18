@@ -43,6 +43,21 @@ class IntegerLiteral : public IExpression {
   int64_t value_;
 };
 
+class Boolean : public IExpression {
+ public:
+  Boolean(Token tok) : tok_(tok), value_(tok.type == TokenType::TRUE) {}
+
+  DECL_DUMP_FUNCS(Boolean)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+
+ private:
+  Token tok_;  // TokenType::TRUE or TokenType::FALSE
+  bool value_;
+};
+
 class PrefixExpression : public IExpression {
  public:
   PrefixExpression(Token tok, std::shared_ptr<IExpression> right)

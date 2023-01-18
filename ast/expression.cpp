@@ -35,6 +35,22 @@ void IntegerLiteral::PrintNode(std::ostream &os) const {
 }
 
 //===----------------------------------------------------------------------===//
+// Boolean
+//===----------------------------------------------------------------------===//
+
+std::string Boolean::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void Boolean::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(Boolean, { os << tok_.literal; })
+
+void Boolean::PrintNode(std::ostream &os) const {
+  Print(os);
+}
+
+//===----------------------------------------------------------------------===//
 // PrefixExpression
 //===----------------------------------------------------------------------===//
 

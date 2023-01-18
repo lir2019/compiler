@@ -218,6 +218,23 @@ a + b * c + d/ e -f;
   TestBase("parse expression statement", input, expected);
 }
 
+static void Test11() {
+  std::string input = R"(
+true;
+false;
+3 > 5 == false;
+3 < 5 == true;
+  )";
+  std::string expected = R"(Program{
+true;
+false;
+((3 > 5) == false);
+((3 < 5) == true);
+}
+)";
+  TestBase("parse expression statement", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -229,4 +246,5 @@ int main() {
   Test8();
   Test9();
   Test10();
+  Test11();
 }

@@ -23,6 +23,8 @@ class Parser {
 
     REGISTER_PRE_PARSE_FUNC(IDENT, ParseIdentifier)
     REGISTER_PRE_PARSE_FUNC(INT, ParseIntegerLiteral)
+    REGISTER_PRE_PARSE_FUNC(TRUE, ParseBoolean)
+    REGISTER_PRE_PARSE_FUNC(FALSE, ParseBoolean)
     REGISTER_PRE_PARSE_FUNC(MINUS, ParsePrefixExpression)
     REGISTER_PRE_PARSE_FUNC(BANG, ParsePrefixExpression)
 #undef REGISTER_PRE_PARSE_FUNC
@@ -39,6 +41,7 @@ class Parser {
       Precedence pre_preced = Precedence::LOWEST);
   std::shared_ptr<IExpression> ParseIdentifier();
   std::shared_ptr<IExpression> ParseIntegerLiteral();
+  std::shared_ptr<IExpression> ParseBoolean();
   std::shared_ptr<IExpression> ParsePrefixExpression();
 
   std::shared_ptr<Lexer> lexer_;
