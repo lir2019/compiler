@@ -12,7 +12,7 @@ std::string Identifier::TokenLiteral() const {
 
 void Identifier::ExpressionNode() const {}
 
-DEFINE_DUMP_FUNCS(Identifier, { os << "Identifier(" << tok_ << ")"; })
+DEFINE_DUMP_FUNCS(Identifier, { os << tok_.literal; })
 
 void Identifier::PrintNode(std::ostream &os) const {
   Print(os);
@@ -28,7 +28,7 @@ std::string IntegerLiteral::TokenLiteral() const {
 
 void IntegerLiteral::ExpressionNode() const {}
 
-DEFINE_DUMP_FUNCS(IntegerLiteral, { os << "IntegerLiteral(" << tok_ << ")"; })
+DEFINE_DUMP_FUNCS(IntegerLiteral, { os << tok_.literal; })
 
 void IntegerLiteral::PrintNode(std::ostream &os) const {
   Print(os);
@@ -45,7 +45,7 @@ std::string PrefixExpression::TokenLiteral() const {
 void PrefixExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(PrefixExpression, {
-  os << "PrefixExpression(" << tok_ << ", ";
+  os << "(" << tok_.literal;
   right_->PrintNode(os);
   os << ")";
 })
@@ -65,9 +65,9 @@ std::string InfixExpression::TokenLiteral() const {
 void InfixExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(InfixExpression, {
-  os << "InfixExpression(" << tok_ << ", ";
+  os << "(";
   left_->PrintNode(os);
-  os << ", ";
+  os << " " << tok_.literal << " ";
   right_->PrintNode(os);
   os << ")";
 })

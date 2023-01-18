@@ -10,7 +10,11 @@ std::string LetStmt::TokenLiteral() const {
 
 void LetStmt::StatementNode() const {}
 
-DEFINE_DUMP_FUNCS(LetStmt, { os << "LetStmt(" << tok_ << ", " << *ident_ << ")"; })
+DEFINE_DUMP_FUNCS(LetStmt, {
+  os << tok_.literal << " " << *ident_ << " = ";
+  os << "(";
+  os << ");";
+})
 
 void LetStmt::PrintNode(std::ostream &os) const {
   Print(os);
@@ -30,7 +34,11 @@ std::string ReturnStmt::TokenLiteral() const {
 
 void ReturnStmt::StatementNode() const {}
 
-DEFINE_DUMP_FUNCS(ReturnStmt, { os << "ReturnStmt(" << tok_ << ")"; })
+DEFINE_DUMP_FUNCS(ReturnStmt, {
+  os << tok_.literal;
+  os << " (";
+  os << ");";
+})
 
 void ReturnStmt::PrintNode(std::ostream &os) const {
   Print(os);
@@ -43,9 +51,8 @@ void ReturnStmt::PrintNode(std::ostream &os) const {
 void ExpressionStmt::StatementNode() const {}
 
 DEFINE_DUMP_FUNCS(ExpressionStmt, {
-  os << "ExpressionStmt(" << tok_ << ", ";
   expression_->PrintNode(os);
-  os << ")";
+  os << ";";
 })
 
 std::string ExpressionStmt::TokenLiteral() const {
