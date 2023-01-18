@@ -11,14 +11,14 @@
 
 class IExpression : public INode {
  public:
-  virtual ~IExpression();
+  virtual ~IExpression() = 0;
   virtual void ExpressionNode() const = 0;
 };
 
 class Identifier : public IExpression {
  public:
   Identifier(Token tok) : tok_(tok) {}
-  virtual ~Identifier() {}
+  virtual ~Identifier();
 
   DECL_DUMP_FUNCS(Identifier)
 
@@ -33,7 +33,7 @@ class Identifier : public IExpression {
 class IntegerLiteral : public IExpression {
  public:
   IntegerLiteral(Token tok) : tok_(tok), value_(std::stol(tok.literal)) {}
-  virtual ~IntegerLiteral() {}
+  virtual ~IntegerLiteral();
 
   DECL_DUMP_FUNCS(IntegerLiteral)
 
@@ -49,7 +49,7 @@ class IntegerLiteral : public IExpression {
 class Boolean : public IExpression {
  public:
   Boolean(Token tok) : tok_(tok), value_(tok.type == TokenType::TRUE) {}
-  virtual ~Boolean() {}
+  virtual ~Boolean();
 
   DECL_DUMP_FUNCS(Boolean)
 
@@ -66,7 +66,7 @@ class PrefixExpression : public IExpression {
  public:
   PrefixExpression(Token tok, std::shared_ptr<IExpression> right)
       : tok_(tok), right_(right) {}
-  virtual ~PrefixExpression() {}
+  virtual ~PrefixExpression();
 
   DECL_DUMP_FUNCS(PrefixExpression)
 
@@ -85,7 +85,7 @@ class InfixExpression : public IExpression {
                   std::shared_ptr<IExpression> left,
                   std::shared_ptr<IExpression> right)
       : tok_(tok), left_(left), right_(right) {}
-  virtual ~InfixExpression() {}
+  virtual ~InfixExpression();
 
   DECL_DUMP_FUNCS(InfixExpression)
 

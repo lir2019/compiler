@@ -8,6 +8,8 @@ IExpression::~IExpression() {}
 // Identifier
 //===----------------------------------------------------------------------===//
 
+Identifier::~Identifier() {}
+
 std::string Identifier::TokenLiteral() const {
   return tok_.literal;
 }
@@ -23,6 +25,8 @@ void Identifier::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // IntegerLiteral
 //===----------------------------------------------------------------------===//
+
+IntegerLiteral::~IntegerLiteral() {}
 
 std::string IntegerLiteral::TokenLiteral() const {
   return tok_.literal;
@@ -40,6 +44,8 @@ void IntegerLiteral::PrintNode(std::ostream &os) const {
 // Boolean
 //===----------------------------------------------------------------------===//
 
+Boolean::~Boolean() {}
+
 std::string Boolean::TokenLiteral() const {
   return tok_.literal;
 }
@@ -55,6 +61,8 @@ void Boolean::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // PrefixExpression
 //===----------------------------------------------------------------------===//
+
+PrefixExpression::~PrefixExpression() {}
 
 std::string PrefixExpression::TokenLiteral() const {
   return tok_.literal;
@@ -75,6 +83,8 @@ void PrefixExpression::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // InfixExpression
 //===----------------------------------------------------------------------===//
+
+InfixExpression::~InfixExpression() {}
 
 std::string InfixExpression::TokenLiteral() const {
   return tok_.literal;

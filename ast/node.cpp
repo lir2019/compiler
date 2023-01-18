@@ -1,3 +1,3 @@
 #include "node.hpp"
 
-//INode::~INode() {}
+INode::~INode() {}
