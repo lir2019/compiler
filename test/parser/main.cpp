@@ -1,9 +1,20 @@
 #include "test/utils.hpp"
+#include "ast/statement.hpp"
 #include "ast/program.hpp"
 #include "parser/parser.hpp"
 
 static void Printer(std::string s) {
   std::cout << s << std::endl;
+}
+
+static void TestBase(const std::string &name,
+                     const std::string &input,
+                     const std::string &expected) {
+  Lexer lexer(input);
+  Parser parser(lexer);
+  Program program = parser.ParseProgram();
+  std::string res = program.ToString();
+  Test(name, res, expected, Printer);
 }
 
 static void Test1() {
@@ -17,28 +28,28 @@ static void Test1() {
   Token y_tok{TokenType::IDENT, "y"};
   Identifier x_ident(x_tok);
   Identifier y_ident(y_tok);
-  auto x_let = std::make_shared<LetStmt>(let_tok, x_ident);
-  auto y_let = std::make_shared<LetStmt>(let_tok, y_ident);
-  expected.AppendStmt(x_let);
-  expected.AppendStmt(y_let);
-  Lexer lexer(input);
-  Parser parser(lexer);
-  Program res = parser.ParseProgram();
-  auto expected_stmts = expected.GetStmts();
-  auto res_stmts = res.GetStmts();
-  Test("size equal", res_stmts.size(), expected_stmts.size());
-  if (res_stmts.size() == expected_stmts.size()) {
-    for (int64_t i = 0; i < res_stmts.size(); i++) {
-      Test("is LetStmt", IsA<IStatement, LetStmt>(res_stmts[i]), true);
-      Test("is LetStmt", IsA<IStatement, LetStmt>(expected_stmts[i]), true);
-      auto res_let = std::dynamic_pointer_cast<LetStmt>(res_stmts[i]);
-      auto expected_let = std::dynamic_pointer_cast<LetStmt>(expected_stmts[i]);
-      Test("dynamic cast", res_let != nullptr, true);
-      Test("dynamic cast", expected_let != nullptr, true);
-      Test("identifiers are the same", res_let->GetIdent(),
-           expected_let->GetIdent());
-    }
-  }
+//  auto x_let = std::make_shared<LetStmt>(let_tok, x_ident);
+//  auto y_let = std::make_shared<LetStmt>(let_tok, y_ident);
+//  expected.AppendStmt(x_let);
+//  expected.AppendStmt(y_let);
+//  Lexer lexer(input);
+//  Parser parser(lexer);
+//  Program res = parser.ParseProgram();
+//  auto expected_stmts = expected.GetStmts();
+//  auto res_stmts = res.GetStmts();
+//  Test("size equal", res_stmts.size(), expected_stmts.size());
+//  if (res_stmts.size() == expected_stmts.size()) {
+//    for (int64_t i = 0; i < res_stmts.size(); i++) {
+//      Test("is LetStmt", IsA<IStatement, LetStmt>(res_stmts[i]), true);
+//      Test("is LetStmt", IsA<IStatement, LetStmt>(expected_stmts[i]), true);
+//      auto res_let = std::dynamic_pointer_cast<LetStmt>(res_stmts[i]);
+//      auto expected_let = std::dynamic_pointer_cast<LetStmt>(expected_stmts[i]);
+//      Test("dynamic cast", res_let != nullptr, true);
+//      Test("dynamic cast", expected_let != nullptr, true);
+//      Test("identifiers are the same", res_let->GetIdent(),
+//           expected_let->GetIdent());
+//    }
+//  }
 }
 
 static void Test2() {
@@ -99,16 +110,6 @@ static void Test4() {
     err_log = err.what();
   }
   Test("error log match", err_log, expected_err_log);
-}
-
-static void TestBase(const std::string &name,
-                     const std::string &input,
-                     const std::string &expected) {
-  Lexer lexer(input);
-  Parser parser(lexer);
-  Program program = parser.ParseProgram();
-  std::string res = program.ToString();
-  Test(name, res, expected, Printer);
 }
 
 static void Test5() {

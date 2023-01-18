@@ -21,7 +21,12 @@ target_link_libraries(test_lexer PUBLIC lexer)
 
 add_executable(test_parser test/parser/main.cpp)
 target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})
-target_link_libraries(test_parser PUBLIC lexer ast parser)
+# Alternatively,
+# target_link_libraries(ast PUBLIC lexer)
+# target_link_libraries(parser PUBLIC ast)
+# target_link_libraries(test_parser PUBLIC parser)
+# "lexer ast parser" may not work. Order is important.
+target_link_libraries(test_parser PUBLIC parser ast lexer)
 
 enable_testing()
 add_test(NAME TestCMakeConfig COMMAND test_configure_file)

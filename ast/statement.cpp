@@ -1,8 +1,12 @@
 #include "statement.hpp"
 
+IStatement::~IStatement() {}
+
 //===----------------------------------------------------------------------===//
 // LetStmt
 //===----------------------------------------------------------------------===//
+
+LetStmt::~LetStmt() {}
 
 std::string LetStmt::TokenLiteral() const {
   return tok_.literal;
@@ -28,6 +32,8 @@ std::string LetStmt::GetIdent() {
 // ReturnStmt
 //===----------------------------------------------------------------------===//
 
+ReturnStmt::~ReturnStmt() {}
+
 std::string ReturnStmt::TokenLiteral() const {
   return tok_.literal;
 }
@@ -47,6 +53,8 @@ void ReturnStmt::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // ExpressionStmt
 //===----------------------------------------------------------------------===//
+
+ExpressionStmt::~ExpressionStmt() {}
 
 void ExpressionStmt::StatementNode() const {}
 

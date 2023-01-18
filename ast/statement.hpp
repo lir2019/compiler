@@ -6,6 +6,7 @@
 
 class IStatement : public INode {
  public:
+  virtual ~IStatement() = 0;
   virtual void StatementNode() const = 0;
 };
 
@@ -13,6 +14,7 @@ class LetStmt : public IStatement {
  public:
   LetStmt(const Token &tok, const Identifier &ident)
       : tok_(tok), ident_(std::make_shared<Identifier>(ident)) {}
+  virtual ~LetStmt();
 
   DECL_DUMP_FUNCS(LetStmt)
 
@@ -32,6 +34,7 @@ class ReturnStmt : public IStatement {
  public:
   ReturnStmt(Token tok, std::shared_ptr<IExpression> v)
       : tok_(tok), value_(v) {}
+  virtual ~ReturnStmt();
 
   DECL_DUMP_FUNCS(ReturnStmt)
 
@@ -48,6 +51,7 @@ class ExpressionStmt : public IStatement {
  public:
   ExpressionStmt(Token tok, std::shared_ptr<IExpression> exp)
       : tok_(tok), expression_(exp) {}
+  virtual ~ExpressionStmt();
 
   DECL_DUMP_FUNCS(ExpressionStmt)
 

@@ -3,10 +3,16 @@
 #include <map>
 
 #include "../ast/program.hpp"
+#include "../ast/statement.hpp"
 
 //===----------------------------------------------------------------------===//
 // Parser
 //===----------------------------------------------------------------------===//
+
+// IStatement::~IStatement() {}
+// LetStmt::~LetStmt() {}
+// ReturnStmt::~ReturnStmt() {}
+// ExpressionStmt::~ExpressionStmt() {}
 
 void Parser::NextToken() {
   cur_tok_ = next_tok_;
