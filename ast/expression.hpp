@@ -10,12 +10,12 @@
 #include "../common/utils.hpp"
 
 class IExpression : public INode {
-public:
+ public:
   virtual void ExpressionNode() const = 0;
 };
 
 class Identifier : public IExpression {
-public:
+ public:
   Identifier(Token tok) : tok_(tok) {}
 
   DECL_DUMP_FUNCS(Identifier)
@@ -23,12 +23,13 @@ public:
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
-private:
+
+ private:
   Token tok_;  // TokenType::INDENT
 };
 
 class IntegerLiteral : public IExpression {
-public:
+ public:
   IntegerLiteral(Token tok) : tok_(tok), value_(std::stol(tok.literal)) {}
 
   DECL_DUMP_FUNCS(IntegerLiteral)
@@ -36,13 +37,14 @@ public:
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
-private:
+
+ private:
   Token tok_;  // TokenType::INT
   int64_t value_;
 };
 
 class PrefixExpression : public IExpression {
-public:
+ public:
   PrefixExpression(Token tok, std::shared_ptr<IExpression> right)
       : tok_(tok), right_(right) {}
 
@@ -51,14 +53,17 @@ public:
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
-private:
+
+ private:
   Token tok_;  // TokenType::BANG or TokenType::MINUS
   std::shared_ptr<IExpression> right_;
 };
 
 class InfixExpression : public IExpression {
-public:
-  InfixExpression(Token tok, std::shared_ptr<IExpression> left, std::shared_ptr<IExpression> right)
+ public:
+  InfixExpression(Token tok,
+                  std::shared_ptr<IExpression> left,
+                  std::shared_ptr<IExpression> right)
       : tok_(tok), left_(left), right_(right) {}
 
   DECL_DUMP_FUNCS(InfixExpression)
@@ -66,7 +71,8 @@ public:
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
-private:
+
+ private:
   Token tok_;  // binary operator, like +, -, *, /, ==, etc.
   std::shared_ptr<IExpression> left_;
   std::shared_ptr<IExpression> right_;

@@ -5,7 +5,9 @@
 #include "../common/utils.hpp"
 
 std::string ToString(TokenType t) {
-#define CASE_TOKENTYPE_TOSTRING(T) case TokenType::T : return #T;
+#define CASE_TOKENTYPE_TOSTRING(T) \
+  case TokenType::T:               \
+    return #T;
   switch (t) {
     CASE_TOKENTYPE_TOSTRING(ILLEGAL)
     CASE_TOKENTYPE_TOSTRING(END)
@@ -49,13 +51,10 @@ bool operator==(const Token &t1, const Token &t2) {
 
 TokenType LookUpIdent(const std::string &id) {
   static const std::map<std::string, TokenType> keywords{
-    {"fn", TokenType::FUNCTION},
-    {"let", TokenType::LET},
-    {"true", TokenType::TRUE},
-    {"false", TokenType::FALSE},
-    {"if", TokenType::IF},
-    {"else", TokenType::ELSE},
-    {"return", TokenType::RETURN},
+      {"fn", TokenType::FUNCTION},   {"let", TokenType::LET},
+      {"true", TokenType::TRUE},     {"false", TokenType::FALSE},
+      {"if", TokenType::IF},         {"else", TokenType::ELSE},
+      {"return", TokenType::RETURN},
   };
   auto found_iter = keywords.find(id);
   if (found_iter != keywords.end()) {

@@ -35,7 +35,8 @@ static void Test1() {
       auto expected_let = std::dynamic_pointer_cast<LetStmt>(expected_stmts[i]);
       Test("dynamic cast", res_let != nullptr, true);
       Test("dynamic cast", expected_let != nullptr, true);
-      Test("identifiers are the same", res_let->GetIdent(), expected_let->GetIdent());
+      Test("identifiers are the same", res_let->GetIdent(),
+           expected_let->GetIdent());
     }
   }
 }
@@ -49,8 +50,9 @@ static void Test2() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check next_tok_.type == TokenType::IDENT failed: "
-                               "expect next TokenType to be IDENT, but got Token(ASSIGN: \"=\")");
+  std::string expected_err_log(
+      "check next_tok_.type == TokenType::IDENT failed: "
+      "expect next TokenType to be IDENT, but got Token(ASSIGN: \"=\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
@@ -68,8 +70,9 @@ static void Test3() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check next_tok_.type == TokenType::ASSIGN failed: "
-                               "expect next TokenType to be ASSIGN, but got Token(SEMICOLON: \";\")");
+  std::string expected_err_log(
+      "check next_tok_.type == TokenType::ASSIGN failed: "
+      "expect next TokenType to be ASSIGN, but got Token(SEMICOLON: \";\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
@@ -87,8 +90,9 @@ static void Test4() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check next_tok_.type == TokenType::SEMICOLON failed: "
-                               "expect next TokenType to be SEMICOLON, but got Token(COMMA: \",\")");
+  std::string expected_err_log(
+      "check next_tok_.type == TokenType::SEMICOLON failed: "
+      "expect next TokenType to be SEMICOLON, but got Token(COMMA: \",\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
@@ -97,7 +101,9 @@ static void Test4() {
   Test("error log match", err_log, expected_err_log);
 }
 
-static void TestBase(const std::string &name, const std::string &input, const std::string &expected) {
+static void TestBase(const std::string &name,
+                     const std::string &input,
+                     const std::string &expected) {
   Lexer lexer(input);
   Parser parser(lexer);
   Program program = parser.ParseProgram();
@@ -127,8 +133,9 @@ static void Test6() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check next_tok_.type == TokenType::SEMICOLON failed: "
-                               "expect next TokenType to be SEMICOLON, but got Token(RPAREN: \")\")");
+  std::string expected_err_log(
+      "check next_tok_.type == TokenType::SEMICOLON failed: "
+      "expect next TokenType to be SEMICOLON, but got Token(RPAREN: \")\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {

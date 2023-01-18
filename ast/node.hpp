@@ -4,10 +4,10 @@
 #include <iostream>
 
 class INode {
-public:
+ public:
   ~INode() {}
 
-  virtual std::string TokenLiteral() const = 0;
+  virtual std::string TokenLiteral() const       = 0;
   virtual void PrintNode(std::ostream &os) const = 0;
 };
 

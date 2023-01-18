@@ -15,9 +15,12 @@ void Parser::NextToken() {
 
 std::shared_ptr<IStatement> Parser::ParseStatement() {
   switch (cur_tok_.type) {
-    case TokenType::LET: return ParseLetStatement();
-    case TokenType::RETURN: return ParseReturnStatement();
-    default: return ParseExpressionStatement();
+    case TokenType::LET:
+      return ParseLetStatement();
+    case TokenType::RETURN:
+      return ParseReturnStatement();
+    default:
+      return ParseExpressionStatement();
   }
   return nullptr;
 }
@@ -33,20 +36,23 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
         "expect next TokenType to be ASSIGN, but got " + next_tok_.ToString());
   NextToken();
   // TODO(lirui): deal with expression
-  CHECK(next_tok_.type == TokenType::SEMICOLON,
-        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  CHECK(
+      next_tok_.type == TokenType::SEMICOLON,
+      "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   NextToken();
 
   return std::make_shared<LetStmt>(tok, ident);
 }
 
 std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
-  CHECK(cur_tok_.type == TokenType::RETURN,
-        "expect current TokenType to be RETURN, but got " + cur_tok_.ToString());
+  CHECK(
+      cur_tok_.type == TokenType::RETURN,
+      "expect current TokenType to be RETURN, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
   // TODO(lirui): deal with expression
-  CHECK(next_tok_.type == TokenType::SEMICOLON,
-        "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
+  CHECK(
+      next_tok_.type == TokenType::SEMICOLON,
+      "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   NextToken();
 
   return std::make_shared<ReturnStmt>(tok, nullptr);
@@ -63,12 +69,14 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
         "can not find parse func");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
-  while (cur_tok_.type != TokenType::SEMICOLON && pre_preced < GetPrecedence(cur_tok_.type)) {
+  while (cur_tok_.type != TokenType::SEMICOLON &&
+         pre_preced < GetPrecedence(cur_tok_.type)) {
     auto infix_tok = cur_tok_;
     auto cur_preced = GetPrecedence(cur_tok_.type);
     NextToken();
     auto right_exp = ParseExpression(cur_preced);
-    left_exp = std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
+    left_exp =
+        std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
   }
   return left_exp;
 }
@@ -91,7 +99,8 @@ std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
 
 std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
   CHECK(cur_tok_.type == TokenType::BANG || cur_tok_.type == TokenType::MINUS,
-        "expect current TokenType to be BANG or MINUS, but got " + cur_tok_.ToString());
+        "expect current TokenType to be BANG or MINUS, but got " +
+            cur_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   auto right = ParseExpression(Precedence::PREFIX);

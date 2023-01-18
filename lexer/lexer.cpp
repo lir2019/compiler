@@ -25,13 +25,16 @@ Token Lexer::NextToken() {
   this->SkipWhiteSpace();
   Token tok{TokenType::ILLEGAL, ""};
   tok.literal.push_back(this->ch_);
-#define CASE_CHAR_TOKEN(C, T) case C : { tok.type = TokenType::T; } break;
+#define CASE_CHAR_TOKEN(C, T) \
+  case C: {                   \
+    tok.type = TokenType::T;  \
+  } break;
   switch (this->ch_) {
     case '\0': {
       tok.type = TokenType::END;
       tok.literal = "";
     } break;
-    case '=' : {
+    case '=': {
       if (PeekChar() == '=') {
         ReadChar();
         tok.literal.push_back(this->ch_);
@@ -40,7 +43,7 @@ Token Lexer::NextToken() {
         tok.type = TokenType::ASSIGN;
       }
     } break;
-    case '!' : {
+    case '!': {
       if (PeekChar() == '=') {
         ReadChar();
         tok.literal.push_back(this->ch_);
@@ -49,24 +52,24 @@ Token Lexer::NextToken() {
         tok.type = TokenType::BANG;
       }
     } break;
-    CASE_CHAR_TOKEN(';', SEMICOLON)
-    CASE_CHAR_TOKEN('(', LPAREN)
-    CASE_CHAR_TOKEN(')', RPAREN)
-    CASE_CHAR_TOKEN(',', COMMA)
-    CASE_CHAR_TOKEN('+', PLUS)
-    CASE_CHAR_TOKEN('{', LBRACE)
-    CASE_CHAR_TOKEN('}', RBRACE)
-    CASE_CHAR_TOKEN('-', MINUS)
-    CASE_CHAR_TOKEN('*', ASTERISK)
-    CASE_CHAR_TOKEN('/', SLASH)
-    CASE_CHAR_TOKEN('<', LT)
-    CASE_CHAR_TOKEN('>', GT)
+      CASE_CHAR_TOKEN(';', SEMICOLON)
+      CASE_CHAR_TOKEN('(', LPAREN)
+      CASE_CHAR_TOKEN(')', RPAREN)
+      CASE_CHAR_TOKEN(',', COMMA)
+      CASE_CHAR_TOKEN('+', PLUS)
+      CASE_CHAR_TOKEN('{', LBRACE)
+      CASE_CHAR_TOKEN('}', RBRACE)
+      CASE_CHAR_TOKEN('-', MINUS)
+      CASE_CHAR_TOKEN('*', ASTERISK)
+      CASE_CHAR_TOKEN('/', SLASH)
+      CASE_CHAR_TOKEN('<', LT)
+      CASE_CHAR_TOKEN('>', GT)
     default: {
       if (IsLetter(this->ch_)) {
         tok.literal = this->ReadIdentifier();
         tok.type = LookUpIdent(tok.literal);
         return tok;
-      // TODO(lirui): support float
+        // TODO(lirui): support float
       } else if (IsNumber(this->ch_)) {
         tok.literal = this->ReadNumber();
         tok.type = TokenType::INT;
@@ -80,8 +83,8 @@ Token Lexer::NextToken() {
 }
 
 void Lexer::SkipWhiteSpace() {
-  while (std::find(white_space_chars.begin(), white_space_chars.end(), this->ch_) !=
-         white_space_chars.end()) {
+  while (std::find(white_space_chars.begin(), white_space_chars.end(),
+                   this->ch_) != white_space_chars.end()) {
     this->ReadChar();
   }
 }

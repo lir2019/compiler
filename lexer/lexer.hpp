@@ -7,10 +7,11 @@
 #include "token.hpp"
 
 class Lexer {
-public:
+ public:
   Lexer(std::string str) : input_(str) { this->ReadChar(); };
   Token NextToken();
-private:
+
+ private:
   void ReadChar();
   char PeekChar();
   void SkipWhiteSpace();
