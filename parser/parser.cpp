@@ -63,9 +63,9 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
         "can not find parse func");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
-  auto cur_preced = GetPrecedence(cur_tok_.type);
-  while (cur_tok_.type != TokenType::SEMICOLON && pre_preced < cur_preced) {
+  while (cur_tok_.type != TokenType::SEMICOLON && pre_preced < GetPrecedence(cur_tok_.type)) {
     auto infix_tok = cur_tok_;
+    auto cur_preced = GetPrecedence(cur_tok_.type);
     NextToken();
     auto right_exp = ParseExpression(cur_preced);
     left_exp = std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
@@ -94,7 +94,7 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
         "expect current TokenType to be BANG or MINUS, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
-  auto right = ParseExpression(GetPrecedence(tok.type));
+  auto right = ParseExpression(Precedence::PREFIX);
   return std::make_shared<PrefixExpression>(tok, right);
 }
 

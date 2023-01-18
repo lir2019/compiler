@@ -178,14 +178,34 @@ static void Test9() {
 
 static void Test10() {
   std::string input = R"(
-    5+ 5;
-    a / 55;
-    5 * a + 55;
+-a * b;
+!-a;
+a + b +c;
+a+b -c;
+a*b*c;
+a * b / c;
+a + b / c;
+a + b * c + d/ e -f;
+3 + 4;
+-5 * 5;
+5 > 4 == 3 < 4;
+5 < 4 != 3 > 4;
+3 + 4*5 == 3*1 + 4*5;
   )";
   std::string expected = R"(Program{
-(5 + 5);
-(a / 55);
-((5 * a) + 55);
+((-a) * b);
+(!(-a));
+((a + b) + c);
+((a + b) - c);
+((a * b) * c);
+((a * b) / c);
+(a + (b / c));
+(((a + (b * c)) + (d / e)) - f);
+(3 + 4);
+((-5) * 5);
+((5 > 4) == (3 < 4));
+((5 < 4) != (3 > 4));
+((3 + (4 * 5)) == ((3 * 1) + (4 * 5)));
 }
 )";
   TestBase("parse expression statement", input, expected);
@@ -201,5 +221,5 @@ int main() {
   Test7();
   Test8();
   Test9();
-//  Test10();
+  Test10();
 }
