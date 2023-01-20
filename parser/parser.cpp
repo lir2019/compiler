@@ -33,14 +33,14 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
 
 std::shared_ptr<IStatement> Parser::ParseLetStatement() {
   CHECK(cur_tok_.type == TokenType::LET, "unexpected Token for LetStmt");
-  CHECK(next_tok_.type == TokenType::IDENT,
-        "expect next TokenType to be IDENT, but got " + next_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
+  CHECK(cur_tok_.type == TokenType::IDENT,
+        "expect cur TokenType to be IDENT, but got " + cur_tok_.ToString());
   Identifier ident(cur_tok_);
-  CHECK(next_tok_.type == TokenType::ASSIGN,
-        "expect next TokenType to be ASSIGN, but got " + next_tok_.ToString());
   NextToken();
+  CHECK(cur_tok_.type == TokenType::ASSIGN,
+        "expect cur TokenType to be ASSIGN, but got " + cur_tok_.ToString());
   NextToken();
   auto exp = ParseExpression();
   CHECK(
@@ -55,13 +55,13 @@ std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
       cur_tok_.type == TokenType::RETURN,
       "expect current TokenType to be RETURN, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
-  // TODO(lirui): deal with expression
-  CHECK(
-      next_tok_.type == TokenType::SEMICOLON,
-      "expect next TokenType to be SEMICOLON, but got " + next_tok_.ToString());
   NextToken();
+  auto exp = ParseExpression();
+  CHECK(
+      cur_tok_.type == TokenType::SEMICOLON,
+      "expect cur TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
 
-  return std::make_shared<ReturnStmt>(tok, nullptr);
+  return std::make_shared<ReturnStmt>(tok, exp);
 }
 
 std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
@@ -71,8 +71,8 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
 }
 
 std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
-  CHECK(prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end(),
-        "can not find parse func");
+  bool is_legal = prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end();
+  CHECK(is_legal, "unexpected Token for Expression");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
   while (cur_tok_.type != TokenType::SEMICOLON &&

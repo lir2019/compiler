@@ -29,7 +29,7 @@ let y = 5;
 let z = x;
 }
 )";
-  TestBase("parse let and return statements", input, expected);
+  TestBase("parse let statements Test1", input, expected);
 }
 
 static void Test2() {
@@ -42,14 +42,14 @@ static void Test2() {
   Parser parser(lexer);
   std::string err_log;
   std::string expected_err_log(
-      "check next_tok_.type == TokenType::IDENT failed: "
-      "expect next TokenType to be IDENT, but got Token(ASSIGN: \"=\")");
+      "check cur_tok_.type == TokenType::IDENT failed: "
+      "expect cur TokenType to be IDENT, but got Token(ASSIGN: \"=\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match", err_log, expected_err_log);
+  Test("error log match Test2", err_log, expected_err_log);
 }
 
 static void Test3() {
@@ -62,14 +62,14 @@ static void Test3() {
   Parser parser(lexer);
   std::string err_log;
   std::string expected_err_log(
-      "check next_tok_.type == TokenType::ASSIGN failed: "
-      "expect next TokenType to be ASSIGN, but got Token(INT: \"3\")");
+      "check cur_tok_.type == TokenType::ASSIGN failed: "
+      "expect cur TokenType to be ASSIGN, but got Token(INT: \"3\")");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match", err_log, expected_err_log, Printer);
+  Test("error log match Test3", err_log, expected_err_log, Printer);
 }
 
 static void Test4() {
@@ -81,30 +81,28 @@ static void Test4() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log(
-      "check next_tok_.type == TokenType::SEMICOLON failed: "
-      "expect next TokenType to be SEMICOLON, but got Token(COMMA: \",\")");
+  std::string expected_err_log("check is_legal failed: unexpected Token for Expression");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match", err_log, expected_err_log);
+  Test("error log match Test4", err_log, expected_err_log);
 }
 
 static void Test5() {
   std::string input = R"(
     let tmp = z;
     let a = 3;
-    return ;
+    return 11 / a;
   )";
   std::string expected = R"(Program{
 let tmp = z;
 let a = 3;
-return ();
+return (11 / a);
 }
 )";
-  TestBase("parse let and return statements", input, expected);
+  TestBase("parse let and return statements Test5", input, expected);
 }
 
 static void Test6() {
@@ -114,15 +112,13 @@ static void Test6() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log(
-      "check next_tok_.type == TokenType::SEMICOLON failed: "
-      "expect next TokenType to be SEMICOLON, but got Token(RPAREN: \")\")");
+  std::string expected_err_log("check is_legal failed: unexpected Token for Expression");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match", err_log, expected_err_log);
+  Test("error log match Test6", err_log, expected_err_log);
 }
 
 static void Test7() {
@@ -133,7 +129,7 @@ static void Test7() {
 foobar;
 }
 )";
-  TestBase("parse expression statement", input, expected);
+  TestBase("parse expression statement Test7", input, expected);
 }
 
 static void Test8() {
@@ -144,7 +140,7 @@ static void Test8() {
 5;
 }
 )";
-  TestBase("parse expression statement", input, expected);
+  TestBase("parse expression statement Test8", input, expected);
 }
 
 static void Test9() {
@@ -161,7 +157,7 @@ static void Test9() {
 (!(!(!10)));
 }
 )";
-  TestBase("parse expression statement", input, expected);
+  TestBase("parse expression statement Test9", input, expected);
 }
 
 static void Test10() {
@@ -196,7 +192,7 @@ a + b * c + d/ e -f;
 ((3 + (4 * 5)) == ((3 * 1) + (4 * 5)));
 }
 )";
-  TestBase("parse expression statement", input, expected);
+  TestBase("parse expression statement Test10", input, expected);
 }
 
 static void Test11() {
@@ -213,14 +209,14 @@ false;
 ((3 < 5) == true);
 }
 )";
-  TestBase("parse expression statement", input, expected);
+  TestBase("parse expression statement Test11", input, expected);
 }
 
 int main() {
   Test1();
   Test2();
   Test3();
-  // Test4();
+  Test4();
   Test5();
   Test6();
   Test7();

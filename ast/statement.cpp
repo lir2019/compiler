@@ -41,9 +41,9 @@ std::string ReturnStmt::TokenLiteral() const {
 void ReturnStmt::StatementNode() const {}
 
 DEFINE_DUMP_FUNCS(ReturnStmt, {
-  os << tok_.literal;
-  os << " (";
-  os << ");";
+  os << tok_.literal << " ";
+  value_->PrintNode(os);
+  os << ";";
 })
 
 void ReturnStmt::PrintNode(std::ostream &os) const {
