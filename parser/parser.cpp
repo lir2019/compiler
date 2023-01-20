@@ -43,6 +43,7 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
         "expect cur TokenType to be ASSIGN, but got " + cur_tok_.ToString());
   NextToken();
   auto exp = ParseExpression();
+  NextToken();
   CHECK(cur_tok_.type == TokenType::SEMICOLON,
         "expect current TokenType to be SEMICOLON, but got " +
             cur_tok_.ToString());
@@ -57,6 +58,7 @@ std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
   auto tok = cur_tok_;
   NextToken();
   auto exp = ParseExpression();
+  NextToken();
   CHECK(cur_tok_.type == TokenType::SEMICOLON,
         "expect cur TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
 
@@ -66,6 +68,9 @@ std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
 std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
   auto tok = cur_tok_;
   auto exp = ParseExpression();
+  NextToken();
+  CHECK(cur_tok_.type == TokenType::SEMICOLON,
+        "expect cur TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
   return std::make_shared<ExpressionStmt>(tok, exp);
 }
 
@@ -75,13 +80,14 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
   CHECK(is_legal, "unexpected Token for Expression");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
-  while (cur_tok_.type != TokenType::SEMICOLON &&
-         cur_tok_.type != TokenType::RPAREN &&
-         pre_preced < GetPrecedence(cur_tok_.type)) {
-    auto infix_tok = cur_tok_;
-    auto cur_preced = GetPrecedence(cur_tok_.type);
+  while (next_tok_.type != TokenType::SEMICOLON &&
+         next_tok_.type != TokenType::RPAREN &&
+         pre_preced < GetPrecedence(next_tok_.type)) {
     NextToken();
-    auto right_exp = ParseExpression(cur_preced);
+    auto infix_tok = cur_tok_;
+    auto preced = GetPrecedence(cur_tok_.type);
+    NextToken();
+    auto right_exp = ParseExpression(preced);
     left_exp =
         std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
   }
@@ -92,7 +98,6 @@ std::shared_ptr<IExpression> Parser::ParseIdentifier() {
   CHECK(cur_tok_.type == TokenType::IDENT,
         "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
-  NextToken();
   return std::make_shared<Identifier>(tok);
 }
 
@@ -100,7 +105,6 @@ std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
   CHECK(cur_tok_.type == TokenType::INT,
         "expect current TokenType to be INT, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
-  NextToken();
   return std::make_shared<IntegerLiteral>(tok);
 }
 
@@ -110,10 +114,10 @@ std::shared_ptr<IExpression> Parser::ParseGroupedExpression() {
       "expect current TokenType to be LPAREN, but got " + cur_tok_.ToString());
   NextToken();
   auto exp = ParseExpression();
+  NextToken();
   CHECK(
       cur_tok_.type == TokenType::RPAREN,
       "expect current TokenType to be RPAREN, but got " + cur_tok_.ToString());
-  NextToken();
   return exp;
 }
 
@@ -122,7 +126,6 @@ std::shared_ptr<IExpression> Parser::ParseBoolean() {
         "expect current TokenType to be TRUE or FALSE, but got " +
             cur_tok_.ToString());
   auto tok = cur_tok_;
-  NextToken();
   return std::make_shared<Boolean>(tok);
 }
 

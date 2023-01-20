@@ -221,6 +221,7 @@ static void Test12() {
     2/(5+ 5);
     -(5 + 5);
     !(true == true);
+    (3-(2*(5-1)-2)) / 2;
   )";
   std::string expected = R"(Program{
 ((1 + (2 + 3)) + 4);
@@ -228,6 +229,7 @@ static void Test12() {
 (2 / (5 + 5));
 (-(5 + 5));
 (!(true == true));
+((3 - ((2 * (5 - 1)) - 2)) / 2);
 }
 )";
   TestBase("parse expression statement Test12", input, expected);
