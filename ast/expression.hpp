@@ -11,7 +11,7 @@
 
 class IExpression : public INode {
  public:
-  virtual ~IExpression() = 0;
+  virtual ~IExpression()              = 0;
   virtual void ExpressionNode() const = 0;
 };
 

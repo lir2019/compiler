@@ -81,7 +81,8 @@ static void Test4() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check is_legal failed: unexpected Token for Expression");
+  std::string expected_err_log(
+      "check is_legal failed: unexpected Token for Expression");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
@@ -112,7 +113,8 @@ static void Test6() {
   Lexer lexer(input);
   Parser parser(lexer);
   std::string err_log;
-  std::string expected_err_log("check is_legal failed: unexpected Token for Expression");
+  std::string expected_err_log(
+      "check is_legal failed: unexpected Token for Expression");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {

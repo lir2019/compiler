@@ -6,15 +6,16 @@
 
 class IStatement : public INode {
  public:
-  virtual ~IStatement() = 0;
+  virtual ~IStatement()              = 0;
   virtual void StatementNode() const = 0;
 };
 
 class LetStmt : public IStatement {
  public:
-  LetStmt(const Token &tok, const Identifier &ident, std::shared_ptr<IExpression> value)
-      : tok_(tok), ident_(std::make_shared<Identifier>(ident)),
-          value_(value) {}
+  LetStmt(const Token &tok,
+          const Identifier &ident,
+          std::shared_ptr<IExpression> value)
+      : tok_(tok), ident_(std::make_shared<Identifier>(ident)), value_(value) {}
   virtual ~LetStmt();
 
   DECL_DUMP_FUNCS(LetStmt)
