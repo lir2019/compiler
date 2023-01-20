@@ -76,6 +76,7 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
   while (cur_tok_.type != TokenType::SEMICOLON &&
+         cur_tok_.type != TokenType::RPAREN &&
          pre_preced < GetPrecedence(cur_tok_.type)) {
     auto infix_tok = cur_tok_;
     auto cur_preced = GetPrecedence(cur_tok_.type);
@@ -101,6 +102,17 @@ std::shared_ptr<IExpression> Parser::ParseIntegerLiteral() {
   auto tok = cur_tok_;
   NextToken();
   return std::make_shared<IntegerLiteral>(tok);
+}
+
+std::shared_ptr<IExpression> Parser::ParseGroupedExpression() {
+  CHECK(cur_tok_.type == TokenType::LPAREN,
+        "expect current TokenType to be LPAREN, but got " + cur_tok_.ToString());
+  NextToken();
+  auto exp = ParseExpression();
+  CHECK(cur_tok_.type == TokenType::RPAREN,
+        "expect current TokenType to be RPAREN, but got " + cur_tok_.ToString());
+  NextToken();
+  return exp;
 }
 
 std::shared_ptr<IExpression> Parser::ParseBoolean() {

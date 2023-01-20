@@ -197,19 +197,38 @@ a + b * c + d/ e -f;
 
 static void Test11() {
   std::string input = R"(
-true;
+!true;
 false;
 3 > 5 == false;
 3 < 5 == true;
   )";
   std::string expected = R"(Program{
-true;
+(!true);
 false;
 ((3 > 5) == false);
 ((3 < 5) == true);
 }
 )";
   TestBase("parse expression statement Test11", input, expected);
+}
+
+static void Test12() {
+  std::string input = R"(
+    1 + (2 + 3) + 4;
+    (5+5) * 2;
+    2/(5+ 5);
+    -(5 + 5);
+    !(true == true);
+  )";
+  std::string expected = R"(Program{
+((1 + (2 + 3)) + 4);
+((5 + 5) * 2);
+(2 / (5 + 5));
+(-(5 + 5));
+(!(true == true));
+}
+)";
+  TestBase("parse expression statement Test12", input, expected);
 }
 
 int main() {
@@ -224,4 +243,5 @@ int main() {
   Test9();
   Test10();
   Test11();
+  Test12();
 }
