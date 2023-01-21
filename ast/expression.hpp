@@ -124,4 +124,24 @@ class IfExpression : public IExpression {
   std::shared_ptr<IStatement> alternative_;
 };
 
+class FuncLiteral : public IExpression {
+ public:
+  FuncLiteral(Token tok,
+              std::vector<Identifier> params,
+              std::shared_ptr<IStatement> body)
+      : tok_(tok), parameters_(params), body_(body) {}
+  virtual ~FuncLiteral() {}
+
+  DECL_DUMP_FUNCS(FuncLiteral)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+
+ private:
+  Token tok_; // TokenType::FUNCTION
+  std::vector<Identifier> parameters_;
+  std::shared_ptr<IStatement> body_;
+};
+
 #endif  // PARSER_EXPRESSION_HPP

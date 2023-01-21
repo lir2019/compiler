@@ -1,6 +1,7 @@
 #include "parser.hpp"
 
 #include <map>
+#include <memory>
 
 #include "../ast/program.hpp"
 #include "../ast/statement.hpp"
@@ -161,6 +162,42 @@ std::shared_ptr<IExpression> Parser::ParseIfExpression() {
     alternative = ParseBlockStatement();
   }
   return std::make_shared<IfExpression>(tok, cond, consequence, alternative);
+}
+
+std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
+  CHECK(
+      cur_tok_.type == TokenType::FUNCTION,
+      "expect current TokenType to be FUNCTION, but got " + cur_tok_.ToString());
+  auto tok = cur_tok_;
+  NextToken();
+  CHECK(
+      cur_tok_.type == TokenType::LPAREN,
+      "expect current TokenType to be LPAREN, but got " + cur_tok_.ToString());
+  NextToken();
+  std::vector<Identifier> params;
+  if (cur_tok_.type != TokenType::RPAREN) {
+    while (true) {
+      CHECK(cur_tok_.type == TokenType::IDENT,
+          "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
+      CHECK(next_tok_.type == TokenType::COMMA ||
+            next_tok_.type == TokenType::RPAREN,
+          "expect next TokenType to be COMMA or RPAREN, but got " + cur_tok_.ToString());
+      auto exp = ParseIdentifier();
+      auto ident = std::dynamic_pointer_cast<Identifier>(exp);
+      CHECK(ident != nullptr, "illegal Identifier");
+      params.push_back(*ident);
+      if (next_tok_.type == TokenType::COMMA) {
+        NextToken();
+        NextToken();
+      } else if (next_tok_.type == TokenType::RPAREN) {
+        NextToken();
+        break;
+      }
+    }
+  }
+  NextToken();
+  auto body = ParseBlockStatement();
+  return std::make_shared<FuncLiteral>(tok, params, body);
 }
 
 std::shared_ptr<IExpression> Parser::ParseBoolean() {

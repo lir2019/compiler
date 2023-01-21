@@ -130,3 +130,30 @@ DEFINE_DUMP_FUNCS(IfExpression, {
 void IfExpression::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// FuncLiteral
+//===----------------------------------------------------------------------===//
+
+std::string FuncLiteral::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void FuncLiteral::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(FuncLiteral, {
+  os << "fn(";
+  for (int i = 0; i < (int)parameters_.size() - 1; i++) {
+    parameters_[i].Print(os);
+    os << ", ";
+  }
+  if (!parameters_.empty()) {
+    parameters_.back().Print(os);
+  }
+  os << ") ";
+  body_->PrintNode(os);
+})
+
+void FuncLiteral::PrintNode(std::ostream &os) const {
+  Print(os);
+}

@@ -286,6 +286,25 @@ if (x > 1) {
   TestBase("parse expression statement Test15", input, expected);
 }
 
+static void Test16() {
+  std::string input = R"(
+  fn(x, y) {x + y;};
+  fn() {};
+fn(xx) { };
+  )";
+  std::string expected = R"(Program{
+fn(x, y) {
+(x + y);
+};
+fn() {
+};
+fn(xx) {
+};
+}
+)";
+  TestBase("parse expression statement Test16", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -302,4 +321,5 @@ int main() {
   Test13();
   Test14();
   Test15();
+  Test16();
 }
