@@ -251,6 +251,41 @@ static void Test13() {
   TestBase("parse expression statement Test13", input, expected);
 }
 
+static void Test14() {
+  std::string input = R"(
+  if (x + 2) {
+  x == y;
+  5 != (u +v) / 2;};
+  )";
+  std::string expected = R"(Program{
+if (x + 2) {
+(x == y);
+(5 != ((u + v) / 2));
+};
+}
+)";
+  TestBase("parse expression statement Test14", input, expected);
+}
+
+static void Test15() {
+  std::string input = R"(
+  if (x> 1) {
+  a + 3;
+  } else {
+  a - 3;
+  };
+  )";
+  std::string expected = R"(Program{
+if (x > 1) {
+(a + 3);
+} else {
+(a - 3);
+};
+}
+)";
+  TestBase("parse expression statement Test15", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -265,4 +300,6 @@ int main() {
   Test11();
   Test12();
   Test13();
+  Test14();
+  Test15();
 }

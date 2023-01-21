@@ -28,6 +28,7 @@ class Parser {
     REGISTER_PRE_PARSE_FUNC(LPAREN, ParseGroupedExpression)
     REGISTER_PRE_PARSE_FUNC(MINUS, ParsePrefixExpression)
     REGISTER_PRE_PARSE_FUNC(BANG, ParsePrefixExpression)
+    REGISTER_PRE_PARSE_FUNC(IF, ParseIfExpression)
 #undef REGISTER_PRE_PARSE_FUNC
   }
   Program ParseProgram();
@@ -47,6 +48,7 @@ class Parser {
   std::shared_ptr<IExpression> ParseGroupedExpression();
   std::shared_ptr<IExpression> ParseBoolean();
   std::shared_ptr<IExpression> ParsePrefixExpression();
+  std::shared_ptr<IExpression> ParseIfExpression();
 
   std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;

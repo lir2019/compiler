@@ -142,6 +142,27 @@ std::shared_ptr<IExpression> Parser::ParseGroupedExpression() {
   return exp;
 }
 
+std::shared_ptr<IExpression> Parser::ParseIfExpression() {
+  CHECK(
+      cur_tok_.type == TokenType::IF,
+      "expect current TokenType to be IF, but got " + cur_tok_.ToString());
+  auto tok = cur_tok_;
+  NextToken();
+  CHECK(
+      cur_tok_.type == TokenType::LPAREN,
+      "expect current TokenType to be LPAREN, but got " + cur_tok_.ToString());
+  auto cond = ParseGroupedExpression();
+  NextToken();
+  auto consequence = ParseBlockStatement();
+  std::shared_ptr<IStatement> alternative = nullptr;
+  if (next_tok_.type == TokenType::ELSE) {
+    NextToken();
+    NextToken();
+    alternative = ParseBlockStatement();
+  }
+  return std::make_shared<IfExpression>(tok, cond, consequence, alternative);
+}
+
 std::shared_ptr<IExpression> Parser::ParseBoolean() {
   CHECK(cur_tok_.type == TokenType::TRUE || cur_tok_.type == TokenType::FALSE,
         "expect current TokenType to be TRUE or FALSE, but got " +

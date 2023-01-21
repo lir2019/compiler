@@ -9,7 +9,7 @@
 #include "../lexer/lexer.hpp"
 #include "../common/utils.hpp"
 
-class BlockStmt;
+class IStatement;
 
 class IExpression : public INode {
  public:
@@ -105,8 +105,8 @@ class IfExpression : public IExpression {
  public:
   IfExpression(Token tok,
                std::shared_ptr<IExpression> cond,
-               std::shared_ptr<BlockStmt> consequence,
-               std::shared_ptr<BlockStmt> alternative)
+               std::shared_ptr<IStatement> consequence,
+               std::shared_ptr<IStatement> alternative)
       : tok_(tok), cond_(cond), consequence_(consequence),
         alternative_(alternative) {}
   virtual ~IfExpression() {}
@@ -120,8 +120,8 @@ class IfExpression : public IExpression {
  private:
   Token tok_; // TokenType::If
   std::shared_ptr<IExpression> cond_;
-  std::shared_ptr<BlockStmt> consequence_;
-  std::shared_ptr<BlockStmt> alternative_;
+  std::shared_ptr<IStatement> consequence_;
+  std::shared_ptr<IStatement> alternative_;
 };
 
 #endif  // PARSER_EXPRESSION_HPP
