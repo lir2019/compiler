@@ -25,6 +25,8 @@ std::shared_ptr<IStatement> Parser::ParseStatement() {
       return ParseLetStatement();
     case TokenType::RETURN:
       return ParseReturnStatement();
+    case TokenType::LBRACE:
+      return ParseBlockStatement();
     default:
       return ParseExpressionStatement();
   }
@@ -74,10 +76,29 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
   return std::make_shared<ExpressionStmt>(tok, exp);
 }
 
+std::shared_ptr<IStatement> Parser::ParseBlockStatement() {
+  CHECK(cur_tok_.type == TokenType::LBRACE, "expect current"
+        " TokenType to be LBRACE, but got " + cur_tok_.ToString());
+  NextToken();
+  auto block = std::make_shared<BlockStmt>(cur_tok_);
+  while (cur_tok_.type != TokenType::RBRACE &&
+         cur_tok_.type != TokenType::END) {
+    auto stmt = ParseStatement();
+    CHECK(stmt != nullptr, "unrecognized statement");
+    if (stmt) {
+      block->AppendStmt(stmt);
+    }
+    NextToken();
+  }
+  CHECK(cur_tok_.type == TokenType::RBRACE, "expect current"
+        " TokenType to be RBRACE, but got " + cur_tok_.ToString());
+  return block;
+}
+
 std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
-  bool is_legal =
+  bool is_found =
       prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end();
-  CHECK(is_legal, "unexpected Token for Expression");
+  CHECK(is_found, "no prefix parse function for " + ::ToString(cur_tok_.type) + " found");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
   while (next_tok_.type != TokenType::SEMICOLON &&

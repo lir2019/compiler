@@ -49,7 +49,7 @@ static void Test2() {
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match Test2", err_log, expected_err_log);
+  Test("error log match Test2", err_log, expected_err_log, Printer);
 }
 
 static void Test3() {
@@ -82,13 +82,13 @@ static void Test4() {
   Parser parser(lexer);
   std::string err_log;
   std::string expected_err_log(
-      "check is_legal failed: unexpected Token for Expression");
+      "check is_found failed: no prefix parse function for COMMA found");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match Test4", err_log, expected_err_log);
+  Test("error log match Test4", err_log, expected_err_log, Printer);
 }
 
 static void Test5() {
@@ -114,13 +114,13 @@ static void Test6() {
   Parser parser(lexer);
   std::string err_log;
   std::string expected_err_log(
-      "check is_legal failed: unexpected Token for Expression");
+      "check is_found failed: no prefix parse function for RPAREN found");
   try {
     Program res = parser.ParseProgram();
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match Test6", err_log, expected_err_log);
+  Test("error log match Test6", err_log, expected_err_log, Printer);
 }
 
 static void Test7() {
@@ -235,6 +235,22 @@ static void Test12() {
   TestBase("parse expression statement Test12", input, expected);
 }
 
+static void Test13() {
+  std::string input = R"(
+  {
+  x+ y;
+  5 *(u +v);}
+  )";
+  std::string expected = R"(Program{
+{
+(x + y);
+(5 * (u + v));
+}
+}
+)";
+  TestBase("parse expression statement Test13", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -248,4 +264,5 @@ int main() {
   Test10();
   Test11();
   Test12();
+  Test13();
 }

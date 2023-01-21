@@ -70,3 +70,26 @@ std::string ExpressionStmt::TokenLiteral() const {
 void ExpressionStmt::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// BlockStmt
+//===----------------------------------------------------------------------===//
+
+void BlockStmt::StatementNode() const {}
+
+DEFINE_DUMP_FUNCS(BlockStmt, {
+  os << "{\n";
+  for (auto stmt : stmts_) {
+    stmt->PrintNode(os);
+    os << "\n";
+  }
+  os << "}";
+})
+
+std::string BlockStmt::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void BlockStmt::PrintNode(std::ostream &os) const {
+  Print(os);
+}

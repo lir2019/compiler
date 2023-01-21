@@ -38,6 +38,8 @@ class Parser {
   std::shared_ptr<IStatement> ParseLetStatement();
   std::shared_ptr<IStatement> ParseReturnStatement();
   std::shared_ptr<IStatement> ParseExpressionStatement();
+  std::shared_ptr<IStatement> ParseBlockStatement();
+
   std::shared_ptr<IExpression> ParseExpression(
       Precedence pre_preced = Precedence::LOWEST);
   std::shared_ptr<IExpression> ParseIdentifier();

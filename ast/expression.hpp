@@ -9,6 +9,8 @@
 #include "../lexer/lexer.hpp"
 #include "../common/utils.hpp"
 
+class BlockStmt;
+
 class IExpression : public INode {
  public:
   virtual ~IExpression()              = 0;
@@ -97,6 +99,29 @@ class InfixExpression : public IExpression {
   Token tok_;  // binary operator, like +, -, *, /, ==, etc.
   std::shared_ptr<IExpression> left_;
   std::shared_ptr<IExpression> right_;
+};
+
+class IfExpression : public IExpression {
+ public:
+  IfExpression(Token tok,
+               std::shared_ptr<IExpression> cond,
+               std::shared_ptr<BlockStmt> consequence,
+               std::shared_ptr<BlockStmt> alternative)
+      : tok_(tok), cond_(cond), consequence_(consequence),
+        alternative_(alternative) {}
+  virtual ~IfExpression() {}
+
+  DECL_DUMP_FUNCS(IfExpression)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+
+ private:
+  Token tok_; // TokenType::If
+  std::shared_ptr<IExpression> cond_;
+  std::shared_ptr<BlockStmt> consequence_;
+  std::shared_ptr<BlockStmt> alternative_;
 };
 
 #endif  // PARSER_EXPRESSION_HPP

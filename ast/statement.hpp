@@ -1,6 +1,8 @@
 #ifndef PARSER_STATEMENT_HPP
 #define PARSER_STATEMENT_HPP
 
+#include <vector>
+
 #include "node.hpp"
 #include "expression.hpp"
 
@@ -64,6 +66,26 @@ class ExpressionStmt : public IStatement {
  private:
   Token tok_;  // first Token in expression
   std::shared_ptr<IExpression> expression_;
+};
+
+class BlockStmt : public IStatement {
+ public:
+  BlockStmt(Token tok) : tok_(tok) {}
+  virtual ~BlockStmt() {}
+
+  DECL_DUMP_FUNCS(BlockStmt)
+
+  void AppendStmt(std::shared_ptr<IStatement> stmt) {
+    stmts_.push_back(stmt);
+  }
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void StatementNode() const override;
+
+ private:
+  Token tok_; // {
+  std::vector<std::shared_ptr<IStatement>> stmts_;
 };
 
 #endif  // PARSER_STATEMENT_HPP

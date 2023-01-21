@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "statement.hpp"
+
 IExpression::~IExpression() {}
 
 //===----------------------------------------------------------------------===//
@@ -101,5 +103,30 @@ DEFINE_DUMP_FUNCS(InfixExpression, {
 })
 
 void InfixExpression::PrintNode(std::ostream &os) const {
+  Print(os);
+}
+
+//===----------------------------------------------------------------------===//
+// IfExpression
+//===----------------------------------------------------------------------===//
+
+std::string IfExpression::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void IfExpression::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(IfExpression, {
+  os << "if ";
+  cond_->PrintNode(os);
+  os << " ";
+  consequence_->PrintNode(os);
+  if (alternative_) {
+    os << " else ";
+    alternative_->PrintNode(os);
+  }
+})
+
+void IfExpression::PrintNode(std::ostream &os) const {
   Print(os);
 }
