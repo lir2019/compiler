@@ -18,9 +18,7 @@ class Program : public INode {
   virtual void PrintNode(std::ostream &os) const override;
 
   void AppendStmt(std::shared_ptr<IStatement> s) { stmts_.push_back(s); }
-
   std::vector<std::shared_ptr<IStatement>> GetStmts() const { return stmts_; }
-
   std::shared_ptr<IStatement> GetStmt(int64_t idx) const {
     CHECK(idx < 0 || idx >= stmts_.size(), "index out of range");
     return stmts_[idx];

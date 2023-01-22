@@ -174,6 +174,35 @@ static void Test12() {
   Test("evaluate Test12", res, expected, Printer);
 }
 
+static void Test13() {
+  std::string input = R"(
+  1 + 1;
+  1 + 1 * 2;
+  )";
+  std::string expected = "3";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test13", res, expected, Printer);
+}
+
+static void Test14() {
+  std::string input = R"(
+  {
+  1 + 1;
+  1 + 1 * 2;}
+  )";
+  std::string expected = "3";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test14", res, expected, Printer);
+}
+
 int main() {
   Test1();
   Test2();
@@ -187,4 +216,6 @@ int main() {
   Test10();
   Test11();
   Test12();
+  Test13();
+  Test14();
 }

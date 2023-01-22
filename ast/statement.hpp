@@ -63,6 +63,10 @@ class ExpressionStmt : public IStatement {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
+  std::shared_ptr<IExpression> GetExp() const {
+    return expression_;
+  }
+
  private:
   Token tok_;  // first Token in expression
   std::shared_ptr<IExpression> expression_;
@@ -75,11 +79,14 @@ class BlockStmt : public IStatement {
 
   DECL_DUMP_FUNCS(BlockStmt)
 
-  void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
-
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
+
+  void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
+  std::vector<std::shared_ptr<IStatement>> GetStmts() const {
+    return stmts_;
+  }
 
  private:
   Token tok_;  // {

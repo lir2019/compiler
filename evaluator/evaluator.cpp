@@ -55,11 +55,21 @@ static std::shared_ptr<IObject> EvalIntInfixExpression(Token op, std::shared_ptr
 
 #undef CASE_INT_INFIX_EVAL
 
+static std::shared_ptr<IObject> Eval(std::vector<std::shared_ptr<IStatement>> stmts) {
+  std::shared_ptr<IObject> res;
+  for (auto stmt : stmts) {
+    res = Eval(*stmt);
+  }
+  return res;
+}
+
 std::shared_ptr<IObject> Eval(const INode &node) {
   if (auto program = dynamic_cast<const Program *>(&node)) {
-    return nullptr;
+    return Eval(program->GetStmts());
+  } else if (auto block_stmt = dynamic_cast<const BlockStmt *>(&node)) {
+    return Eval(block_stmt->GetStmts());
   } else if (auto exp_stmt = dynamic_cast<const ExpressionStmt *>(&node)) {
-    return nullptr;
+    return Eval(*(exp_stmt->GetExp()));
   } else if (auto int_lit = dynamic_cast<const IntegerLiteral *>(&node)) {
     return std::make_shared<Integer>(int_lit->GetValue());
   } else if (auto bool_lit = dynamic_cast<const BooleanLiteral *>(&node)) {
