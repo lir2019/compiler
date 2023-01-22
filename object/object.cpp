@@ -21,7 +21,7 @@ ObjectType Boolean::Type() const {
 }
 
 std::string Boolean::Inspect() const {
-  return std::to_string(value_);
+  return value_ ? "true" : "false";
 }
 
 //===----------------------------------------------------------------------===//

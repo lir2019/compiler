@@ -18,5 +18,33 @@ static void TestBase(const std::string &name,
   Test(name, res, expected, Printer);
 }
 
+static void Test1() {
+  std::string input = R"(
+  5;
+  )";
+  std::string expected = "5";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseIntegerLiteral();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate integer literal Test1", res, expected, Printer);
+}
+
+static void Test2() {
+  std::string input = R"(
+  true;
+  )";
+  std::string expected = "true";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseBooleanLiteral();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate integer literal Test2", res, expected, Printer);
+}
+
 int main() {
+  Test1();
+  Test2();
 }

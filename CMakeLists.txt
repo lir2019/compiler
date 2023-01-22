@@ -14,12 +14,26 @@ add_subdirectory(evaluator)
 
 configure_file(MonkeyCompilerConfig.h.in MonkeyCompilerConfig.h)
 
+enable_testing()
+
 add_executable(test_configure_file test/cmake/main.cpp)
 target_include_directories(test_configure_file PUBLIC "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}")
+add_test(NAME TestCMakeConfig COMMAND test_configure_file)
+set_tests_properties(TestCMakeConfig PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
 
 add_executable(test_lexer test/lexer/main.cpp)
 target_include_directories(test_lexer PUBLIC ${PROJECT_SOURCE_DIR})
 target_link_libraries(test_lexer PUBLIC lexer)
+function(do_lexer_test arg)
+  add_test(NAME TestLexerCase${arg} COMMAND test_lexer ${arg})
+  set_tests_properties(TestLexerCase${arg} PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
+endfunction()
+do_lexer_test(1)
+do_lexer_test(2)
+do_lexer_test(3)
+do_lexer_test(4)
+do_lexer_test(5)
+do_lexer_test(6)
 
 add_executable(test_parser test/parser/main.cpp)
 target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})
@@ -29,26 +43,11 @@ target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})
 # target_link_libraries(test_parser PUBLIC parser)
 # "lexer ast parser" may not work. Order is important.
 target_link_libraries(test_parser PUBLIC parser ast lexer)
+add_test(NAME TestParser COMMAND test_parser)
+set_tests_properties(TestParser PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
 
 add_executable(test_evaluator test/evaluator/main.cpp)
 target_include_directories(test_evaluator PUBLIC ${PROJECT_SOURCE_DIR})
 target_link_libraries(test_evaluator PUBLIC evaluator object parser ast lexer)
-
-enable_testing()
-add_test(NAME TestCMakeConfig COMMAND test_configure_file)
-set_tests_properties(TestCMakeConfig PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
-
-function(do_lexer_test arg)
-  add_test(NAME TestLexerCase${arg} COMMAND test_lexer ${arg})
-  set_tests_properties(TestLexerCase${arg} PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
-endfunction()
-
-do_lexer_test(1)
-do_lexer_test(2)
-do_lexer_test(3)
-do_lexer_test(4)
-do_lexer_test(5)
-do_lexer_test(6)
-
-add_test(NAME TestParser COMMAND test_parser)
-set_tests_properties(TestParser PROPERTIES FAIL_REGULAR_EXPRESSION "failure")
+add_test(NAME TestEvaluator COMMAND test_evaluator)
+set_tests_properties(TestEvaluator PROPERTIES FAIL_REGULAR_EXPRESSION "failure")

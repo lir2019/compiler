@@ -19,6 +19,7 @@ class IObject {
 
 class Integer : public IObject {
  public:
+  Integer(int64_t value) : value_(value) {}
   virtual ~Integer() {}
 
   virtual ObjectType Type() const override;
@@ -29,6 +30,7 @@ class Integer : public IObject {
 
 class Boolean : public IObject {
  public:
+  Boolean(bool value) : value_(value) {}
   virtual ~Boolean() {}
 
   virtual ObjectType Type() const override;

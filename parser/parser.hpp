@@ -34,8 +34,6 @@ class Parser {
   }
   Program ParseProgram();
 
- private:
-  void NextToken();
   std::shared_ptr<IStatement> ParseStatement();
   std::shared_ptr<IStatement> ParseLetStatement();
   std::shared_ptr<IStatement> ParseReturnStatement();
@@ -53,6 +51,9 @@ class Parser {
   std::shared_ptr<IExpression> ParseIfExpression();
   std::shared_ptr<IExpression> ParseCallExpression(
       std::shared_ptr<IExpression> func);
+
+ private:
+  void NextToken();
 
   std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;

@@ -43,6 +43,8 @@ class IntegerLiteral : public IExpression {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
 
+  int64_t GetValue() const { return value_; }
+
  private:
   Token tok_;  // TokenType::INT
   int64_t value_;
@@ -58,6 +60,8 @@ class BooleanLiteral : public IExpression {
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
+
+  bool GetValue() const { return value_; }
 
  private:
   Token tok_;  // TokenType::TRUE or TokenType::FALSE
