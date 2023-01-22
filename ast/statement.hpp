@@ -75,16 +75,14 @@ class BlockStmt : public IStatement {
 
   DECL_DUMP_FUNCS(BlockStmt)
 
-  void AppendStmt(std::shared_ptr<IStatement> stmt) {
-    stmts_.push_back(stmt);
-  }
+  void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
 
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
  private:
-  Token tok_; // {
+  Token tok_;  // {
   std::vector<std::shared_ptr<IStatement>> stmts_;
 };
 

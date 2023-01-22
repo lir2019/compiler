@@ -107,7 +107,9 @@ class IfExpression : public IExpression {
                std::shared_ptr<IExpression> cond,
                std::shared_ptr<IStatement> consequence,
                std::shared_ptr<IStatement> alternative)
-      : tok_(tok), cond_(cond), consequence_(consequence),
+      : tok_(tok),
+        cond_(cond),
+        consequence_(consequence),
         alternative_(alternative) {}
   virtual ~IfExpression() {}
 
@@ -118,7 +120,7 @@ class IfExpression : public IExpression {
   virtual void ExpressionNode() const override;
 
  private:
-  Token tok_; // TokenType::If
+  Token tok_;  // TokenType::If
   std::shared_ptr<IExpression> cond_;
   std::shared_ptr<IStatement> consequence_;
   std::shared_ptr<IStatement> alternative_;
@@ -139,7 +141,7 @@ class FuncLiteral : public IExpression {
   virtual void ExpressionNode() const override;
 
  private:
-  Token tok_; // TokenType::FUNCTION
+  Token tok_;  // TokenType::FUNCTION
   std::vector<Identifier> parameters_;
   std::shared_ptr<IStatement> body_;
 };
@@ -159,8 +161,8 @@ class CallExpression : public IExpression {
   virtual void ExpressionNode() const override;
 
  private:
-  Token tok_; // TokenType::FUNCTION
-  std::shared_ptr<IExpression> func_; // Identifier or FuncLiteral
+  Token tok_;                          // TokenType::FUNCTION
+  std::shared_ptr<IExpression> func_;  // Identifier or FuncLiteral
   std::vector<std::shared_ptr<IExpression>> arguments_;
 };
 

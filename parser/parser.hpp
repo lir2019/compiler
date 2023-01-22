@@ -51,7 +51,8 @@ class Parser {
   std::shared_ptr<IExpression> ParseBoolean();
   std::shared_ptr<IExpression> ParsePrefixExpression();
   std::shared_ptr<IExpression> ParseIfExpression();
-  std::shared_ptr<IExpression> ParseCallExpression(std::shared_ptr<IExpression> func);
+  std::shared_ptr<IExpression> ParseCallExpression(
+      std::shared_ptr<IExpression> func);
 
   std::shared_ptr<Lexer> lexer_;
   Token cur_tok_;

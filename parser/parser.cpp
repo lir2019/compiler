@@ -78,8 +78,10 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
 }
 
 std::shared_ptr<IStatement> Parser::ParseBlockStatement() {
-  CHECK(cur_tok_.type == TokenType::LBRACE, "expect current"
-        " TokenType to be LBRACE, but got " + cur_tok_.ToString());
+  CHECK(cur_tok_.type == TokenType::LBRACE,
+        "expect current"
+        " TokenType to be LBRACE, but got " +
+            cur_tok_.ToString());
   NextToken();
   auto block = std::make_shared<BlockStmt>(cur_tok_);
   while (cur_tok_.type != TokenType::RBRACE &&
@@ -91,15 +93,18 @@ std::shared_ptr<IStatement> Parser::ParseBlockStatement() {
     }
     NextToken();
   }
-  CHECK(cur_tok_.type == TokenType::RBRACE, "expect current"
-        " TokenType to be RBRACE, but got " + cur_tok_.ToString());
+  CHECK(cur_tok_.type == TokenType::RBRACE,
+        "expect current"
+        " TokenType to be RBRACE, but got " +
+            cur_tok_.ToString());
   return block;
 }
 
 std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
   bool is_found =
       prefix_parse_funcs_.find(cur_tok_.type) != prefix_parse_funcs_.end();
-  CHECK(is_found, "no prefix parse function for " + ::ToString(cur_tok_.type) + " found");
+  CHECK(is_found,
+        "no prefix parse function for " + ::ToString(cur_tok_.type) + " found");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
   auto left_exp = prefix_parse_func();
   while (next_tok_.type != TokenType::SEMICOLON &&
@@ -148,9 +153,8 @@ std::shared_ptr<IExpression> Parser::ParseGroupedExpression() {
 }
 
 std::shared_ptr<IExpression> Parser::ParseIfExpression() {
-  CHECK(
-      cur_tok_.type == TokenType::IF,
-      "expect current TokenType to be IF, but got " + cur_tok_.ToString());
+  CHECK(cur_tok_.type == TokenType::IF,
+        "expect current TokenType to be IF, but got " + cur_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   CHECK(
@@ -169,9 +173,9 @@ std::shared_ptr<IExpression> Parser::ParseIfExpression() {
 }
 
 std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
-  CHECK(
-      cur_tok_.type == TokenType::FUNCTION,
-      "expect current TokenType to be FUNCTION, but got " + cur_tok_.ToString());
+  CHECK(cur_tok_.type == TokenType::FUNCTION,
+        "expect current TokenType to be FUNCTION, but got " +
+            cur_tok_.ToString());
   auto tok = cur_tok_;
   NextToken();
   CHECK(
@@ -182,10 +186,12 @@ std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
   if (cur_tok_.type != TokenType::RPAREN) {
     while (true) {
       CHECK(cur_tok_.type == TokenType::IDENT,
-          "expect current TokenType to be IDENT, but got " + cur_tok_.ToString());
+            "expect current TokenType to be IDENT, but got " +
+                cur_tok_.ToString());
       CHECK(next_tok_.type == TokenType::COMMA ||
-            next_tok_.type == TokenType::RPAREN,
-          "expect next TokenType to be COMMA or RPAREN, but got " + cur_tok_.ToString());
+                next_tok_.type == TokenType::RPAREN,
+            "expect next TokenType to be COMMA or RPAREN, but got " +
+                cur_tok_.ToString());
       auto exp = ParseIdentifier();
       auto ident = std::dynamic_pointer_cast<Identifier>(exp);
       CHECK(ident != nullptr, "illegal Identifier");
@@ -222,7 +228,8 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
   return std::make_shared<PrefixExpression>(tok, right);
 }
 
-std::shared_ptr<IExpression> Parser::ParseCallExpression(std::shared_ptr<IExpression> func) {
+std::shared_ptr<IExpression> Parser::ParseCallExpression(
+    std::shared_ptr<IExpression> func) {
   std::vector<std::shared_ptr<IExpression>> arguments;
   auto infix_tok = cur_tok_;
   if (next_tok_.type != TokenType::RPAREN) {
@@ -231,9 +238,10 @@ std::shared_ptr<IExpression> Parser::ParseCallExpression(std::shared_ptr<IExpres
     arguments.push_back(arg);
     while (true) {
       CHECK(next_tok_.type == TokenType::COMMA ||
-            next_tok_.type == TokenType::RPAREN,
+                next_tok_.type == TokenType::RPAREN,
             "expect next TokenType to be COMMA or RPAREN, "
-            "but got " + next_tok_.ToString());
+            "but got " +
+                next_tok_.ToString());
       if (next_tok_.type == TokenType::RPAREN) {
         break;
       }
