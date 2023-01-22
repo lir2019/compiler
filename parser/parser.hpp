@@ -23,8 +23,8 @@ class Parser {
 
     REGISTER_PRE_PARSE_FUNC(IDENT, ParseIdentifier)
     REGISTER_PRE_PARSE_FUNC(INT, ParseIntegerLiteral)
-    REGISTER_PRE_PARSE_FUNC(TRUE, ParseBoolean)
-    REGISTER_PRE_PARSE_FUNC(FALSE, ParseBoolean)
+    REGISTER_PRE_PARSE_FUNC(TRUE, ParseBooleanLiteral)
+    REGISTER_PRE_PARSE_FUNC(FALSE, ParseBooleanLiteral)
     REGISTER_PRE_PARSE_FUNC(LPAREN, ParseGroupedExpression)
     REGISTER_PRE_PARSE_FUNC(MINUS, ParsePrefixExpression)
     REGISTER_PRE_PARSE_FUNC(BANG, ParsePrefixExpression)
@@ -48,7 +48,7 @@ class Parser {
   std::shared_ptr<IExpression> ParseIntegerLiteral();
   std::shared_ptr<IExpression> ParseFuncLiteral();
   std::shared_ptr<IExpression> ParseGroupedExpression();
-  std::shared_ptr<IExpression> ParseBoolean();
+  std::shared_ptr<IExpression> ParseBooleanLiteral();
   std::shared_ptr<IExpression> ParsePrefixExpression();
   std::shared_ptr<IExpression> ParseIfExpression();
   std::shared_ptr<IExpression> ParseCallExpression(

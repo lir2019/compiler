@@ -43,20 +43,20 @@ void IntegerLiteral::PrintNode(std::ostream &os) const {
 }
 
 //===----------------------------------------------------------------------===//
-// Boolean
+// BooleanLiteral
 //===----------------------------------------------------------------------===//
 
-Boolean::~Boolean() {}
+BooleanLiteral::~BooleanLiteral() {}
 
-std::string Boolean::TokenLiteral() const {
+std::string BooleanLiteral::TokenLiteral() const {
   return tok_.literal;
 }
 
-void Boolean::ExpressionNode() const {}
+void BooleanLiteral::ExpressionNode() const {}
 
-DEFINE_DUMP_FUNCS(Boolean, { os << tok_.literal; })
+DEFINE_DUMP_FUNCS(BooleanLiteral, { os << tok_.literal; })
 
-void Boolean::PrintNode(std::ostream &os) const {
+void BooleanLiteral::PrintNode(std::ostream &os) const {
   Print(os);
 }
 

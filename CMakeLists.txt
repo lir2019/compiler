@@ -9,6 +9,8 @@ message(PROJECT_BINARY_DIR="${PROJECT_BINARY_DIR}")
 add_subdirectory(lexer)
 add_subdirectory(ast)
 add_subdirectory(parser)
+add_subdirectory(object)
+add_subdirectory(evaluator)
 
 configure_file(MonkeyCompilerConfig.h.in MonkeyCompilerConfig.h)
 
@@ -27,6 +29,10 @@ target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})
 # target_link_libraries(test_parser PUBLIC parser)
 # "lexer ast parser" may not work. Order is important.
 target_link_libraries(test_parser PUBLIC parser ast lexer)
+
+add_executable(test_evaluator test/evaluator/main.cpp)
+target_include_directories(test_evaluator PUBLIC ${PROJECT_SOURCE_DIR})
+target_link_libraries(test_evaluator PUBLIC evaluator object parser ast lexer)
 
 enable_testing()
 add_test(NAME TestCMakeConfig COMMAND test_configure_file)

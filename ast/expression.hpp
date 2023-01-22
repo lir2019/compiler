@@ -48,12 +48,12 @@ class IntegerLiteral : public IExpression {
   int64_t value_;
 };
 
-class Boolean : public IExpression {
+class BooleanLiteral : public IExpression {
  public:
-  Boolean(Token tok) : tok_(tok), value_(tok.type == TokenType::TRUE) {}
-  virtual ~Boolean();
+  BooleanLiteral(Token tok) : tok_(tok), value_(tok.type == TokenType::TRUE) {}
+  virtual ~BooleanLiteral();
 
-  DECL_DUMP_FUNCS(Boolean)
+  DECL_DUMP_FUNCS(BooleanLiteral)
 
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;

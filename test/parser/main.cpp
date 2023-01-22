@@ -1,3 +1,4 @@
+#include "common/utils.hpp"
 #include "test/utils.hpp"
 #include "ast/statement.hpp"
 #include "ast/program.hpp"
