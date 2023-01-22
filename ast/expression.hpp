@@ -102,6 +102,10 @@ class InfixExpression : public IExpression {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
 
+  Token GetOperator() const { return tok_; }
+  std::shared_ptr<IExpression> GetLeft() const { return left_; }
+  std::shared_ptr<IExpression> GetRight() const { return right_; }
+
  private:
   Token tok_;  // binary operator, like +, -, *, /, ==, etc.
   std::shared_ptr<IExpression> left_;
