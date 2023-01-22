@@ -28,7 +28,7 @@ static void Test1() {
   auto node = parser.ParseExpression();
   auto obj = Eval(*node);
   auto res = obj->Inspect();
-  Test("evaluate integer literal Test1", res, expected, Printer);
+  Test("evaluate Test1", res, expected, Printer);
 }
 
 static void Test2() {
@@ -41,7 +41,7 @@ static void Test2() {
   auto node = parser.ParseExpression();
   auto obj = Eval(*node);
   auto res = obj->Inspect();
-  Test("evaluate integer literal Test2", res, expected, Printer);
+  Test("evaluate Test2", res, expected, Printer);
 }
 
 static void Test3() {
@@ -54,7 +54,7 @@ static void Test3() {
   auto node = parser.ParseExpression();
   auto obj = Eval(*node);
   auto res = obj->Inspect();
-  Test("evaluate integer literal Test3", res, expected, Printer);
+  Test("evaluate Test3", res, expected, Printer);
 }
 
 static void Test4() {
@@ -67,7 +67,7 @@ static void Test4() {
   auto node = parser.ParseExpression();
   auto obj = Eval(*node);
   auto res = obj->Inspect();
-  Test("evaluate integer literal Test4", res, expected, Printer);
+  Test("evaluate Test4", res, expected, Printer);
 }
 
 static void Test5() {
@@ -80,7 +80,98 @@ static void Test5() {
   auto node = parser.ParseExpression();
   auto obj = Eval(*node);
   auto res = obj->Inspect();
-  Test("evaluate integer literal Test5", res, expected, Printer);
+  Test("evaluate Test5", res, expected, Printer);
+}
+
+static void Test6() {
+  std::string input = R"(
+  true == true;
+  )";
+  std::string expected = "true";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test6", res, expected, Printer);
+}
+
+static void Test7() {
+  std::string input = R"(
+  false != true;
+  )";
+  std::string expected = "true";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test7", res, expected, Printer);
+}
+
+static void Test8() {
+  std::string input = R"(
+  false == true;
+  )";
+  std::string expected = "false";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test8", res, expected, Printer);
+}
+
+static void Test9() {
+  std::string input = R"(
+  5 < 1 == false;
+  )";
+  std::string expected = "true";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test9", res, expected, Printer);
+}
+
+static void Test10() {
+  std::string input = R"(
+  5 - 1 * 4 / 2;
+  )";
+  std::string expected = "3";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test10", res, expected, Printer);
+}
+
+static void Test11() {
+  std::string input = R"(
+  5 - 1 * 4 / 2 + 4 * 2 > 9;
+  )";
+  std::string expected = "true";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test11", res, expected, Printer);
+}
+
+static void Test12() {
+  std::string input = R"(
+  ((4 - 1) * 2 / (2 + 4) * 2 == 2) == (2 == 3);
+  )";
+  std::string expected = "false";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto node = parser.ParseExpression();
+  auto obj = Eval(*node);
+  auto res = obj->Inspect();
+  Test("evaluate Test12", res, expected, Printer);
 }
 
 int main() {
@@ -89,4 +180,11 @@ int main() {
   Test3();
   Test4();
   Test5();
+  Test6();
+  Test7();
+  Test8();
+  Test9();
+  Test10();
+  Test11();
+  Test12();
 }

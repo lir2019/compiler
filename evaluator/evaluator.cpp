@@ -18,25 +18,42 @@ static std::shared_ptr<IObject> EvalPrefixExpression(Token op, std::shared_ptr<I
   }
 }
 
+#define CASE_INFIX_EVAL(TYPE, NAME, OP) \
+    case TokenType::NAME: {     \
+        return std::make_shared<TYPE>(left_val->GetValue() OP right_val->GetValue()); \
+    } break;
+
 static std::shared_ptr<IObject> EvalBoolInfixExpression(Token op, std::shared_ptr<IObject> left, std::shared_ptr<IObject> right) {
   auto left_val = std::dynamic_pointer_cast<Boolean>(left);
   auto right_val = std::dynamic_pointer_cast<Boolean>(right);
   CHECK(left_val != nullptr && right_val != nullptr, "expect both to be Boolean");
   switch (op.type) {
-    case TokenType::EQ: {
-        return std::make_shared<Boolean>(left_val->GetValue() == right_val->GetValue());
-    } break;
-    case TokenType::NE: {
-        return std::make_shared<Boolean>(left_val->GetValue() != right_val->GetValue());
-    } break;
+    CASE_INFIX_EVAL(Boolean, EQ, ==)
+    CASE_INFIX_EVAL(Boolean, NE, !=)
     default: CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
   }
   return nullptr;
 }
 
 static std::shared_ptr<IObject> EvalIntInfixExpression(Token op, std::shared_ptr<IObject> left, std::shared_ptr<IObject> right) {
+  auto left_val = std::dynamic_pointer_cast<Integer>(left);
+  auto right_val = std::dynamic_pointer_cast<Integer>(right);
+  CHECK(left_val != nullptr && right_val != nullptr, "expect both to be Integer");
+  switch (op.type) {
+    CASE_INFIX_EVAL(Boolean, EQ, ==)
+    CASE_INFIX_EVAL(Boolean, NE, !=)
+    CASE_INFIX_EVAL(Boolean, GT, >)
+    CASE_INFIX_EVAL(Boolean, LT, <)
+    CASE_INFIX_EVAL(Integer, PLUS, +)
+    CASE_INFIX_EVAL(Integer, MINUS, -)
+    CASE_INFIX_EVAL(Integer, ASTERISK, *)
+    CASE_INFIX_EVAL(Integer, SLASH, /)
+    default: CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
+  }
   return nullptr;
 }
+
+#undef CASE_INT_INFIX_EVAL
 
 std::shared_ptr<IObject> Eval(const INode &node) {
   if (auto program = dynamic_cast<const Program *>(&node)) {
