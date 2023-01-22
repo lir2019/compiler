@@ -24,6 +24,9 @@ class Integer : public IObject {
 
   virtual ObjectType Type() const override;
   virtual std::string Inspect() const override;
+
+  int64_t GetValue() const { return value_; }
+
  private:
   int64_t value_;
 };
@@ -35,6 +38,8 @@ class Boolean : public IObject {
 
   virtual ObjectType Type() const override;
   virtual std::string Inspect() const override;
+
+  bool GetValue() const { return value_; }
  private:
   bool value_;
 };

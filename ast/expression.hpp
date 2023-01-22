@@ -80,6 +80,9 @@ class PrefixExpression : public IExpression {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
 
+  Token GetOperator() const { return tok_; }
+  std::shared_ptr<IExpression> GetRight() const { return right_; }
+
  private:
   Token tok_;  // TokenType::BANG or TokenType::MINUS
   std::shared_ptr<IExpression> right_;
