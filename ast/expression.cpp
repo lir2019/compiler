@@ -157,3 +157,30 @@ DEFINE_DUMP_FUNCS(FuncLiteral, {
 void FuncLiteral::PrintNode(std::ostream &os) const {
   Print(os);
 }
+
+//===----------------------------------------------------------------------===//
+// CallExpression
+//===----------------------------------------------------------------------===//
+
+std::string CallExpression::TokenLiteral() const {
+  return tok_.literal;
+}
+
+void CallExpression::ExpressionNode() const {}
+
+DEFINE_DUMP_FUNCS(CallExpression, {
+  func_->PrintNode(os);
+  os << "(";
+  for (int i = 0; i < (int)arguments_.size() - 1; i++) {
+    arguments_[i]->PrintNode(os);
+    os << ", ";
+  }
+  if (!arguments_.empty()) {
+    arguments_.back()->PrintNode(os);
+  }
+  os << ")";
+})
+
+void CallExpression::PrintNode(std::ostream &os) const {
+  Print(os);
+}

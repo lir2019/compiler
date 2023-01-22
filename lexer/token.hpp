@@ -58,6 +58,7 @@ inline Precedence GetPrecedence(TokenType t) {
       {TokenType::MINUS, Precedence::SUM},
       {TokenType::SLASH, Precedence::PRODUCT},
       {TokenType::ASTERISK, Precedence::PRODUCT},
+      {TokenType::LPAREN, Precedence::CALL},
   };
   if (token_precedence_map.find(t) != token_precedence_map.end()) {
     return token_precedence_map[t];

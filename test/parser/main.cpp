@@ -291,6 +291,7 @@ static void Test16() {
   fn(x, y) {x + y;};
   fn() {};
 fn(xx) { };
+let add = fn(a, b) {return a + b;};
   )";
   std::string expected = R"(Program{
 fn(x, y) {
@@ -300,9 +301,33 @@ fn() {
 };
 fn(xx) {
 };
+let add = fn(a, b) {
+return (a + b);
+};
 }
 )";
   TestBase("parse expression statement Test16", input, expected);
+}
+
+static void Test17() {
+  std::string input = R"(
+  add(1, 2 *3, 4+ a);
+a + add(b * c) +d;
+add(a, b, 1, 2 * 3, 5 + 4, add(6, 7 * 8));
+add(a + b + c * d /f + g);
+fn(x, y) {x+y;}(1, sub(tmp, 1));
+  )";
+  std::string expected = R"(Program{
+add(1, (2 * 3), (4 + a));
+((a + add((b * c))) + d);
+add(a, b, 1, (2 * 3), (5 + 4), add(6, (7 * 8)));
+add((((a + b) + ((c * d) / f)) + g));
+fn(x, y) {
+(x + y);
+}(1, sub(tmp, 1));
+}
+)";
+  TestBase("parse expression statement Test17", input, expected);
 }
 
 int main() {
@@ -322,4 +347,5 @@ int main() {
   Test14();
   Test15();
   Test16();
+  Test17();
 }

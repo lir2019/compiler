@@ -144,4 +144,24 @@ class FuncLiteral : public IExpression {
   std::shared_ptr<IStatement> body_;
 };
 
+class CallExpression : public IExpression {
+ public:
+  CallExpression(Token tok,
+                 std::shared_ptr<IExpression> func,
+                 std::vector<std::shared_ptr<IExpression>> arguments)
+      : tok_(tok), func_(func), arguments_(arguments) {}
+  virtual ~CallExpression() {}
+
+  DECL_DUMP_FUNCS(CallExpression)
+
+  virtual std::string TokenLiteral() const override;
+  virtual void PrintNode(std::ostream &os) const override;
+  virtual void ExpressionNode() const override;
+
+ private:
+  Token tok_; // TokenType::FUNCTION
+  std::shared_ptr<IExpression> func_; // Identifier or FuncLiteral
+  std::vector<std::shared_ptr<IExpression>> arguments_;
+};
+
 #endif  // PARSER_EXPRESSION_HPP

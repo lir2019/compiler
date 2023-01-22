@@ -108,10 +108,14 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
     NextToken();
     auto infix_tok = cur_tok_;
     auto preced = GetPrecedence(cur_tok_.type);
-    NextToken();
-    auto right_exp = ParseExpression(preced);
-    left_exp =
-        std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
+    if (infix_tok.type == TokenType::LPAREN) {
+      left_exp = ParseCallExpression(left_exp);
+    } else {
+      NextToken();
+      auto right_exp = ParseExpression(preced);
+      left_exp =
+          std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
+    }
   }
   return left_exp;
 }
@@ -216,6 +220,31 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
   NextToken();
   auto right = ParseExpression(Precedence::PREFIX);
   return std::make_shared<PrefixExpression>(tok, right);
+}
+
+std::shared_ptr<IExpression> Parser::ParseCallExpression(std::shared_ptr<IExpression> func) {
+  std::vector<std::shared_ptr<IExpression>> arguments;
+  auto infix_tok = cur_tok_;
+  if (next_tok_.type != TokenType::RPAREN) {
+    NextToken();
+    auto arg = ParseExpression();
+    arguments.push_back(arg);
+    while (true) {
+      CHECK(next_tok_.type == TokenType::COMMA ||
+            next_tok_.type == TokenType::RPAREN,
+            "expect next TokenType to be COMMA or RPAREN, "
+            "but got " + next_tok_.ToString());
+      if (next_tok_.type == TokenType::RPAREN) {
+        break;
+      }
+      NextToken();
+      NextToken();
+      auto arg = ParseExpression();
+      arguments.push_back(arg);
+    }
+  }
+  NextToken();
+  return std::make_shared<CallExpression>(infix_tok, func, arguments);
 }
 
 Program Parser::ParseProgram() {
