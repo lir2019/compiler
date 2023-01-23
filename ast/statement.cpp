@@ -24,10 +24,6 @@ void LetStmt::PrintNode(std::ostream &os) const {
   Print(os);
 }
 
-std::string LetStmt::GetIdent() {
-  return ident_->TokenLiteral();
-}
-
 //===----------------------------------------------------------------------===//
 // ReturnStmt
 //===----------------------------------------------------------------------===//

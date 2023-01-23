@@ -295,6 +295,24 @@ static void Test19() {
   Test("evaluate Test19", res, expected, Printer);
 }
 
+static void Test20() {
+  std::string input = R"(
+  let a = 5;
+  let b = 3;
+  let c = a * b;
+  c - a;
+  )";
+  std::string expected = "10";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  Environment env;
+  auto obj = Eval(program, env);
+  env.Print(std::cout);
+  auto res = obj->Inspect();
+  Test("evaluate Test20", res, expected, Printer);
+}
+
 int main() {
   Test1();
   Test2();
@@ -315,4 +333,5 @@ int main() {
   Test17();
   Test18();
   Test19();
+  Test20();
 }

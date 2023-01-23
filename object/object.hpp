@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 enum class ObjectType {
   INT,
@@ -100,6 +101,14 @@ class Environment {
   }
   void Set(const std::string &name, std::shared_ptr<IObject> obj) {
     store_[name] = obj;
+  }
+
+  void Print(std::ostream &os) {
+    os << "Environment{\n";
+    for (auto e : store_) {
+      os << "{" + e.first + ": " + e.second->Inspect() + "}\n";
+    }
+    os << "}\n";
   }
 
  private:

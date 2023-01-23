@@ -6,6 +6,6 @@
 #include "../ast/node.hpp"
 #include "../object/object.hpp"
 
-std::shared_ptr<IObject> Eval(const INode &node, const Environment &env);
+std::shared_ptr<IObject> Eval(const INode &node, Environment &env);
 
 #endif  // EVALUATOR_EVALUATOR_HPP

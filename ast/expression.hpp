@@ -28,6 +28,8 @@ class Identifier : public IExpression {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
 
+  std::string GetName() const { return tok_.literal; }
+
  private:
   Token tok_;  // TokenType::INDENT
 };

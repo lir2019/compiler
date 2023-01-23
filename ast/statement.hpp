@@ -22,16 +22,17 @@ class LetStmt : public IStatement {
 
   DECL_DUMP_FUNCS(LetStmt)
 
-  std::string GetIdent();
-
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
+  std::shared_ptr<Identifier> GetIdent() const { return ident_; }
+  std::shared_ptr<IExpression> GetValue() const { return value_; }
+
  private:
   Token tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
-  std::shared_ptr<IExpression> value_ = nullptr;
+  std::shared_ptr<IExpression> value_;
 };
 
 class ReturnStmt : public IStatement {
