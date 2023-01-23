@@ -135,6 +135,7 @@ class IfExpression : public IExpression {
   std::shared_ptr<IExpression> GetCond() const { return cond_; }
   std::shared_ptr<IStatement> GetConsequence() const { return consequence_; }
   std::shared_ptr<IStatement> GetAlternative() const { return alternative_; }
+
  private:
   Token tok_;  // TokenType::If
   std::shared_ptr<IExpression> cond_;

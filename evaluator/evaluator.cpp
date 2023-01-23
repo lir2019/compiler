@@ -2,43 +2,59 @@
 
 #include "../ast/program.hpp"
 
-static std::shared_ptr<IObject> EvalPrefixExpression(Token op, std::shared_ptr<IObject> right, Environment &env) {
+static std::shared_ptr<IObject> EvalPrefixExpression(
+    Token op,
+    std::shared_ptr<IObject> right,
+    Environment &env) {
   switch (op.type) {
     case TokenType::BANG: {
-        auto boolean = std::dynamic_pointer_cast<Boolean>(right);
-        CHECK(boolean != nullptr, "expect Boolean");
-        return std::make_shared<Boolean>(!boolean->GetValue());
+      auto boolean = std::dynamic_pointer_cast<Boolean>(right);
+      CHECK(boolean != nullptr, "expect Boolean");
+      return std::make_shared<Boolean>(!boolean->GetValue());
     } break;
     case TokenType::MINUS: {
-        auto integer = std::dynamic_pointer_cast<Integer>(right);
-        CHECK(integer != nullptr, "expect Integer");
-        return std::make_shared<Integer>(-integer->GetValue());
+      auto integer = std::dynamic_pointer_cast<Integer>(right);
+      CHECK(integer != nullptr, "expect Integer");
+      return std::make_shared<Integer>(-integer->GetValue());
     } break;
-    default: return nullptr;
+    default:
+      return nullptr;
   }
 }
 
-#define CASE_INFIX_EVAL(TYPE, NAME, OP) \
-    case TokenType::NAME: {     \
-        return std::make_shared<TYPE>(left_val->GetValue() OP right_val->GetValue()); \
-    } break;
+#define CASE_INFIX_EVAL(TYPE, NAME, OP)                          \
+  case TokenType::NAME: {                                        \
+    return std::make_shared<TYPE>(left_val->GetValue()           \
+                                      OP right_val->GetValue()); \
+  } break;
 
-static std::shared_ptr<IObject> EvalBoolInfixExpression(Token op, std::shared_ptr<IObject> left, std::shared_ptr<IObject> right, Environment &env) {
+static std::shared_ptr<IObject> EvalBoolInfixExpression(
+    Token op,
+    std::shared_ptr<IObject> left,
+    std::shared_ptr<IObject> right,
+    Environment &env) {
   auto left_val = std::dynamic_pointer_cast<Boolean>(left);
   auto right_val = std::dynamic_pointer_cast<Boolean>(right);
-  CHECK(left_val != nullptr && right_val != nullptr, "expect both to be Boolean");
+  CHECK(left_val != nullptr && right_val != nullptr,
+        "expect both to be Boolean");
   switch (op.type) {
     CASE_INFIX_EVAL(Boolean, EQ, ==)
     CASE_INFIX_EVAL(Boolean, NE, !=)
-    default: CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
+    default:
+      CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
   }
   return nullptr;
 }
 
-static std::shared_ptr<IObject> EvalIntInfixExpression(Token op, std::shared_ptr<IObject> left, std::shared_ptr<IObject> right, Environment &env) {
+static std::shared_ptr<IObject> EvalIntInfixExpression(
+    Token op,
+    std::shared_ptr<IObject> left,
+    std::shared_ptr<IObject> right,
+    Environment &env) {
   auto left_val = std::dynamic_pointer_cast<Integer>(left);
   auto right_val = std::dynamic_pointer_cast<Integer>(right);
-  CHECK(left_val != nullptr && right_val != nullptr, "expect both to be Integer");
+  CHECK(left_val != nullptr && right_val != nullptr,
+        "expect both to be Integer");
   switch (op.type) {
     CASE_INFIX_EVAL(Boolean, EQ, ==)
     CASE_INFIX_EVAL(Boolean, NE, !=)
@@ -48,14 +64,17 @@ static std::shared_ptr<IObject> EvalIntInfixExpression(Token op, std::shared_ptr
     CASE_INFIX_EVAL(Integer, MINUS, -)
     CASE_INFIX_EVAL(Integer, ASTERISK, *)
     CASE_INFIX_EVAL(Integer, SLASH, /)
-    default: CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
+    default:
+      CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
   }
   return nullptr;
 }
 
 #undef CASE_INT_INFIX_EVAL
 
-static std::shared_ptr<IObject> Eval(std::vector<std::shared_ptr<IStatement>> stmts, Environment &env) {
+static std::shared_ptr<IObject> Eval(
+    std::vector<std::shared_ptr<IStatement>> stmts,
+    Environment &env) {
   std::shared_ptr<IObject> res;
   for (auto stmt : stmts) {
     res = Eval(*stmt, env);
@@ -66,7 +85,8 @@ static std::shared_ptr<IObject> Eval(std::vector<std::shared_ptr<IStatement>> st
   return res;
 }
 
-static std::shared_ptr<IObject> EvalIfExpression(const INode &node, Environment &env) {
+static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
+                                                 Environment &env) {
   auto if_exp = dynamic_cast<const IfExpression *>(&node);
   CHECK(if_exp != nullptr, "expect IfExpression");
   auto cond = Eval(*(if_exp->GetCond()), env);
@@ -113,7 +133,8 @@ std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
     if (auto left_bool_val = std::dynamic_pointer_cast<Boolean>(left)) {
       auto right_bool_val = std::dynamic_pointer_cast<Boolean>(right);
       CHECK(right_bool_val != nullptr, "expect Boolean");
-      return EvalBoolInfixExpression(infix_exp->GetOperator(), left, right, env);
+      return EvalBoolInfixExpression(infix_exp->GetOperator(), left, right,
+                                     env);
     } else if (auto left_int_val = std::dynamic_pointer_cast<Integer>(left)) {
       auto right_int_val = std::dynamic_pointer_cast<Integer>(right);
       CHECK(right_int_val != nullptr, "expect Integer");

@@ -17,7 +17,7 @@ class IObject {
  public:
   virtual ~IObject() {}
 
-  virtual ObjectType Type() const = 0;
+  virtual ObjectType Type() const     = 0;
   virtual std::string Inspect() const = 0;
 };
 
@@ -44,6 +44,7 @@ class Boolean : public IObject {
   virtual std::string Inspect() const override;
 
   bool GetValue() const { return value_; }
+
  private:
   bool value_;
 };
@@ -83,9 +84,9 @@ class Error : public IObject {
 };
 
 #ifndef RETURN_IF_ERROR
-#define RETURN_IF_ERROR(OBJ) \
+#define RETURN_IF_ERROR(OBJ)                   \
   if (std::dynamic_pointer_cast<Error>(OBJ)) { \
-    return OBJ; \
+    return OBJ;                                \
   }
 #endif
 

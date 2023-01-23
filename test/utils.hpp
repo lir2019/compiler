@@ -6,9 +6,7 @@
 #include <functional>
 
 template <typename T>
-bool Test(const std::string &name,
-          T out,
-          T expected) {
+bool Test(const std::string &name, T out, T expected) {
   std::cout << name << " test result: ";
   bool ret = false;
   if (out == expected) {
@@ -22,10 +20,7 @@ bool Test(const std::string &name,
 }
 
 template <typename T, typename PRINTER_TYPE>
-bool Test(const std::string &name,
-          T out,
-          T expected,
-          PRINTER_TYPE print) {
+bool Test(const std::string &name, T out, T expected, PRINTER_TYPE print) {
   std::cout << name << " test result: ";
   bool ret = false;
   if (out == expected) {

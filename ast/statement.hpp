@@ -47,9 +47,7 @@ class ReturnStmt : public IStatement {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
-  std::shared_ptr<IExpression> GetValue() const {
-    return value_;
-  }
+  std::shared_ptr<IExpression> GetValue() const { return value_; }
 
  private:
   Token tok_;  // TokenType::RETURN
@@ -68,9 +66,7 @@ class ExpressionStmt : public IStatement {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
-  std::shared_ptr<IExpression> GetExp() const {
-    return expression_;
-  }
+  std::shared_ptr<IExpression> GetExp() const { return expression_; }
 
  private:
   Token tok_;  // first Token in expression
@@ -89,9 +85,7 @@ class BlockStmt : public IStatement {
   virtual void StatementNode() const override;
 
   void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
-  std::vector<std::shared_ptr<IStatement>> GetStmts() const {
-    return stmts_;
-  }
+  std::vector<std::shared_ptr<IStatement>> GetStmts() const { return stmts_; }
 
  private:
   Token tok_;  // {
