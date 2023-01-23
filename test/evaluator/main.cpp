@@ -13,7 +13,8 @@ static void TestBase(const std::string &name,
   Lexer lexer(input);
   Parser parser(lexer);
   Program program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test(name, res, expected, Printer);
 }
@@ -26,7 +27,8 @@ static void Test1() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test1", res, expected, Printer);
 }
@@ -39,7 +41,8 @@ static void Test2() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test2", res, expected, Printer);
 }
@@ -52,7 +55,8 @@ static void Test3() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test3", res, expected, Printer);
 }
@@ -65,7 +69,8 @@ static void Test4() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test4", res, expected, Printer);
 }
@@ -78,7 +83,8 @@ static void Test5() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test5", res, expected, Printer);
 }
@@ -91,7 +97,8 @@ static void Test6() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test6", res, expected, Printer);
 }
@@ -104,7 +111,8 @@ static void Test7() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test7", res, expected, Printer);
 }
@@ -117,7 +125,8 @@ static void Test8() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test8", res, expected, Printer);
 }
@@ -130,7 +139,8 @@ static void Test9() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test9", res, expected, Printer);
 }
@@ -143,7 +153,8 @@ static void Test10() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test10", res, expected, Printer);
 }
@@ -156,7 +167,8 @@ static void Test11() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test11", res, expected, Printer);
 }
@@ -169,7 +181,8 @@ static void Test12() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  auto obj = Eval(*node);
+  Environment env;
+  auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test12", res, expected, Printer);
 }
@@ -183,7 +196,8 @@ static void Test13() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test13", res, expected, Printer);
 }
@@ -198,7 +212,8 @@ static void Test14() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test14", res, expected, Printer);
 }
@@ -211,7 +226,8 @@ static void Test15() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test15", res, expected, Printer);
 }
@@ -224,7 +240,8 @@ static void Test16() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test16", res, expected, Printer);
 }
@@ -237,7 +254,8 @@ static void Test17() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test17", res, expected, Printer);
 }
@@ -255,7 +273,8 @@ static void Test18() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test18", res, expected, Printer);
 }
@@ -270,7 +289,8 @@ static void Test19() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  auto obj = Eval(program);
+  Environment env;
+  auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test19", res, expected, Printer);
 }

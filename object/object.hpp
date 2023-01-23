@@ -2,6 +2,7 @@
 #define OBJECT_OBJECT_HPP
 
 #include <string>
+#include <map>
 
 enum class ObjectType {
   INT,
@@ -86,5 +87,23 @@ class Error : public IObject {
     return OBJ; \
   }
 #endif
+
+class Environment {
+ public:
+  Environment() {}
+  ~Environment() {}
+
+  const std::shared_ptr<IObject> Get(const std::string &name) const {
+    // store_[name] will not compile!!!
+    // because there is not a nonconst overload of operator[]
+    return store_.at(name);
+  }
+  void Set(const std::string &name, std::shared_ptr<IObject> obj) {
+    store_[name] = obj;
+  }
+
+ private:
+  std::map<std::string, std::shared_ptr<IObject>> store_;
+};
 
 #endif  // OBJECT_OBJECT_HPP
