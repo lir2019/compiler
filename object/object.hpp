@@ -8,6 +8,7 @@ enum class ObjectType {
   BOOL,
   NUL,
   RET,
+  ERR,
 };
 
 class IObject {
@@ -66,5 +67,24 @@ class ReturnValue : public IObject {
  private:
   std::shared_ptr<IObject> value_;
 };
+
+class Error : public IObject {
+ public:
+  Error(const std::string &m) : message_(m) {}
+  virtual ~Error() {}
+
+  virtual ObjectType Type() const override;
+  virtual std::string Inspect() const override;
+
+ private:
+  std::string message_;
+};
+
+#ifndef RETURN_IF_ERROR
+#define RETURN_IF_ERROR(OBJ) \
+  if (std::dynamic_pointer_cast<Error>(OBJ)) { \
+    return OBJ; \
+  }
+#endif
 
 #endif  // OBJECT_OBJECT_HPP

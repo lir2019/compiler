@@ -47,3 +47,15 @@ ObjectType ReturnValue::Type() const {
 std::string ReturnValue::Inspect() const {
   return value_->Inspect();
 }
+
+//===----------------------------------------------------------------------===//
+// Error
+//===----------------------------------------------------------------------===//
+
+ObjectType Error::Type() const {
+  return ObjectType::ERR;
+}
+
+std::string Error::Inspect() const {
+  return "ERROR: " + message_;
+}
