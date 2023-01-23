@@ -46,6 +46,10 @@ class ReturnStmt : public IStatement {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void StatementNode() const override;
 
+  std::shared_ptr<IExpression> GetValue() const {
+    return value_;
+  }
+
  private:
   Token tok_;  // TokenType::RETURN
   std::shared_ptr<IExpression> value_;

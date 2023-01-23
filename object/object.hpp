@@ -7,6 +7,7 @@ enum class ObjectType {
   INT,
   BOOL,
   NUL,
+  RET,
 };
 
 class IObject {
@@ -50,6 +51,20 @@ class Null : public IObject {
 
   virtual ObjectType Type() const override;
   virtual std::string Inspect() const override;
+};
+
+class ReturnValue : public IObject {
+ public:
+  ReturnValue(std::shared_ptr<IObject> value) : value_(value) {}
+  virtual ~ReturnValue() {}
+
+  virtual ObjectType Type() const override;
+  virtual std::string Inspect() const override;
+
+  std::shared_ptr<IObject> GetValue() const { return value_; }
+
+ private:
+  std::shared_ptr<IObject> value_;
 };
 
 #endif  // OBJECT_OBJECT_HPP

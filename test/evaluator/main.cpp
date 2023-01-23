@@ -203,6 +203,78 @@ static void Test14() {
   Test("evaluate Test14", res, expected, Printer);
 }
 
+static void Test15() {
+  std::string input = R"(
+  1 + if (1 > 2) {12;} else {22;};
+  )";
+  std::string expected = "23";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test15", res, expected, Printer);
+}
+
+static void Test16() {
+  std::string input = R"(
+  1 + if (1 < 2) {12;} else {22;} / 2;
+  )";
+  std::string expected = "7";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test16", res, expected, Printer);
+}
+
+static void Test17() {
+  std::string input = R"(
+  return 1 + 1;
+  )";
+  std::string expected = "2";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test17", res, expected, Printer);
+}
+
+static void Test18() {
+  std::string input = R"(
+  if (10 > 1) {
+    if (true != false) {
+      return 0;
+    };
+    return 1;
+  };
+  )";
+  std::string expected = "0";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test18", res, expected, Printer);
+}
+
+static void Test19() {
+  std::string input = R"(
+  9;
+  return 2 * 5;
+  11;
+  )";
+  std::string expected = "10";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto obj = Eval(program);
+  auto res = obj->Inspect();
+  Test("evaluate Test19", res, expected, Printer);
+}
+
 int main() {
   Test1();
   Test2();
@@ -218,4 +290,9 @@ int main() {
   Test12();
   Test13();
   Test14();
+  Test15();
+  Test16();
+  Test17();
+  Test18();
+  Test19();
 }

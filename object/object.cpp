@@ -35,3 +35,15 @@ ObjectType Null::Type() const {
 std::string Null::Inspect() const {
   return "null";
 }
+
+//===----------------------------------------------------------------------===//
+// ReturnValue
+//===----------------------------------------------------------------------===//
+
+ObjectType ReturnValue::Type() const {
+  return ObjectType::RET;
+}
+
+std::string ReturnValue::Inspect() const {
+  return value_->Inspect();
+}

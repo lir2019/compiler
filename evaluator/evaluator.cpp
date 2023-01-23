@@ -59,8 +59,29 @@ static std::shared_ptr<IObject> Eval(std::vector<std::shared_ptr<IStatement>> st
   std::shared_ptr<IObject> res;
   for (auto stmt : stmts) {
     res = Eval(*stmt);
+    if (std::dynamic_pointer_cast<ReturnValue>(res)) {
+      return res;
+    }
   }
   return res;
+}
+
+static std::shared_ptr<IObject> EvalIfExpression(const INode &node) {
+  auto if_exp = dynamic_cast<const IfExpression *>(&node);
+  CHECK(if_exp != nullptr, "expect IfExpression");
+  auto cond = Eval(*(if_exp->GetCond()));
+  auto cond_bool = std::dynamic_pointer_cast<Boolean>(cond);
+  CHECK(cond_bool != nullptr, "expect Boolean");
+  if (cond_bool->GetValue()) {
+    if (auto consequence = if_exp->GetConsequence()) {
+      return Eval(*consequence);
+    }
+  } else {
+    if (auto alternative = if_exp->GetAlternative()) {
+      return Eval(*alternative);
+    }
+  }
+  return std::make_shared<Null>();
 }
 
 std::shared_ptr<IObject> Eval(const INode &node) {
@@ -70,6 +91,9 @@ std::shared_ptr<IObject> Eval(const INode &node) {
     return Eval(block_stmt->GetStmts());
   } else if (auto exp_stmt = dynamic_cast<const ExpressionStmt *>(&node)) {
     return Eval(*(exp_stmt->GetExp()));
+  } else if (auto ret_stmt = dynamic_cast<const ReturnStmt *>(&node)) {
+    auto value = Eval(*(ret_stmt->GetValue()));
+    return std::make_shared<ReturnValue>(value);
   } else if (auto int_lit = dynamic_cast<const IntegerLiteral *>(&node)) {
     return std::make_shared<Integer>(int_lit->GetValue());
   } else if (auto bool_lit = dynamic_cast<const BooleanLiteral *>(&node)) {
@@ -91,6 +115,10 @@ std::shared_ptr<IObject> Eval(const INode &node) {
     } else {
       CHECK(false, "expect Boolean or Integer");
     }
+  } else if (auto if_exp = dynamic_cast<const IfExpression *>(&node)) {
+    return EvalIfExpression(node);
+  } else {
+    CHECK(false, "unexpected Node to be evaluated");
   }
   return nullptr;
 }
