@@ -5,12 +5,16 @@
 #include <map>
 #include <iostream>
 
+#include "../common/utils.hpp"
+#include "../ast/program.hpp"
+
 enum class ObjectType {
   INT,
   BOOL,
   NUL,
   RET,
   ERR,
+  FUNC,
 };
 
 class IObject {
@@ -19,6 +23,19 @@ class IObject {
 
   virtual ObjectType Type() const     = 0;
   virtual std::string Inspect() const = 0;
+};
+
+class Environment {
+ public:
+  Environment() {}
+  ~Environment() {}
+
+  const std::shared_ptr<IObject> Get(const std::string &name) const;
+  void Set(const std::string &name, std::shared_ptr<IObject> obj);
+  void Print(std::ostream &os);
+
+ private:
+  std::map<std::string, std::shared_ptr<IObject>> store_;
 };
 
 class Integer : public IObject {
@@ -83,37 +100,32 @@ class Error : public IObject {
   std::string message_;
 };
 
+class Function : public IObject {
+ public:
+  Function(std::vector<Identifier> parameters,
+           std::shared_ptr<IStatement> body,
+           Environment &env)
+      : parameters_(parameters), body_(body), env_(env) {}
+  virtual ~Function() {}
+
+  virtual ObjectType Type() const override;
+  virtual std::string Inspect() const override;
+
+  void Set(const std::string &name, std::shared_ptr<IObject> obj) {
+    env_.Set(name, obj);
+  }
+
+ private:
+  std::vector<Identifier> parameters_;
+  std::shared_ptr<IStatement> body_;
+  Environment &env_;
+};
+
 #ifndef RETURN_IF_ERROR
 #define RETURN_IF_ERROR(OBJ)                   \
   if (std::dynamic_pointer_cast<Error>(OBJ)) { \
     return OBJ;                                \
   }
 #endif
-
-class Environment {
- public:
-  Environment() {}
-  ~Environment() {}
-
-  const std::shared_ptr<IObject> Get(const std::string &name) const {
-    // store_[name] will not compile!!!
-    // because there is not a nonconst overload of operator[]
-    return store_.at(name);
-  }
-  void Set(const std::string &name, std::shared_ptr<IObject> obj) {
-    store_[name] = obj;
-  }
-
-  void Print(std::ostream &os) {
-    os << "Environment{\n";
-    for (auto e : store_) {
-      os << "{" + e.first + ": " + e.second->Inspect() + "}\n";
-    }
-    os << "}\n";
-  }
-
- private:
-  std::map<std::string, std::shared_ptr<IObject>> store_;
-};
 
 #endif  // OBJECT_OBJECT_HPP

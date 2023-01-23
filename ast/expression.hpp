@@ -157,6 +157,9 @@ class FuncLiteral : public IExpression {
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
 
+  std::vector<Identifier> GetParams() const { return parameters_; }
+  std::shared_ptr<IStatement> GetBody() const { return body_; }
+
  private:
   Token tok_;  // TokenType::FUNCTION
   std::vector<Identifier> parameters_;
@@ -176,6 +179,9 @@ class CallExpression : public IExpression {
   virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
   virtual void ExpressionNode() const override;
+
+  std::shared_ptr<IExpression> GetFunc() const { return func_; }
+  std::vector<std::shared_ptr<IExpression>> GetArgs() const { return arguments_; }
 
  private:
   Token tok_;                          // TokenType::FUNCTION

@@ -104,30 +104,38 @@ static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
   return std::make_shared<Null>();
 }
 
+#define IF_MATCH_THEN(TYPE, BODY)                   \
+  if (auto ptr = dynamic_cast<const TYPE *>(&node)) \
+  BODY
+
 std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
-  if (auto program = dynamic_cast<const Program *>(&node)) {
-    return Eval(program->GetStmts(), env);
-  } else if (auto block_stmt = dynamic_cast<const BlockStmt *>(&node)) {
-    return Eval(block_stmt->GetStmts(), env);
-  } else if (auto exp_stmt = dynamic_cast<const ExpressionStmt *>(&node)) {
-    return Eval(*(exp_stmt->GetExp()), env);
-  } else if (auto let_stmt = dynamic_cast<const LetStmt *>(&node)) {
-    auto value = Eval(*(let_stmt->GetValue()), env);
-    env.Set(let_stmt->GetIdent()->GetName(), value);
+  IF_MATCH_THEN(Program, { return Eval(ptr->GetStmts(), env); })
+  else IF_MATCH_THEN(BlockStmt, {
+    return Eval(ptr->GetStmts(), env);
+  }) else IF_MATCH_THEN(ExpressionStmt, {
+    return Eval(*(ptr->GetExp()), env);
+  }) else IF_MATCH_THEN(LetStmt, {
+    auto value = Eval(*(ptr->GetValue()), env);
+    env.Set(ptr->GetIdent()->GetName(), value);
     return value;
-  } else if (auto ret_stmt = dynamic_cast<const ReturnStmt *>(&node)) {
+  }) else if (auto ret_stmt = dynamic_cast<const ReturnStmt *>(&node)) {
     auto value = Eval(*(ret_stmt->GetValue()), env);
     return std::make_shared<ReturnValue>(value);
-  } else if (auto ident = dynamic_cast<const Identifier *>(&node)) {
+  }
+  else if (auto ident = dynamic_cast<const Identifier *>(&node)) {
     return env.Get(ident->GetName());
-  } else if (auto int_lit = dynamic_cast<const IntegerLiteral *>(&node)) {
+  }
+  else if (auto int_lit = dynamic_cast<const IntegerLiteral *>(&node)) {
     return std::make_shared<Integer>(int_lit->GetValue());
-  } else if (auto bool_lit = dynamic_cast<const BooleanLiteral *>(&node)) {
+  }
+  else if (auto bool_lit = dynamic_cast<const BooleanLiteral *>(&node)) {
     return std::make_shared<Boolean>(bool_lit->GetValue());
-  } else if (auto prefix_exp = dynamic_cast<const PrefixExpression *>(&node)) {
+  }
+  else if (auto prefix_exp = dynamic_cast<const PrefixExpression *>(&node)) {
     auto right = Eval(*(prefix_exp->GetRight()), env);
     return EvalPrefixExpression(prefix_exp->GetOperator(), right, env);
-  } else if (auto infix_exp = dynamic_cast<const InfixExpression *>(&node)) {
+  }
+  else if (auto infix_exp = dynamic_cast<const InfixExpression *>(&node)) {
     auto left = Eval(*(infix_exp->GetLeft()), env);
     auto right = Eval(*(infix_exp->GetRight()), env);
     if (auto left_bool_val = std::dynamic_pointer_cast<Boolean>(left)) {
@@ -142,10 +150,27 @@ std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
     } else {
       CHECK(false, "expect Boolean or Integer");
     }
-  } else if (auto if_exp = dynamic_cast<const IfExpression *>(&node)) {
+  }
+  else if (auto if_exp = dynamic_cast<const IfExpression *>(&node)) {
     return EvalIfExpression(node, env);
-  } else {
+  }
+  else if (auto func_lit = dynamic_cast<const FuncLiteral *>(&node)) {
+    auto params = func_lit->GetParams();
+    auto body = func_lit->GetBody();
+    return std::make_shared<Function>(params, body, env);
+  }
+  else if (auto call = dynamic_cast<const CallExpression *>(&node)) {
+    auto func = Eval(*(call->GetFunc()), env);
+    std::vector<std::shared_ptr<IObject>> args;
+    for (auto arg_exp : call->GetArgs()) {
+      args.push_back(Eval(*arg_exp, env));
+    }
+    return nullptr;
+  }
+  else {
     CHECK(false, "unexpected Node to be evaluated");
   }
   return nullptr;
 }
+
+#undef IF_MATCH_THEN

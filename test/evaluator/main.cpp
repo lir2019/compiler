@@ -308,9 +308,24 @@ static void Test20() {
   auto program = parser.ParseProgram();
   Environment env;
   auto obj = Eval(program, env);
-  env.Print(std::cout);
   auto res = obj->Inspect();
   Test("evaluate Test20", res, expected, Printer);
+}
+
+static void Test21() {
+  std::string input = R"(
+  fn(x, y) { return (x + y) / 2; };
+  )";
+  std::string expected = R"(fn(x, y) {
+return ((x + y) / 2);
+})";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  Environment env;
+  auto obj = Eval(program, env);
+  auto res = obj->Inspect();
+  Test("evaluate Test21", res, expected, Printer);
 }
 
 int main() {
@@ -334,4 +349,5 @@ int main() {
   Test18();
   Test19();
   Test20();
+  Test21();
 }

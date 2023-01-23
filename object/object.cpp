@@ -1,5 +1,30 @@
 #include "object.hpp"
 
+#include <sstream>
+
+//===----------------------------------------------------------------------===//
+// Environment
+//===----------------------------------------------------------------------===//
+
+const std::shared_ptr<IObject> Environment::Get(const std::string &name) const {
+  // store_[name] will not compile!!!
+  // because there is not a nonconst overload of operator[]
+  bool exist = store_.find(name) != store_.end();
+  CHECK(exist, name + " does not exist in Environment");
+  return store_.at(name);
+}
+void Environment::Set(const std::string &name, std::shared_ptr<IObject> obj) {
+  store_[name] = obj;
+}
+
+void Environment::Print(std::ostream &os) {
+  os << "Environment{\n";
+  for (auto e : store_) {
+    os << "{" + e.first + ": " + e.second->Inspect() + "}\n";
+  }
+  os << "}\n";
+}
+
 //===----------------------------------------------------------------------===//
 // Integer
 //===----------------------------------------------------------------------===//
@@ -58,4 +83,27 @@ ObjectType Error::Type() const {
 
 std::string Error::Inspect() const {
   return "ERROR: " + message_;
+}
+
+//===----------------------------------------------------------------------===//
+// Function
+//===----------------------------------------------------------------------===//
+
+ObjectType Function::Type() const {
+  return ObjectType::FUNC;
+}
+
+std::string Function::Inspect() const {
+  std::string ret("fn(");
+  for (int i = 0; i < (int)parameters_.size() - 1; i++) {
+    ret += parameters_[i].ToString() + ", ";
+  }
+  if (!parameters_.empty()) {
+    ret += parameters_.back().ToString();
+  }
+  ret += ") ";
+  std::stringstream ss;
+  body_->PrintNode(ss);
+  ret += ss.str();
+  return ret;
 }
