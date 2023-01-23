@@ -5,7 +5,7 @@
 static std::shared_ptr<IObject> EvalPrefixExpression(
     Token op,
     std::shared_ptr<IObject> right,
-    Environment &env) {
+    std::shared_ptr<Environment> env) {
   switch (op.type) {
     case TokenType::BANG: {
       auto boolean = std::dynamic_pointer_cast<Boolean>(right);
@@ -32,7 +32,7 @@ static std::shared_ptr<IObject> EvalBoolInfixExpression(
     Token op,
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
-    Environment &env) {
+    std::shared_ptr<Environment> env) {
   auto left_val = std::dynamic_pointer_cast<Boolean>(left);
   auto right_val = std::dynamic_pointer_cast<Boolean>(right);
   CHECK(left_val != nullptr && right_val != nullptr,
@@ -50,7 +50,7 @@ static std::shared_ptr<IObject> EvalIntInfixExpression(
     Token op,
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
-    Environment &env) {
+    std::shared_ptr<Environment> env) {
   auto left_val = std::dynamic_pointer_cast<Integer>(left);
   auto right_val = std::dynamic_pointer_cast<Integer>(right);
   CHECK(left_val != nullptr && right_val != nullptr,
@@ -74,7 +74,7 @@ static std::shared_ptr<IObject> EvalIntInfixExpression(
 
 static std::shared_ptr<IObject> Eval(
     std::vector<std::shared_ptr<IStatement>> stmts,
-    Environment &env) {
+    std::shared_ptr<Environment> env) {
   std::shared_ptr<IObject> res;
   for (auto stmt : stmts) {
     res = Eval(*stmt, env);
@@ -86,7 +86,7 @@ static std::shared_ptr<IObject> Eval(
 }
 
 static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
-                                                 Environment &env) {
+                                                 std::shared_ptr<Environment> env) {
   auto if_exp = dynamic_cast<const IfExpression *>(&node);
   CHECK(if_exp != nullptr, "expect IfExpression");
   auto cond = Eval(*(if_exp->GetCond()), env);
@@ -104,11 +104,29 @@ static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
   return std::make_shared<Null>();
 }
 
+static std::shared_ptr<IObject> ApplyFunction(std::shared_ptr<IObject> obj,
+    std::vector<std::shared_ptr<IObject>> args) {
+  auto func = std::dynamic_pointer_cast<Function>(obj);
+  CHECK(func != nullptr, "expect Function");
+  auto outer_env = func->GetEnv();
+  auto env = std::make_shared<Environment>(outer_env);
+  auto params = func->GetParams();
+  CHECK(args.size() == params.size(), "arguments size does not match parameters size");
+  for (int i = 0; i < args.size(); i++) {
+    env->Set(params[i].GetName(), args[i]);
+  }
+  auto ret = Eval(*(func->GetBody()), env);
+  if (auto ret_val = std::dynamic_pointer_cast<ReturnValue>(ret)) {
+    return ret_val->GetValue();
+  }
+  return ret;
+}
+
 #define IF_MATCH_THEN(TYPE, BODY)                   \
   if (auto ptr = dynamic_cast<const TYPE *>(&node)) \
   BODY
 
-std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
+std::shared_ptr<IObject> Eval(const INode &node, std::shared_ptr<Environment> env) {
   IF_MATCH_THEN(Program, { return Eval(ptr->GetStmts(), env); })
   else IF_MATCH_THEN(BlockStmt, {
     return Eval(ptr->GetStmts(), env);
@@ -116,14 +134,14 @@ std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
     return Eval(*(ptr->GetExp()), env);
   }) else IF_MATCH_THEN(LetStmt, {
     auto value = Eval(*(ptr->GetValue()), env);
-    env.Set(ptr->GetIdent()->GetName(), value);
+    env->Set(ptr->GetIdent()->GetName(), value);
     return value;
   }) else if (auto ret_stmt = dynamic_cast<const ReturnStmt *>(&node)) {
     auto value = Eval(*(ret_stmt->GetValue()), env);
     return std::make_shared<ReturnValue>(value);
   }
   else if (auto ident = dynamic_cast<const Identifier *>(&node)) {
-    return env.Get(ident->GetName());
+    return env->Get(ident->GetName());
   }
   else if (auto int_lit = dynamic_cast<const IntegerLiteral *>(&node)) {
     return std::make_shared<Integer>(int_lit->GetValue());
@@ -165,7 +183,7 @@ std::shared_ptr<IObject> Eval(const INode &node, Environment &env) {
     for (auto arg_exp : call->GetArgs()) {
       args.push_back(Eval(*arg_exp, env));
     }
-    return nullptr;
+    return ApplyFunction(func, args);
   }
   else {
     CHECK(false, "unexpected Node to be evaluated");

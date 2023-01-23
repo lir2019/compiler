@@ -27,7 +27,7 @@ class IObject {
 
 class Environment {
  public:
-  Environment() {}
+  Environment(std::shared_ptr<Environment> outer = nullptr) : outer_(outer) {}
   ~Environment() {}
 
   const std::shared_ptr<IObject> Get(const std::string &name) const;
@@ -36,6 +36,7 @@ class Environment {
 
  private:
   std::map<std::string, std::shared_ptr<IObject>> store_;
+  std::shared_ptr<Environment> outer_;
 };
 
 class Integer : public IObject {
@@ -104,7 +105,7 @@ class Function : public IObject {
  public:
   Function(std::vector<Identifier> parameters,
            std::shared_ptr<IStatement> body,
-           Environment &env)
+           std::shared_ptr<Environment> env)
       : parameters_(parameters), body_(body), env_(env) {}
   virtual ~Function() {}
 
@@ -112,13 +113,17 @@ class Function : public IObject {
   virtual std::string Inspect() const override;
 
   void Set(const std::string &name, std::shared_ptr<IObject> obj) {
-    env_.Set(name, obj);
+    env_->Set(name, obj);
   }
+
+  std::vector<Identifier> GetParams() const { return parameters_; }
+  std::shared_ptr<IStatement> GetBody() const { return body_; }
+  std::shared_ptr<Environment> GetEnv() const { return env_; }
 
  private:
   std::vector<Identifier> parameters_;
   std::shared_ptr<IStatement> body_;
-  Environment &env_;
+  std::shared_ptr<Environment> env_;
 };
 
 #ifndef RETURN_IF_ERROR

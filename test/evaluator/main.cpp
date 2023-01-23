@@ -13,7 +13,7 @@ static void TestBase(const std::string &name,
   Lexer lexer(input);
   Parser parser(lexer);
   Program program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test(name, res, expected, Printer);
@@ -27,7 +27,7 @@ static void Test1() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test1", res, expected, Printer);
@@ -41,7 +41,7 @@ static void Test2() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test2", res, expected, Printer);
@@ -55,7 +55,7 @@ static void Test3() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test3", res, expected, Printer);
@@ -69,7 +69,7 @@ static void Test4() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test4", res, expected, Printer);
@@ -83,7 +83,7 @@ static void Test5() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test5", res, expected, Printer);
@@ -97,7 +97,7 @@ static void Test6() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test6", res, expected, Printer);
@@ -111,7 +111,7 @@ static void Test7() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test7", res, expected, Printer);
@@ -125,7 +125,7 @@ static void Test8() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test8", res, expected, Printer);
@@ -139,7 +139,7 @@ static void Test9() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test9", res, expected, Printer);
@@ -153,7 +153,7 @@ static void Test10() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test10", res, expected, Printer);
@@ -167,7 +167,7 @@ static void Test11() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test11", res, expected, Printer);
@@ -181,7 +181,7 @@ static void Test12() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto node = parser.ParseExpression();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(*node, env);
   auto res = obj->Inspect();
   Test("evaluate Test12", res, expected, Printer);
@@ -196,7 +196,7 @@ static void Test13() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test13", res, expected, Printer);
@@ -212,7 +212,7 @@ static void Test14() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test14", res, expected, Printer);
@@ -226,7 +226,7 @@ static void Test15() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test15", res, expected, Printer);
@@ -240,7 +240,7 @@ static void Test16() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test16", res, expected, Printer);
@@ -254,7 +254,7 @@ static void Test17() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test17", res, expected, Printer);
@@ -273,7 +273,7 @@ static void Test18() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test18", res, expected, Printer);
@@ -289,7 +289,7 @@ static void Test19() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test19", res, expected, Printer);
@@ -306,7 +306,7 @@ static void Test20() {
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test20", res, expected, Printer);
@@ -322,10 +322,43 @@ return ((x + y) / 2);
   Lexer lexer(input);
   Parser parser(lexer);
   auto program = parser.ParseProgram();
-  Environment env;
+  auto env = std::make_shared<Environment>();
   auto obj = Eval(program, env);
   auto res = obj->Inspect();
   Test("evaluate Test21", res, expected, Printer);
+}
+
+static void Test22() {
+  std::string input = R"(
+  let add = fn(x, y){x + y;};
+  add(2 + 2, 5 + 5);
+  )";
+  std::string expected = "14";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto env = std::make_shared<Environment>();
+  auto obj = Eval(program, env);
+  auto res = obj->Inspect();
+  Test("evaluate Test22", res, expected, Printer);
+}
+
+static void Test23() {
+  std::string input = R"(
+  let newAdder = fn(x) {
+    fn(y) {x+y;};
+  };
+  let addTwo = newAdder(2);
+  addTwo(6);
+  )";
+  std::string expected = "8";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto env = std::make_shared<Environment>();
+  auto obj = Eval(program, env);
+  auto res = obj->Inspect();
+  Test("evaluate Test23", res, expected, Printer);
 }
 
 int main() {
@@ -350,4 +383,6 @@ int main() {
   Test19();
   Test20();
   Test21();
+  Test22();
+  Test23();
 }

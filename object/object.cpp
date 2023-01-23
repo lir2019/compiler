@@ -10,7 +10,15 @@ const std::shared_ptr<IObject> Environment::Get(const std::string &name) const {
   // store_[name] will not compile!!!
   // because there is not a nonconst overload of operator[]
   bool exist = store_.find(name) != store_.end();
-  CHECK(exist, name + " does not exist in Environment");
+  if (exist) {
+    return store_.at(name);
+  } else {
+    if (outer_) {
+      return outer_->Get(name);
+    } else {
+      CHECK(false, name + " does not exist");
+    }
+  }
   return store_.at(name);
 }
 void Environment::Set(const std::string &name, std::shared_ptr<IObject> obj) {
