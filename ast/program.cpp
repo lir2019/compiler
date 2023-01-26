@@ -4,13 +4,6 @@
 
 #include "../common/utils.hpp"
 
-std::string Program::TokenLiteral() const {
-  if (stmts_.size() > 0) {
-    return stmts_.front()->TokenLiteral();
-  }
-  return "";
-}
-
 DEFINE_DUMP_FUNCS(Program, {
   os << "Program{\n";
   for (auto stmt : stmts_) {

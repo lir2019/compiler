@@ -85,8 +85,9 @@ static std::shared_ptr<IObject> Eval(
   return res;
 }
 
-static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
-                                                 std::shared_ptr<Environment> env) {
+static std::shared_ptr<IObject> EvalIfExpression(
+    const INode &node,
+    std::shared_ptr<Environment> env) {
   auto if_exp = dynamic_cast<const IfExpression *>(&node);
   CHECK(if_exp != nullptr, "expect IfExpression");
   auto cond = Eval(*(if_exp->GetCond()), env);
@@ -104,14 +105,16 @@ static std::shared_ptr<IObject> EvalIfExpression(const INode &node,
   return std::make_shared<Null>();
 }
 
-static std::shared_ptr<IObject> ApplyFunction(std::shared_ptr<IObject> obj,
+static std::shared_ptr<IObject> ApplyFunction(
+    std::shared_ptr<IObject> obj,
     std::vector<std::shared_ptr<IObject>> args) {
   auto func = std::dynamic_pointer_cast<Function>(obj);
   CHECK(func != nullptr, "expect Function");
   auto outer_env = func->GetEnv();
   auto env = std::make_shared<Environment>(outer_env);
   auto params = func->GetParams();
-  CHECK(args.size() == params.size(), "arguments size does not match parameters size");
+  CHECK(args.size() == params.size(),
+        "arguments size does not match parameters size");
   for (int i = 0; i < args.size(); i++) {
     env->Set(params[i].GetName(), args[i]);
   }
@@ -126,7 +129,8 @@ static std::shared_ptr<IObject> ApplyFunction(std::shared_ptr<IObject> obj,
   if (auto ptr = dynamic_cast<const TYPE *>(&node)) \
   BODY
 
-std::shared_ptr<IObject> Eval(const INode &node, std::shared_ptr<Environment> env) {
+std::shared_ptr<IObject> Eval(const INode &node,
+                              std::shared_ptr<Environment> env) {
   IF_MATCH_THEN(Program, { return Eval(ptr->GetStmts(), env); })
   else IF_MATCH_THEN(BlockStmt, {
     return Eval(ptr->GetStmts(), env);

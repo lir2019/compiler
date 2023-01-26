@@ -13,20 +13,17 @@ class IStatement;
 
 class IExpression : public INode {
  public:
-  virtual ~IExpression()              = 0;
-  virtual void ExpressionNode() const = 0;
+  virtual ~IExpression() = 0;
 };
 
 class Identifier : public IExpression {
  public:
   Identifier(Token tok) : tok_(tok) {}
-  virtual ~Identifier();
+  virtual ~Identifier() {}
 
   DECL_DUMP_FUNCS(Identifier)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   std::string GetName() const { return tok_.literal; }
 
@@ -37,13 +34,11 @@ class Identifier : public IExpression {
 class IntegerLiteral : public IExpression {
  public:
   IntegerLiteral(Token tok) : tok_(tok), value_(std::stol(tok.literal)) {}
-  virtual ~IntegerLiteral();
+  virtual ~IntegerLiteral() {}
 
   DECL_DUMP_FUNCS(IntegerLiteral)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   int64_t GetValue() const { return value_; }
 
@@ -55,13 +50,11 @@ class IntegerLiteral : public IExpression {
 class BooleanLiteral : public IExpression {
  public:
   BooleanLiteral(Token tok) : tok_(tok), value_(tok.type == TokenType::TRUE) {}
-  virtual ~BooleanLiteral();
+  virtual ~BooleanLiteral() {}
 
   DECL_DUMP_FUNCS(BooleanLiteral)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   bool GetValue() const { return value_; }
 
@@ -74,13 +67,11 @@ class PrefixExpression : public IExpression {
  public:
   PrefixExpression(Token tok, std::shared_ptr<IExpression> right)
       : tok_(tok), right_(right) {}
-  virtual ~PrefixExpression();
+  virtual ~PrefixExpression() {}
 
   DECL_DUMP_FUNCS(PrefixExpression)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   Token GetOperator() const { return tok_; }
   std::shared_ptr<IExpression> GetRight() const { return right_; }
@@ -96,13 +87,11 @@ class InfixExpression : public IExpression {
                   std::shared_ptr<IExpression> left,
                   std::shared_ptr<IExpression> right)
       : tok_(tok), left_(left), right_(right) {}
-  virtual ~InfixExpression();
+  virtual ~InfixExpression() {}
 
   DECL_DUMP_FUNCS(InfixExpression)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   Token GetOperator() const { return tok_; }
   std::shared_ptr<IExpression> GetLeft() const { return left_; }
@@ -128,9 +117,7 @@ class IfExpression : public IExpression {
 
   DECL_DUMP_FUNCS(IfExpression)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   std::shared_ptr<IExpression> GetCond() const { return cond_; }
   std::shared_ptr<IStatement> GetConsequence() const { return consequence_; }
@@ -153,9 +140,7 @@ class FuncLiteral : public IExpression {
 
   DECL_DUMP_FUNCS(FuncLiteral)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   std::vector<Identifier> GetParams() const { return parameters_; }
   std::shared_ptr<IStatement> GetBody() const { return body_; }
@@ -176,12 +161,12 @@ class CallExpression : public IExpression {
 
   DECL_DUMP_FUNCS(CallExpression)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void ExpressionNode() const override;
 
   std::shared_ptr<IExpression> GetFunc() const { return func_; }
-  std::vector<std::shared_ptr<IExpression>> GetArgs() const { return arguments_; }
+  std::vector<std::shared_ptr<IExpression>> GetArgs() const {
+    return arguments_;
+  }
 
  private:
   Token tok_;                          // TokenType::FUNCTION

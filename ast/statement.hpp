@@ -8,8 +8,7 @@
 
 class IStatement : public INode {
  public:
-  virtual ~IStatement()              = 0;
-  virtual void StatementNode() const = 0;
+  virtual ~IStatement() = 0;
 };
 
 class LetStmt : public IStatement {
@@ -17,20 +16,20 @@ class LetStmt : public IStatement {
   LetStmt(const Token &tok,
           const Identifier &ident,
           std::shared_ptr<IExpression> value)
-      : tok_(tok), ident_(std::make_shared<Identifier>(ident)), value_(value) {}
+      : tok_(std::make_shared<Token>(tok)),
+        ident_(std::make_shared<Identifier>(ident)),
+        value_(value) {}
   virtual ~LetStmt();
 
   DECL_DUMP_FUNCS(LetStmt)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() const override;
 
   std::shared_ptr<Identifier> GetIdent() const { return ident_; }
   std::shared_ptr<IExpression> GetValue() const { return value_; }
 
  private:
-  Token tok_;  // TokenType::LET
+  std::shared_ptr<Token> tok_;  // TokenType::LET
   std::shared_ptr<Identifier> ident_;
   std::shared_ptr<IExpression> value_;
 };
@@ -39,13 +38,11 @@ class ReturnStmt : public IStatement {
  public:
   ReturnStmt(Token tok, std::shared_ptr<IExpression> v)
       : tok_(tok), value_(v) {}
-  virtual ~ReturnStmt();
+  virtual ~ReturnStmt() {}
 
   DECL_DUMP_FUNCS(ReturnStmt)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() const override;
 
   std::shared_ptr<IExpression> GetValue() const { return value_; }
 
@@ -58,13 +55,11 @@ class ExpressionStmt : public IStatement {
  public:
   ExpressionStmt(Token tok, std::shared_ptr<IExpression> exp)
       : tok_(tok), expression_(exp) {}
-  virtual ~ExpressionStmt();
+  virtual ~ExpressionStmt() {}
 
   DECL_DUMP_FUNCS(ExpressionStmt)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() const override;
 
   std::shared_ptr<IExpression> GetExp() const { return expression_; }
 
@@ -80,9 +75,7 @@ class BlockStmt : public IStatement {
 
   DECL_DUMP_FUNCS(BlockStmt)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
-  virtual void StatementNode() const override;
 
   void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
   std::vector<std::shared_ptr<IStatement>> GetStmts() const { return stmts_; }

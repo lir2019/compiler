@@ -8,14 +8,8 @@ IStatement::~IStatement() {}
 
 LetStmt::~LetStmt() {}
 
-std::string LetStmt::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void LetStmt::StatementNode() const {}
-
 DEFINE_DUMP_FUNCS(LetStmt, {
-  os << tok_.literal << " " << *ident_ << " = ";
+  os << tok_->literal << " " << *ident_ << " = ";
   value_->PrintNode(os);
   os << ";";
 })
@@ -27,14 +21,6 @@ void LetStmt::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // ReturnStmt
 //===----------------------------------------------------------------------===//
-
-ReturnStmt::~ReturnStmt() {}
-
-std::string ReturnStmt::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void ReturnStmt::StatementNode() const {}
 
 DEFINE_DUMP_FUNCS(ReturnStmt, {
   os << tok_.literal << " ";
@@ -50,18 +36,10 @@ void ReturnStmt::PrintNode(std::ostream &os) const {
 // ExpressionStmt
 //===----------------------------------------------------------------------===//
 
-ExpressionStmt::~ExpressionStmt() {}
-
-void ExpressionStmt::StatementNode() const {}
-
 DEFINE_DUMP_FUNCS(ExpressionStmt, {
   expression_->PrintNode(os);
   os << ";";
 })
-
-std::string ExpressionStmt::TokenLiteral() const {
-  return tok_.literal;
-}
 
 void ExpressionStmt::PrintNode(std::ostream &os) const {
   Print(os);
@@ -71,8 +49,6 @@ void ExpressionStmt::PrintNode(std::ostream &os) const {
 // BlockStmt
 //===----------------------------------------------------------------------===//
 
-void BlockStmt::StatementNode() const {}
-
 DEFINE_DUMP_FUNCS(BlockStmt, {
   os << "{\n";
   for (auto stmt : stmts_) {
@@ -81,10 +57,6 @@ DEFINE_DUMP_FUNCS(BlockStmt, {
   }
   os << "}";
 })
-
-std::string BlockStmt::TokenLiteral() const {
-  return tok_.literal;
-}
 
 void BlockStmt::PrintNode(std::ostream &os) const {
   Print(os);

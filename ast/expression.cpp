@@ -10,14 +10,6 @@ IExpression::~IExpression() {}
 // Identifier
 //===----------------------------------------------------------------------===//
 
-Identifier::~Identifier() {}
-
-std::string Identifier::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void Identifier::ExpressionNode() const {}
-
 DEFINE_DUMP_FUNCS(Identifier, { os << tok_.literal; })
 
 void Identifier::PrintNode(std::ostream &os) const {
@@ -27,14 +19,6 @@ void Identifier::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // IntegerLiteral
 //===----------------------------------------------------------------------===//
-
-IntegerLiteral::~IntegerLiteral() {}
-
-std::string IntegerLiteral::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void IntegerLiteral::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(IntegerLiteral, { os << tok_.literal; })
 
@@ -46,14 +30,6 @@ void IntegerLiteral::PrintNode(std::ostream &os) const {
 // BooleanLiteral
 //===----------------------------------------------------------------------===//
 
-BooleanLiteral::~BooleanLiteral() {}
-
-std::string BooleanLiteral::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void BooleanLiteral::ExpressionNode() const {}
-
 DEFINE_DUMP_FUNCS(BooleanLiteral, { os << tok_.literal; })
 
 void BooleanLiteral::PrintNode(std::ostream &os) const {
@@ -63,14 +39,6 @@ void BooleanLiteral::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // PrefixExpression
 //===----------------------------------------------------------------------===//
-
-PrefixExpression::~PrefixExpression() {}
-
-std::string PrefixExpression::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void PrefixExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(PrefixExpression, {
   os << "(" << tok_.literal;
@@ -85,14 +53,6 @@ void PrefixExpression::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // InfixExpression
 //===----------------------------------------------------------------------===//
-
-InfixExpression::~InfixExpression() {}
-
-std::string InfixExpression::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void InfixExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(InfixExpression, {
   os << "(";
@@ -109,12 +69,6 @@ void InfixExpression::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // IfExpression
 //===----------------------------------------------------------------------===//
-
-std::string IfExpression::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void IfExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(IfExpression, {
   os << "if ";
@@ -134,12 +88,6 @@ void IfExpression::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // FuncLiteral
 //===----------------------------------------------------------------------===//
-
-std::string FuncLiteral::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void FuncLiteral::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(FuncLiteral, {
   os << "fn(";
@@ -161,12 +109,6 @@ void FuncLiteral::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 // CallExpression
 //===----------------------------------------------------------------------===//
-
-std::string CallExpression::TokenLiteral() const {
-  return tok_.literal;
-}
-
-void CallExpression::ExpressionNode() const {}
 
 DEFINE_DUMP_FUNCS(CallExpression, {
   func_->PrintNode(os);

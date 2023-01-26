@@ -14,7 +14,6 @@ class Program : public INode {
 
   DECL_DUMP_FUNCS(Program)
 
-  virtual std::string TokenLiteral() const override;
   virtual void PrintNode(std::ostream &os) const override;
 
   void AppendStmt(std::shared_ptr<IStatement> s) { stmts_.push_back(s); }
