@@ -16,15 +16,10 @@ class ClonableNode : public INode {
  public:
   virtual ~ClonableNode();
 
-  virtual std::shared_ptr<Derived> Clone() const;
+  virtual std::shared_ptr<Derived> Clone() const = 0;
 };
 
 template<typename Derived>
 ClonableNode<Derived>::~ClonableNode() {}
-
-template<typename Derived>
-std::shared_ptr<Derived> ClonableNode<Derived>::Clone() const {
-  return nullptr;
-}
 
 #endif  // PARSER_NODE_HPP

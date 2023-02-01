@@ -10,30 +10,42 @@ IExpression::~IExpression() {}
 // Identifier
 //===----------------------------------------------------------------------===//
 
-DEFINE_DUMP_FUNCS(Identifier, { os << tok_.literal; })
+DEFINE_DUMP_FUNCS(Identifier, { os << tok_->literal; })
 
 void Identifier::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> Identifier::Clone() const {
+  return std::make_shared<Identifier>(*tok_);
 }
 
 //===----------------------------------------------------------------------===//
 // IntegerLiteral
 //===----------------------------------------------------------------------===//
 
-DEFINE_DUMP_FUNCS(IntegerLiteral, { os << tok_.literal; })
+DEFINE_DUMP_FUNCS(IntegerLiteral, { os << tok_->literal; })
 
 void IntegerLiteral::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> IntegerLiteral::Clone() const {
+  return std::make_shared<IntegerLiteral>(*tok_);
 }
 
 //===----------------------------------------------------------------------===//
 // BooleanLiteral
 //===----------------------------------------------------------------------===//
 
-DEFINE_DUMP_FUNCS(BooleanLiteral, { os << tok_.literal; })
+DEFINE_DUMP_FUNCS(BooleanLiteral, { os << tok_->literal; })
 
 void BooleanLiteral::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> BooleanLiteral::Clone() const {
+  return std::make_shared<BooleanLiteral>(*tok_);
 }
 
 //===----------------------------------------------------------------------===//
@@ -41,13 +53,17 @@ void BooleanLiteral::PrintNode(std::ostream &os) const {
 //===----------------------------------------------------------------------===//
 
 DEFINE_DUMP_FUNCS(PrefixExpression, {
-  os << "(" << tok_.literal;
+  os << "(" << tok_->literal;
   right_->PrintNode(os);
   os << ")";
 })
 
 void PrefixExpression::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> PrefixExpression::Clone() const {
+  return std::make_shared<PrefixExpression>(*tok_, right_);
 }
 
 //===----------------------------------------------------------------------===//
@@ -57,13 +73,17 @@ void PrefixExpression::PrintNode(std::ostream &os) const {
 DEFINE_DUMP_FUNCS(InfixExpression, {
   os << "(";
   left_->PrintNode(os);
-  os << " " << tok_.literal << " ";
+  os << " " << tok_->literal << " ";
   right_->PrintNode(os);
   os << ")";
 })
 
 void InfixExpression::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> InfixExpression::Clone() const {
+  return std::make_shared<InfixExpression>(*tok_, left_, right_);
 }
 
 //===----------------------------------------------------------------------===//
@@ -83,6 +103,10 @@ DEFINE_DUMP_FUNCS(IfExpression, {
 
 void IfExpression::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> IfExpression::Clone() const {
+  return std::make_shared<IfExpression>(*tok_, cond_, consequence_, alternative_);
 }
 
 //===----------------------------------------------------------------------===//
@@ -106,6 +130,10 @@ void FuncLiteral::PrintNode(std::ostream &os) const {
   Print(os);
 }
 
+std::shared_ptr<IExpression> FuncLiteral::Clone() const {
+  return std::make_shared<FuncLiteral>(*tok_, parameters_, body_);
+}
+
 //===----------------------------------------------------------------------===//
 // CallExpression
 //===----------------------------------------------------------------------===//
@@ -125,4 +153,8 @@ DEFINE_DUMP_FUNCS(CallExpression, {
 
 void CallExpression::PrintNode(std::ostream &os) const {
   Print(os);
+}
+
+std::shared_ptr<IExpression> CallExpression::Clone() const {
+  return std::make_shared<CallExpression>(*tok_, func_, arguments_);
 }

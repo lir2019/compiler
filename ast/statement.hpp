@@ -15,16 +15,14 @@ class LetStmt : public IStatement {
  public:
   LetStmt(const Token &tok,
           const Identifier &ident,
-          const IExpression &value)
+          std::shared_ptr<IExpression> value)
       : tok_(std::make_shared<Token>(tok)),
         ident_(std::make_shared<Identifier>(ident)),
         value_(value) {}
   virtual ~LetStmt();
 
   virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IStatement> Clone() const override {
-    return std::make_shared<LetStmt>(*tok_, *ident_, *value_);
-  }
+  virtual std::shared_ptr<IStatement> Clone() const override;
 
   DECL_DUMP_FUNCS(LetStmt)
 
@@ -39,52 +37,57 @@ class LetStmt : public IStatement {
 
 class ReturnStmt : public IStatement {
  public:
-  ReturnStmt(Token tok, std::shared_ptr<IExpression> v)
-      : tok_(tok), value_(v) {}
+  ReturnStmt(const Token &tok, std::shared_ptr<IExpression> v)
+      : tok_(std::make_shared<Token>(tok)),
+        value_(v) {}
   virtual ~ReturnStmt() {}
 
-  DECL_DUMP_FUNCS(ReturnStmt)
-
   virtual void PrintNode(std::ostream &os) const override;
+  virtual std::shared_ptr<IStatement> Clone() const override;
+
+  DECL_DUMP_FUNCS(ReturnStmt)
 
   std::shared_ptr<IExpression> GetValue() const { return value_; }
 
  private:
-  Token tok_;  // TokenType::RETURN
+  std::shared_ptr<Token> tok_;  // TokenType::RETURN
   std::shared_ptr<IExpression> value_;
 };
 
 class ExpressionStmt : public IStatement {
  public:
-  ExpressionStmt(Token tok, std::shared_ptr<IExpression> exp)
-      : tok_(tok), expression_(exp) {}
+  ExpressionStmt(const Token &tok, std::shared_ptr<IExpression> exp)
+      : tok_(std::make_shared<Token>(tok)),
+        expression_(exp) {}
   virtual ~ExpressionStmt() {}
 
-  DECL_DUMP_FUNCS(ExpressionStmt)
-
   virtual void PrintNode(std::ostream &os) const override;
+  virtual std::shared_ptr<IStatement> Clone() const override;
+
+  DECL_DUMP_FUNCS(ExpressionStmt)
 
   std::shared_ptr<IExpression> GetExp() const { return expression_; }
 
  private:
-  Token tok_;  // first Token in expression
+  std::shared_ptr<Token> tok_;  // first Token in expression
   std::shared_ptr<IExpression> expression_;
 };
 
 class BlockStmt : public IStatement {
  public:
-  BlockStmt(Token tok) : tok_(tok) {}
+  BlockStmt(Token tok) : tok_(std::make_shared<Token>(tok)) {}
   virtual ~BlockStmt() {}
 
-  DECL_DUMP_FUNCS(BlockStmt)
-
   virtual void PrintNode(std::ostream &os) const override;
+  virtual std::shared_ptr<IStatement> Clone() const override;
+
+  DECL_DUMP_FUNCS(BlockStmt)
 
   void AppendStmt(std::shared_ptr<IStatement> stmt) { stmts_.push_back(stmt); }
   std::vector<std::shared_ptr<IStatement>> GetStmts() const { return stmts_; }
 
  private:
-  Token tok_;  // {
+  std::shared_ptr<Token> tok_;  // {
   std::vector<std::shared_ptr<IStatement>> stmts_;
 };
 
