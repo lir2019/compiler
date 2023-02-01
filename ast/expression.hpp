@@ -9,13 +9,6 @@
 #include "../lexer/lexer.hpp"
 #include "../common/utils.hpp"
 
-class IStatement;
-
-class IExpression : public ClonableNode<IExpression> {
- public:
-  virtual ~IExpression() = 0;
-};
-
 class Identifier : public IExpression {
  public:
   Identifier(const Token &tok) : tok_(std::make_shared<Token>(tok)) {}
@@ -68,8 +61,8 @@ class BooleanLiteral : public IExpression {
 
 class PrefixExpression : public IExpression {
  public:
-  PrefixExpression(const Token &tok, std::shared_ptr<IExpression> right)
-      : tok_(std::make_shared<Token>(tok)), right_(right) {}
+  PrefixExpression(const Token &tok, const IExpression &right)
+      : tok_(std::make_shared<Token>(tok)), right_(right.Clone()) {}
   virtual ~PrefixExpression() {}
 
   virtual void PrintNode(std::ostream &os) const override;
@@ -88,9 +81,9 @@ class PrefixExpression : public IExpression {
 class InfixExpression : public IExpression {
  public:
   InfixExpression(const Token &tok,
-                  std::shared_ptr<IExpression> left,
-                  std::shared_ptr<IExpression> right)
-      : tok_(std::make_shared<Token>(tok)), left_(left), right_(right) {}
+                  const IExpression &left,
+                  const IExpression &right)
+      : tok_(std::make_shared<Token>(tok)), left_(left.Clone()), right_(right.Clone()) {}
   virtual ~InfixExpression() {}
 
   virtual void PrintNode(std::ostream &os) const override;
@@ -111,13 +104,12 @@ class InfixExpression : public IExpression {
 class IfExpression : public IExpression {
  public:
   IfExpression(const Token &tok,
-               std::shared_ptr<IExpression> cond,
-               std::shared_ptr<IStatement> consequence,
-               std::shared_ptr<IStatement> alternative)
+               const IExpression &cond,
+               const IStatement &consequence)
       : tok_(std::make_shared<Token>(tok)),
-        cond_(cond),
-        consequence_(consequence),
-        alternative_(alternative) {}
+        cond_(cond.Clone()),
+        consequence_(consequence.Clone()),
+        alternative_(nullptr) {}
   virtual ~IfExpression() {}
 
   virtual void PrintNode(std::ostream &os) const override;
@@ -128,6 +120,9 @@ class IfExpression : public IExpression {
   std::shared_ptr<IExpression> GetCond() const { return cond_; }
   std::shared_ptr<IStatement> GetConsequence() const { return consequence_; }
   std::shared_ptr<IStatement> GetAlternative() const { return alternative_; }
+  void SetAlternative(const IStatement &alternative) {
+    alternative_ = alternative.Clone();
+  }
 
  private:
   std::shared_ptr<Token> tok_;  // TokenType::If
@@ -139,9 +134,9 @@ class IfExpression : public IExpression {
 class FuncLiteral : public IExpression {
  public:
   FuncLiteral(const Token &tok,
-              std::vector<Identifier> params,
-              std::shared_ptr<IStatement> body)
-      : tok_(std::make_shared<Token>(tok)), parameters_(params), body_(body) {}
+              const std::vector<Identifier> &params,
+              const IStatement &body)
+      : tok_(std::make_shared<Token>(tok)), parameters_(params), body_(body.Clone()) {}
   virtual ~FuncLiteral() {}
 
   virtual void PrintNode(std::ostream &os) const override;
@@ -161,9 +156,8 @@ class FuncLiteral : public IExpression {
 class CallExpression : public IExpression {
  public:
   CallExpression(const Token &tok,
-                 std::shared_ptr<IExpression> func,
-                 std::vector<std::shared_ptr<IExpression>> arguments)
-      : tok_(std::make_shared<Token>(tok)), func_(func), arguments_(arguments) {}
+                 const IExpression &func)
+      : tok_(std::make_shared<Token>(tok)), func_(func.Clone()), arguments_() {}
   virtual ~CallExpression() {}
 
   virtual void PrintNode(std::ostream &os) const override;
@@ -174,6 +168,9 @@ class CallExpression : public IExpression {
   std::shared_ptr<IExpression> GetFunc() const { return func_; }
   std::vector<std::shared_ptr<IExpression>> GetArgs() const {
     return arguments_;
+  }
+  void AppendArg(const IExpression &arg) {
+    arguments_.push_back(arg.Clone());
   }
 
  private:

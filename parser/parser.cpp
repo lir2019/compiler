@@ -10,11 +10,6 @@
 // Parser
 //===----------------------------------------------------------------------===//
 
-// IStatement::~IStatement() {}
-// LetStmt::~LetStmt() {}
-// ReturnStmt::~ReturnStmt() {}
-// ExpressionStmt::~ExpressionStmt() {}
-
 void Parser::NextToken() {
   cur_tok_ = next_tok_;
   next_tok_ = lexer_->NextToken();
@@ -51,7 +46,7 @@ std::shared_ptr<IStatement> Parser::ParseLetStatement() {
         "expect current TokenType to be SEMICOLON, but got " +
             cur_tok_.ToString());
 
-  return std::make_shared<LetStmt>(tok, ident, exp);
+  return std::make_shared<LetStmt>(tok, ident, *exp);
 }
 
 std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
@@ -65,7 +60,7 @@ std::shared_ptr<IStatement> Parser::ParseReturnStatement() {
   CHECK(cur_tok_.type == TokenType::SEMICOLON,
         "expect cur TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
 
-  return std::make_shared<ReturnStmt>(tok, exp);
+  return std::make_shared<ReturnStmt>(tok, *exp);
 }
 
 std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
@@ -74,7 +69,7 @@ std::shared_ptr<IStatement> Parser::ParseExpressionStatement() {
   NextToken();
   CHECK(cur_tok_.type == TokenType::SEMICOLON,
         "expect cur TokenType to be SEMICOLON, but got " + cur_tok_.ToString());
-  return std::make_shared<ExpressionStmt>(tok, exp);
+  return std::make_shared<ExpressionStmt>(tok, *exp);
 }
 
 std::shared_ptr<IStatement> Parser::ParseBlockStatement() {
@@ -118,7 +113,7 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
       NextToken();
       auto right_exp = ParseExpression(preced);
       left_exp =
-          std::make_shared<InfixExpression>(infix_tok, left_exp, right_exp);
+          std::make_shared<InfixExpression>(infix_tok, *left_exp, *right_exp);
     }
   }
   return left_exp;
@@ -162,13 +157,14 @@ std::shared_ptr<IExpression> Parser::ParseIfExpression() {
   auto cond = ParseGroupedExpression();
   NextToken();
   auto consequence = ParseBlockStatement();
-  std::shared_ptr<IStatement> alternative = nullptr;
+  auto if_exp = std::make_shared<IfExpression>(tok, *cond, *consequence);
   if (next_tok_.type == TokenType::ELSE) {
     NextToken();
     NextToken();
-    alternative = ParseBlockStatement();
+    auto alternative = ParseBlockStatement();
+    if_exp->SetAlternative(*alternative);
   }
-  return std::make_shared<IfExpression>(tok, cond, consequence, alternative);
+  return if_exp;
 }
 
 std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
@@ -206,7 +202,7 @@ std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
   }
   NextToken();
   auto body = ParseBlockStatement();
-  return std::make_shared<FuncLiteral>(tok, params, body);
+  return std::make_shared<FuncLiteral>(tok, params, *body);
 }
 
 std::shared_ptr<IExpression> Parser::ParseBooleanLiteral() {
@@ -224,17 +220,17 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
   auto tok = cur_tok_;
   NextToken();
   auto right = ParseExpression(Precedence::PREFIX);
-  return std::make_shared<PrefixExpression>(tok, right);
+  return std::make_shared<PrefixExpression>(tok, *right);
 }
 
 std::shared_ptr<IExpression> Parser::ParseCallExpression(
     std::shared_ptr<IExpression> func) {
-  std::vector<std::shared_ptr<IExpression>> arguments;
   auto infix_tok = cur_tok_;
+  auto call_exp = std::make_shared<CallExpression>(infix_tok, *func);
   if (next_tok_.type != TokenType::RPAREN) {
     NextToken();
     auto arg = ParseExpression();
-    arguments.push_back(arg);
+    call_exp->AppendArg(*arg);
     while (true) {
       CHECK(next_tok_.type == TokenType::COMMA ||
                 next_tok_.type == TokenType::RPAREN,
@@ -247,11 +243,11 @@ std::shared_ptr<IExpression> Parser::ParseCallExpression(
       NextToken();
       NextToken();
       auto arg = ParseExpression();
-      arguments.push_back(arg);
+      call_exp->AppendArg(*arg);
     }
   }
   NextToken();
-  return std::make_shared<CallExpression>(infix_tok, func, arguments);
+  return call_exp;
 }
 
 Program Parser::ParseProgram() {

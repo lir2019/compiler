@@ -4,8 +4,6 @@
 
 #include "statement.hpp"
 
-IExpression::~IExpression() {}
-
 //===----------------------------------------------------------------------===//
 // Identifier
 //===----------------------------------------------------------------------===//
@@ -17,7 +15,7 @@ void Identifier::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> Identifier::Clone() const {
-  return std::make_shared<Identifier>(*tok_);
+  return std::make_shared<Identifier>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -31,7 +29,7 @@ void IntegerLiteral::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> IntegerLiteral::Clone() const {
-  return std::make_shared<IntegerLiteral>(*tok_);
+  return std::make_shared<IntegerLiteral>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -45,7 +43,7 @@ void BooleanLiteral::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> BooleanLiteral::Clone() const {
-  return std::make_shared<BooleanLiteral>(*tok_);
+  return std::make_shared<BooleanLiteral>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -63,7 +61,7 @@ void PrefixExpression::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> PrefixExpression::Clone() const {
-  return std::make_shared<PrefixExpression>(*tok_, right_);
+  return std::make_shared<PrefixExpression>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -83,7 +81,7 @@ void InfixExpression::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> InfixExpression::Clone() const {
-  return std::make_shared<InfixExpression>(*tok_, left_, right_);
+  return std::make_shared<InfixExpression>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -106,7 +104,7 @@ void IfExpression::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> IfExpression::Clone() const {
-  return std::make_shared<IfExpression>(*tok_, cond_, consequence_, alternative_);
+  return std::make_shared<IfExpression>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -131,7 +129,7 @@ void FuncLiteral::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> FuncLiteral::Clone() const {
-  return std::make_shared<FuncLiteral>(*tok_, parameters_, body_);
+  return std::make_shared<FuncLiteral>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -156,5 +154,5 @@ void CallExpression::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IExpression> CallExpression::Clone() const {
-  return std::make_shared<CallExpression>(*tok_, func_, arguments_);
+  return std::make_shared<CallExpression>(*this);
 }

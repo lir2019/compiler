@@ -22,4 +22,14 @@ class ClonableNode : public INode {
 template<typename Derived>
 ClonableNode<Derived>::~ClonableNode() {}
 
+class IExpression : public ClonableNode<IExpression> {
+ public:
+  virtual ~IExpression() = 0;
+};
+
+class IStatement : public ClonableNode<IStatement> {
+ public:
+  virtual ~IStatement() = 0;
+};
+
 #endif  // PARSER_NODE_HPP

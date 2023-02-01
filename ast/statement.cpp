@@ -1,7 +1,5 @@
 #include "statement.hpp"
 
-IStatement::~IStatement() {}
-
 //===----------------------------------------------------------------------===//
 // LetStmt
 //===----------------------------------------------------------------------===//
@@ -19,7 +17,7 @@ void LetStmt::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IStatement> LetStmt::Clone() const {
-  return std::make_shared<LetStmt>(*tok_, *ident_, value_);
+  return std::make_shared<LetStmt>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -37,7 +35,7 @@ void ReturnStmt::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IStatement> ReturnStmt::Clone() const {
-  return std::make_shared<ReturnStmt>(*tok_, value_);
+  return std::make_shared<ReturnStmt>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -54,7 +52,7 @@ void ExpressionStmt::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IStatement> ExpressionStmt::Clone() const {
-  return std::make_shared<ExpressionStmt>(*tok_, expression_);
+  return std::make_shared<ExpressionStmt>(*this);
 }
 
 //===----------------------------------------------------------------------===//
@@ -75,9 +73,5 @@ void BlockStmt::PrintNode(std::ostream &os) const {
 }
 
 std::shared_ptr<IStatement> BlockStmt::Clone() const {
-  auto block = std::make_shared<BlockStmt>(*tok_);
-  for (auto stmt : stmts_) {
-    block->AppendStmt(stmt);
-  }
-  return block;
+  return std::make_shared<BlockStmt>(*this);
 }
