@@ -6,7 +6,7 @@
 #include "node.hpp"
 #include "expression.hpp"
 
-class IStatement : public INode {
+class IStatement : public ClonableNode<IStatement> {
  public:
   virtual ~IStatement() = 0;
 };
@@ -15,15 +15,18 @@ class LetStmt : public IStatement {
  public:
   LetStmt(const Token &tok,
           const Identifier &ident,
-          std::shared_ptr<IExpression> value)
+          const IExpression &value)
       : tok_(std::make_shared<Token>(tok)),
         ident_(std::make_shared<Identifier>(ident)),
         value_(value) {}
   virtual ~LetStmt();
 
-  DECL_DUMP_FUNCS(LetStmt)
-
   virtual void PrintNode(std::ostream &os) const override;
+  virtual std::shared_ptr<IStatement> Clone() const override {
+    return std::make_shared<LetStmt>(*tok_, *ident_, *value_);
+  }
+
+  DECL_DUMP_FUNCS(LetStmt)
 
   std::shared_ptr<Identifier> GetIdent() const { return ident_; }
   std::shared_ptr<IExpression> GetValue() const { return value_; }
