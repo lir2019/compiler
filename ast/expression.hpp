@@ -9,13 +9,10 @@
 #include "../lexer/lexer.hpp"
 #include "../common/utils.hpp"
 
-class Identifier : public IExpression {
+class Identifier : public Expression<Identifier> {
  public:
   Identifier(const Token &tok) : tok_(std::make_shared<Token>(tok)) {}
   virtual ~Identifier() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(Identifier)
 
@@ -25,13 +22,10 @@ class Identifier : public IExpression {
   std::shared_ptr<Token> tok_;  // TokenType::INDENT
 };
 
-class IntegerLiteral : public IExpression {
+class IntegerLiteral : public Expression<IntegerLiteral> {
  public:
   IntegerLiteral(const Token &tok) : tok_(std::make_shared<Token>(tok)), value_(std::stol(tok.literal)) {}
   virtual ~IntegerLiteral() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(IntegerLiteral)
 
@@ -42,13 +36,10 @@ class IntegerLiteral : public IExpression {
   int64_t value_;
 };
 
-class BooleanLiteral : public IExpression {
+class BooleanLiteral : public Expression<BooleanLiteral> {
  public:
   BooleanLiteral(const Token &tok) : tok_(std::make_shared<Token>(tok)), value_(tok.type == TokenType::TRUE) {}
   virtual ~BooleanLiteral() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(BooleanLiteral)
 
@@ -59,14 +50,11 @@ class BooleanLiteral : public IExpression {
   bool value_;
 };
 
-class PrefixExpression : public IExpression {
+class PrefixExpression : public Expression<PrefixExpression> {
  public:
   PrefixExpression(const Token &tok, const IExpression &right)
       : tok_(std::make_shared<Token>(tok)), right_(right.Clone()) {}
   virtual ~PrefixExpression() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(PrefixExpression)
 
@@ -78,16 +66,13 @@ class PrefixExpression : public IExpression {
   std::shared_ptr<IExpression> right_;
 };
 
-class InfixExpression : public IExpression {
+class InfixExpression : public Expression<InfixExpression> {
  public:
   InfixExpression(const Token &tok,
                   const IExpression &left,
                   const IExpression &right)
       : tok_(std::make_shared<Token>(tok)), left_(left.Clone()), right_(right.Clone()) {}
   virtual ~InfixExpression() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(InfixExpression)
 
@@ -101,7 +86,7 @@ class InfixExpression : public IExpression {
   std::shared_ptr<IExpression> right_;
 };
 
-class IfExpression : public IExpression {
+class IfExpression : public Expression<IfExpression> {
  public:
   IfExpression(const Token &tok,
                const IExpression &cond,
@@ -111,9 +96,6 @@ class IfExpression : public IExpression {
         consequence_(consequence.Clone()),
         alternative_(nullptr) {}
   virtual ~IfExpression() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(IfExpression)
 
@@ -131,16 +113,13 @@ class IfExpression : public IExpression {
   std::shared_ptr<IStatement> alternative_;
 };
 
-class FuncLiteral : public IExpression {
+class FuncLiteral : public Expression<FuncLiteral> {
  public:
   FuncLiteral(const Token &tok,
               const std::vector<Identifier> &params,
               const IStatement &body)
       : tok_(std::make_shared<Token>(tok)), parameters_(params), body_(body.Clone()) {}
   virtual ~FuncLiteral() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(FuncLiteral)
 
@@ -153,15 +132,12 @@ class FuncLiteral : public IExpression {
   std::shared_ptr<IStatement> body_;
 };
 
-class CallExpression : public IExpression {
+class CallExpression : public Expression<CallExpression> {
  public:
   CallExpression(const Token &tok,
                  const IExpression &func)
       : tok_(std::make_shared<Token>(tok)), func_(func.Clone()), arguments_() {}
   virtual ~CallExpression() {}
-
-  virtual void PrintNode(std::ostream &os) const override;
-  virtual std::shared_ptr<IExpression> Clone() const override;
 
   DECL_DUMP_FUNCS(CallExpression)
 

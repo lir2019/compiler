@@ -32,4 +32,32 @@ class IStatement : public ClonableNode<IStatement> {
   virtual ~IStatement() = 0;
 };
 
+template<typename ConCreteExp>
+class Expression : public IExpression {
+ public:
+  virtual ~Expression() {};
+
+  virtual std::shared_ptr<IExpression> Clone() const override {
+    return std::make_shared<ConCreteExp>(static_cast<const ConCreteExp &>(*this));
+  }
+
+  virtual void PrintNode(std::ostream &os) const override {
+    static_cast<const ConCreteExp &>(*this).Print(os);
+  }
+};
+
+template<typename ConCreteStmt>
+class Statement : public IStatement {
+ public:
+  virtual ~Statement() {};
+
+  virtual std::shared_ptr<IStatement> Clone() const override {
+    return std::make_shared<ConCreteStmt>(static_cast<const ConCreteStmt &>(*this));
+  }
+
+  virtual void PrintNode(std::ostream &os) const override {
+    static_cast<const ConCreteStmt &>(*this).Print(os);
+  }
+};
+
 #endif  // PARSER_NODE_HPP
