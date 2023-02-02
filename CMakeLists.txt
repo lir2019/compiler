@@ -34,6 +34,8 @@ do_lexer_test(3)
 do_lexer_test(4)
 do_lexer_test(5)
 do_lexer_test(6)
+do_lexer_test(7)
+do_lexer_test(8)
 
 add_executable(test_parser test/parser/main.cpp)
 target_include_directories(test_parser PUBLIC ${PROJECT_SOURCE_DIR})

@@ -64,16 +64,18 @@ Token Lexer::NextToken() {
       CASE_CHAR_TOKEN('/', SLASH)
       CASE_CHAR_TOKEN('<', LT)
       CASE_CHAR_TOKEN('>', GT)
+    case '"': {
+      tok.type = TokenType::STRING;
+      tok.literal = this->ReadString();
+    } break;
     default: {
       if (IsLetter(this->ch_)) {
         tok.literal = this->ReadIdentifier();
         tok.type = LookUpIdent(tok.literal);
-        return tok;
-        // TODO(lirui): support float
       } else if (IsNumber(this->ch_)) {
         tok.literal = this->ReadNumber();
         tok.type = TokenType::INT;
-        return tok;
+        // TODO(lirui): support float
       }
     } break;
   }
@@ -89,21 +91,35 @@ void Lexer::SkipWhiteSpace() {
   }
 }
 
-std::string Lexer::ReadIdentifier() {
-  int begin = this->read_pos_ - 1;
-  while (IsLetter(this->ch_)) {
+std::string Lexer::ReadString() {
+  CHECK(this->ch_ == '"', "expect current char to be \"");
+  int begin = this->read_pos_;
+  ReadChar();
+  while (this->ch_ != '"' && this->ch_ != '\0') {
     ReadChar();
   }
+  CHECK(this->ch_ == '"', "miss \" at the end of string literal");
   int end = this->read_pos_ - 1;
   return this->input_.substr(begin, end - begin);
 }
 
-std::string Lexer::ReadNumber() {
+std::string Lexer::ReadIdentifier() {
+  CHECK(IsLetter(this->ch_), "expect current char to be letter");
   int begin = this->read_pos_ - 1;
-  while (IsNumber(this->ch_)) {
+  while (IsLetter(this->PeekChar())) {
     ReadChar();
   }
-  int end = this->read_pos_ - 1;
+  int end = this->read_pos_;
+  return this->input_.substr(begin, end - begin);
+}
+
+std::string Lexer::ReadNumber() {
+  CHECK(IsNumber(this->ch_), "expect current char to be number");
+  int begin = this->read_pos_ - 1;
+  while (IsNumber(this->PeekChar())) {
+    ReadChar();
+  }
+  int end = this->read_pos_;
   return this->input_.substr(begin, end - begin);
 }
 

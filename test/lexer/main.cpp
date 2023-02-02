@@ -119,7 +119,59 @@ if (5 < 10) {
       Token{TokenType::SEMICOLON, ";"}, Token{TokenType::END, ""},
   };
 
-  Test("case2", StrToTokens, input, expected, Printer);
+  Test("case6", StrToTokens, input, expected, Printer);
+}
+
+static void Test7() {
+  std::string input = R"(
+ s = "xxyyzz234";
+"*#f//"
+"abc
+def"
+)";
+
+  std::vector<Token> expected{
+      Token{TokenType::IDENT, "s"},
+      Token{TokenType::ASSIGN, "="},
+      Token{TokenType::STRING, "xxyyzz234"},
+      Token{TokenType::SEMICOLON, ";"},
+      Token{TokenType::STRING, "*#f//"},
+      Token{TokenType::STRING, "abc\ndef"},
+      Token{TokenType::END, ""},
+  };
+
+  Test("case7", StrToTokens, input, expected, Printer);
+}
+
+static void Test8() {
+  std::string input = R"(
+ s = "xxyyzz234";
+"*#f//"
+"abc
+)";
+
+  std::vector<Token> expected{
+      Token{TokenType::IDENT, "s"},
+      Token{TokenType::ASSIGN, "="},
+      Token{TokenType::STRING, "xxyyzz234"},
+      Token{TokenType::SEMICOLON, ";"},
+      Token{TokenType::STRING, "*#f//"},
+      Token{TokenType::STRING, "abc"},
+      Token{TokenType::END, ""},
+  };
+
+  std::string err_log;
+  std::string expected_err_log("check this->ch_ == '\"' failed: "
+      "miss \" at the end of string literal");
+  try {
+    Test("case8", StrToTokens, input, expected);
+  } catch (std::runtime_error err) {
+    err_log = err.what();
+  }
+  Test("error log match Test8", err_log, expected_err_log, [] (std::string s) {
+        std::cout << s << std::endl;
+      });
+
 }
 
 int main(int argc, char *argv[]) {
@@ -146,6 +198,12 @@ int main(int argc, char *argv[]) {
       break;
     case 6:
       Test6();
+      break;
+    case 7:
+      Test7();
+      break;
+    case 8:
+      Test8();
       break;
     default:
       break;

@@ -17,6 +17,7 @@ class Lexer {
   void SkipWhiteSpace();
   std::string ReadIdentifier();
   std::string ReadNumber();
+  std::string ReadString();
 
   std::string input_;
   int read_pos_ = 0;

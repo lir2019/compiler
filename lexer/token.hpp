@@ -28,6 +28,7 @@ enum class TokenType {
   RPAREN,
   LBRACE,
   RBRACE,
+  STRING,
   // keywords
   FUNCTION,
   LET,

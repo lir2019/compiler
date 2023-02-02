@@ -2,7 +2,9 @@
 
 #include "../ast/program.hpp"
 
-static std::shared_ptr<IObject> EvalPrefixExpression(
+namespace {
+
+std::shared_ptr<IObject> EvalPrefixExpression(
     Token op,
     std::shared_ptr<IObject> right,
     std::shared_ptr<Environment> env) {
@@ -28,7 +30,7 @@ static std::shared_ptr<IObject> EvalPrefixExpression(
                                       OP right_val->GetValue()); \
   } break;
 
-static std::shared_ptr<IObject> EvalBoolInfixExpression(
+std::shared_ptr<IObject> EvalBoolInfixExpression(
     Token op,
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
@@ -46,7 +48,7 @@ static std::shared_ptr<IObject> EvalBoolInfixExpression(
   return nullptr;
 }
 
-static std::shared_ptr<IObject> EvalIntInfixExpression(
+std::shared_ptr<IObject> EvalIntInfixExpression(
     Token op,
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
@@ -72,7 +74,7 @@ static std::shared_ptr<IObject> EvalIntInfixExpression(
 
 #undef CASE_INT_INFIX_EVAL
 
-static std::shared_ptr<IObject> Eval(
+std::shared_ptr<IObject> Eval(
     std::vector<std::shared_ptr<IStatement>> stmts,
     std::shared_ptr<Environment> env) {
   std::shared_ptr<IObject> res;
@@ -85,7 +87,7 @@ static std::shared_ptr<IObject> Eval(
   return res;
 }
 
-static std::shared_ptr<IObject> EvalIfExpression(
+std::shared_ptr<IObject> EvalIfExpression(
     const INode &node,
     std::shared_ptr<Environment> env) {
   auto if_exp = dynamic_cast<const IfExpression *>(&node);
@@ -105,7 +107,7 @@ static std::shared_ptr<IObject> EvalIfExpression(
   return std::make_shared<Null>();
 }
 
-static std::shared_ptr<IObject> ApplyFunction(
+std::shared_ptr<IObject> ApplyFunction(
     std::shared_ptr<IObject> obj,
     std::vector<std::shared_ptr<IObject>> args) {
   auto func = std::dynamic_pointer_cast<Function>(obj);
@@ -124,6 +126,8 @@ static std::shared_ptr<IObject> ApplyFunction(
   }
   return ret;
 }
+
+}  // namespace
 
 #define IF_MATCH_THEN(TYPE, BODY)                   \
   if (auto ptr = dynamic_cast<const TYPE *>(&node)) \
