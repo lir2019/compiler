@@ -11,7 +11,7 @@ class INode {
   virtual void PrintNode(std::ostream &os) const = 0;
 };
 
-template<typename Derived>
+template <typename Derived>
 class ClonableNode : public INode {
  public:
   virtual ~ClonableNode();
@@ -19,7 +19,7 @@ class ClonableNode : public INode {
   virtual std::shared_ptr<Derived> Clone() const = 0;
 };
 
-template<typename Derived>
+template <typename Derived>
 ClonableNode<Derived>::~ClonableNode() {}
 
 class IExpression : public ClonableNode<IExpression> {
@@ -32,13 +32,14 @@ class IStatement : public ClonableNode<IStatement> {
   virtual ~IStatement() = 0;
 };
 
-template<typename ConCreteExp>
+template <typename ConCreteExp>
 class Expression : public IExpression {
  public:
-  virtual ~Expression() {};
+  virtual ~Expression(){};
 
   virtual std::shared_ptr<IExpression> Clone() const override {
-    return std::make_shared<ConCreteExp>(static_cast<const ConCreteExp &>(*this));
+    return std::make_shared<ConCreteExp>(
+        static_cast<const ConCreteExp &>(*this));
   }
 
   virtual void PrintNode(std::ostream &os) const override {
@@ -46,13 +47,14 @@ class Expression : public IExpression {
   }
 };
 
-template<typename ConCreteStmt>
+template <typename ConCreteStmt>
 class Statement : public IStatement {
  public:
-  virtual ~Statement() {};
+  virtual ~Statement(){};
 
   virtual std::shared_ptr<IStatement> Clone() const override {
-    return std::make_shared<ConCreteStmt>(static_cast<const ConCreteStmt &>(*this));
+    return std::make_shared<ConCreteStmt>(
+        static_cast<const ConCreteStmt &>(*this));
   }
 
   virtual void PrintNode(std::ostream &os) const override {

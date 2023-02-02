@@ -161,17 +161,16 @@ static void Test8() {
   };
 
   std::string err_log;
-  std::string expected_err_log("check this->ch_ == '\"' failed: "
+  std::string expected_err_log(
+      "check this->ch_ == '\"' failed: "
       "miss \" at the end of string literal");
   try {
     Test("case8", StrToTokens, input, expected);
   } catch (std::runtime_error err) {
     err_log = err.what();
   }
-  Test("error log match Test8", err_log, expected_err_log, [] (std::string s) {
-        std::cout << s << std::endl;
-      });
-
+  Test("error log match Test8", err_log, expected_err_log,
+       [](std::string s) { std::cout << s << std::endl; });
 }
 
 int main(int argc, char *argv[]) {

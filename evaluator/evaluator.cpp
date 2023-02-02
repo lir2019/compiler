@@ -35,7 +35,7 @@ std::shared_ptr<IObject> EvalBoolInfixExpression(
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
     std::shared_ptr<Environment> env) {
-  auto left_val = std::dynamic_pointer_cast<Boolean>(left);
+  auto left_val  = std::dynamic_pointer_cast<Boolean>(left);
   auto right_val = std::dynamic_pointer_cast<Boolean>(right);
   CHECK(left_val != nullptr && right_val != nullptr,
         "expect both to be Boolean");
@@ -53,7 +53,7 @@ std::shared_ptr<IObject> EvalIntInfixExpression(
     std::shared_ptr<IObject> left,
     std::shared_ptr<IObject> right,
     std::shared_ptr<Environment> env) {
-  auto left_val = std::dynamic_pointer_cast<Integer>(left);
+  auto left_val  = std::dynamic_pointer_cast<Integer>(left);
   auto right_val = std::dynamic_pointer_cast<Integer>(right);
   CHECK(left_val != nullptr && right_val != nullptr,
         "expect both to be Integer");
@@ -74,9 +74,8 @@ std::shared_ptr<IObject> EvalIntInfixExpression(
 
 #undef CASE_INT_INFIX_EVAL
 
-std::shared_ptr<IObject> Eval(
-    std::vector<std::shared_ptr<IStatement>> stmts,
-    std::shared_ptr<Environment> env) {
+std::shared_ptr<IObject> Eval(std::vector<std::shared_ptr<IStatement>> stmts,
+                              std::shared_ptr<Environment> env) {
   std::shared_ptr<IObject> res;
   for (auto stmt : stmts) {
     res = Eval(*stmt, env);
@@ -87,12 +86,11 @@ std::shared_ptr<IObject> Eval(
   return res;
 }
 
-std::shared_ptr<IObject> EvalIfExpression(
-    const INode &node,
-    std::shared_ptr<Environment> env) {
+std::shared_ptr<IObject> EvalIfExpression(const INode &node,
+                                          std::shared_ptr<Environment> env) {
   auto if_exp = dynamic_cast<const IfExpression *>(&node);
   CHECK(if_exp != nullptr, "expect IfExpression");
-  auto cond = Eval(*(if_exp->GetCond()), env);
+  auto cond      = Eval(*(if_exp->GetCond()), env);
   auto cond_bool = std::dynamic_pointer_cast<Boolean>(cond);
   CHECK(cond_bool != nullptr, "expect Boolean");
   if (cond_bool->GetValue()) {
@@ -113,8 +111,8 @@ std::shared_ptr<IObject> ApplyFunction(
   auto func = std::dynamic_pointer_cast<Function>(obj);
   CHECK(func != nullptr, "expect Function");
   auto outer_env = func->GetEnv();
-  auto env = std::make_shared<Environment>(outer_env);
-  auto params = func->GetParams();
+  auto env       = std::make_shared<Environment>(outer_env);
+  auto params    = func->GetParams();
   CHECK(args.size() == params.size(),
         "arguments size does not match parameters size");
   for (int i = 0; i < args.size(); i++) {
@@ -162,7 +160,7 @@ std::shared_ptr<IObject> Eval(const INode &node,
     return EvalPrefixExpression(prefix_exp->GetOperator(), right, env);
   }
   else if (auto infix_exp = dynamic_cast<const InfixExpression *>(&node)) {
-    auto left = Eval(*(infix_exp->GetLeft()), env);
+    auto left  = Eval(*(infix_exp->GetLeft()), env);
     auto right = Eval(*(infix_exp->GetRight()), env);
     if (auto left_bool_val = std::dynamic_pointer_cast<Boolean>(left)) {
       auto right_bool_val = std::dynamic_pointer_cast<Boolean>(right);
@@ -182,7 +180,7 @@ std::shared_ptr<IObject> Eval(const INode &node,
   }
   else if (auto func_lit = dynamic_cast<const FuncLiteral *>(&node)) {
     auto params = func_lit->GetParams();
-    auto body = func_lit->GetBody();
+    auto body   = func_lit->GetBody();
     return std::make_shared<Function>(params, body, env);
   }
   else if (auto call = dynamic_cast<const CallExpression *>(&node)) {

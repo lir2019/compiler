@@ -8,9 +8,7 @@
 
 class LetStmt : public Statement<LetStmt> {
  public:
-  LetStmt(const Token &tok,
-          const Identifier &ident,
-          const IExpression &value)
+  LetStmt(const Token &tok, const Identifier &ident, const IExpression &value)
       : tok_(std::make_shared<Token>(tok)),
         ident_(std::make_shared<Identifier>(ident)),
         value_(value.Clone()) {}
@@ -30,8 +28,7 @@ class LetStmt : public Statement<LetStmt> {
 class ReturnStmt : public Statement<ReturnStmt> {
  public:
   ReturnStmt(const Token &tok, const IExpression &value)
-      : tok_(std::make_shared<Token>(tok)),
-        value_(value.Clone()) {}
+      : tok_(std::make_shared<Token>(tok)), value_(value.Clone()) {}
   virtual ~ReturnStmt() {}
 
   DECL_DUMP_FUNCS(ReturnStmt)
@@ -46,8 +43,7 @@ class ReturnStmt : public Statement<ReturnStmt> {
 class ExpressionStmt : public Statement<ExpressionStmt> {
  public:
   ExpressionStmt(const Token &tok, const IExpression &exp)
-      : tok_(std::make_shared<Token>(tok)),
-        expression_(exp.Clone()) {}
+      : tok_(std::make_shared<Token>(tok)), expression_(exp.Clone()) {}
   virtual ~ExpressionStmt() {}
 
   DECL_DUMP_FUNCS(ExpressionStmt)

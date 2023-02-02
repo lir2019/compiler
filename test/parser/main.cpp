@@ -19,7 +19,7 @@ static void TestBase(const std::string &name,
 }
 
 static void Test1() {
-  std::string input = R"(
+  std::string input    = R"(
     let x = 1 + 1;
     let y = 5;
     let z = x;
@@ -93,7 +93,7 @@ static void Test4() {
 }
 
 static void Test5() {
-  std::string input = R"(
+  std::string input    = R"(
     let tmp = z;
     let a = 3;
     return 11 / a;
@@ -125,7 +125,7 @@ static void Test6() {
 }
 
 static void Test7() {
-  std::string input = R"(
+  std::string input    = R"(
     foobar;
   )";
   std::string expected = R"(Program{
@@ -136,7 +136,7 @@ foobar;
 }
 
 static void Test8() {
-  std::string input = R"(
+  std::string input    = R"(
     5;
   )";
   std::string expected = R"(Program{
@@ -147,7 +147,7 @@ static void Test8() {
 }
 
 static void Test9() {
-  std::string input = R"(
+  std::string input    = R"(
     !5;
     -a;
     --tmp;
@@ -164,7 +164,7 @@ static void Test9() {
 }
 
 static void Test10() {
-  std::string input = R"(
+  std::string input    = R"(
 -a * b;
 !-a;
 a + b +c;
@@ -199,7 +199,7 @@ a + b * c + d/ e -f;
 }
 
 static void Test11() {
-  std::string input = R"(
+  std::string input    = R"(
 !true;
 false;
 3 > 5 == false;
@@ -216,7 +216,7 @@ false;
 }
 
 static void Test12() {
-  std::string input = R"(
+  std::string input    = R"(
     1 + (2 + 3) + 4;
     (5+5) * 2;
     2/(5+ 5);
@@ -237,7 +237,7 @@ static void Test12() {
 }
 
 static void Test13() {
-  std::string input = R"(
+  std::string input    = R"(
   {
   x+ y;
   5 *(u +v);}
@@ -253,7 +253,7 @@ static void Test13() {
 }
 
 static void Test14() {
-  std::string input = R"(
+  std::string input    = R"(
   if (x + 2) {
   x == y;
   5 != (u +v) / 2;};
@@ -269,7 +269,7 @@ if (x + 2) {
 }
 
 static void Test15() {
-  std::string input = R"(
+  std::string input    = R"(
   if (x> 1) {
   a + 3;
   } else {
@@ -288,7 +288,7 @@ if (x > 1) {
 }
 
 static void Test16() {
-  std::string input = R"(
+  std::string input    = R"(
   fn(x, y) {x + y;};
   fn() {};
 fn(xx) { };
@@ -311,7 +311,7 @@ return (a + b);
 }
 
 static void Test17() {
-  std::string input = R"(
+  std::string input    = R"(
   add(1, 2 *3, 4+ a);
 a + add(b * c) +d;
 add(a, b, 1, 2 * 3, 5 + 4, add(6, 7 * 8));

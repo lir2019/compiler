@@ -24,7 +24,8 @@ class Identifier : public Expression<Identifier> {
 
 class IntegerLiteral : public Expression<IntegerLiteral> {
  public:
-  IntegerLiteral(const Token &tok) : tok_(std::make_shared<Token>(tok)), value_(std::stol(tok.literal)) {}
+  IntegerLiteral(const Token &tok)
+      : tok_(std::make_shared<Token>(tok)), value_(std::stol(tok.literal)) {}
   virtual ~IntegerLiteral() {}
 
   DECL_DUMP_FUNCS(IntegerLiteral)
@@ -38,7 +39,9 @@ class IntegerLiteral : public Expression<IntegerLiteral> {
 
 class BooleanLiteral : public Expression<BooleanLiteral> {
  public:
-  BooleanLiteral(const Token &tok) : tok_(std::make_shared<Token>(tok)), value_(tok.type == TokenType::TRUE) {}
+  BooleanLiteral(const Token &tok)
+      : tok_(std::make_shared<Token>(tok)),
+        value_(tok.type == TokenType::TRUE) {}
   virtual ~BooleanLiteral() {}
 
   DECL_DUMP_FUNCS(BooleanLiteral)
@@ -71,7 +74,9 @@ class InfixExpression : public Expression<InfixExpression> {
   InfixExpression(const Token &tok,
                   const IExpression &left,
                   const IExpression &right)
-      : tok_(std::make_shared<Token>(tok)), left_(left.Clone()), right_(right.Clone()) {}
+      : tok_(std::make_shared<Token>(tok)),
+        left_(left.Clone()),
+        right_(right.Clone()) {}
   virtual ~InfixExpression() {}
 
   DECL_DUMP_FUNCS(InfixExpression)
@@ -118,7 +123,9 @@ class FuncLiteral : public Expression<FuncLiteral> {
   FuncLiteral(const Token &tok,
               const std::vector<Identifier> &params,
               const IStatement &body)
-      : tok_(std::make_shared<Token>(tok)), parameters_(params), body_(body.Clone()) {}
+      : tok_(std::make_shared<Token>(tok)),
+        parameters_(params),
+        body_(body.Clone()) {}
   virtual ~FuncLiteral() {}
 
   DECL_DUMP_FUNCS(FuncLiteral)
@@ -134,8 +141,7 @@ class FuncLiteral : public Expression<FuncLiteral> {
 
 class CallExpression : public Expression<CallExpression> {
  public:
-  CallExpression(const Token &tok,
-                 const IExpression &func)
+  CallExpression(const Token &tok, const IExpression &func)
       : tok_(std::make_shared<Token>(tok)), func_(func.Clone()), arguments_() {}
   virtual ~CallExpression() {}
 
@@ -145,12 +151,10 @@ class CallExpression : public Expression<CallExpression> {
   std::vector<std::shared_ptr<IExpression>> GetArgs() const {
     return arguments_;
   }
-  void AppendArg(const IExpression &arg) {
-    arguments_.push_back(arg.Clone());
-  }
+  void AppendArg(const IExpression &arg) { arguments_.push_back(arg.Clone()); }
 
  private:
-  std::shared_ptr<Token> tok_;                          // TokenType::FUNCTION
+  std::shared_ptr<Token> tok_;         // TokenType::FUNCTION
   std::shared_ptr<IExpression> func_;  // Identifier or FuncLiteral
   std::vector<std::shared_ptr<IExpression>> arguments_;
 };

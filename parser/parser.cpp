@@ -11,7 +11,7 @@
 //===----------------------------------------------------------------------===//
 
 void Parser::NextToken() {
-  cur_tok_ = next_tok_;
+  cur_tok_  = next_tok_;
   next_tok_ = lexer_->NextToken();
 }
 
@@ -101,12 +101,12 @@ std::shared_ptr<IExpression> Parser::ParseExpression(Precedence pre_preced) {
   CHECK(is_found,
         "no prefix parse function for " + ::ToString(cur_tok_.type) + " found");
   auto prefix_parse_func = prefix_parse_funcs_[cur_tok_.type];
-  auto left_exp = prefix_parse_func();
+  auto left_exp          = prefix_parse_func();
   while (next_tok_.type != TokenType::SEMICOLON &&
          pre_preced < GetPrecedence(next_tok_.type)) {
     NextToken();
     auto infix_tok = cur_tok_;
-    auto preced = GetPrecedence(cur_tok_.type);
+    auto preced    = GetPrecedence(cur_tok_.type);
     if (infix_tok.type == TokenType::LPAREN) {
       left_exp = ParseCallExpression(left_exp);
     } else {
@@ -157,7 +157,7 @@ std::shared_ptr<IExpression> Parser::ParseIfExpression() {
   auto cond = ParseGroupedExpression();
   NextToken();
   auto consequence = ParseBlockStatement();
-  auto if_exp = std::make_shared<IfExpression>(tok, *cond, *consequence);
+  auto if_exp      = std::make_shared<IfExpression>(tok, *cond, *consequence);
   if (next_tok_.type == TokenType::ELSE) {
     NextToken();
     NextToken();
@@ -187,7 +187,7 @@ std::shared_ptr<IExpression> Parser::ParseFuncLiteral() {
                 next_tok_.type == TokenType::RPAREN,
             "expect next TokenType to be COMMA or RPAREN, but got " +
                 cur_tok_.ToString());
-      auto exp = ParseIdentifier();
+      auto exp   = ParseIdentifier();
       auto ident = std::dynamic_pointer_cast<Identifier>(exp);
       CHECK(ident != nullptr, "illegal Identifier");
       params.push_back(*ident);
@@ -226,7 +226,7 @@ std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
 std::shared_ptr<IExpression> Parser::ParseCallExpression(
     std::shared_ptr<IExpression> func) {
   auto infix_tok = cur_tok_;
-  auto call_exp = std::make_shared<CallExpression>(infix_tok, *func);
+  auto call_exp  = std::make_shared<CallExpression>(infix_tok, *func);
   if (next_tok_.type != TokenType::RPAREN) {
     NextToken();
     auto arg = ParseExpression();

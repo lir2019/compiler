@@ -31,7 +31,7 @@ Token Lexer::NextToken() {
   } break;
   switch (this->ch_) {
     case '\0': {
-      tok.type = TokenType::END;
+      tok.type    = TokenType::END;
       tok.literal = "";
     } break;
     case '=': {
@@ -65,16 +65,16 @@ Token Lexer::NextToken() {
       CASE_CHAR_TOKEN('<', LT)
       CASE_CHAR_TOKEN('>', GT)
     case '"': {
-      tok.type = TokenType::STRING;
+      tok.type    = TokenType::STRING;
       tok.literal = this->ReadString();
     } break;
     default: {
       if (IsLetter(this->ch_)) {
         tok.literal = this->ReadIdentifier();
-        tok.type = LookUpIdent(tok.literal);
+        tok.type    = LookUpIdent(tok.literal);
       } else if (IsNumber(this->ch_)) {
         tok.literal = this->ReadNumber();
-        tok.type = TokenType::INT;
+        tok.type    = TokenType::INT;
         // TODO(lirui): support float
       }
     } break;
