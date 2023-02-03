@@ -24,10 +24,10 @@ std::shared_ptr<IObject> EvalPrefixExpression(
   }
 }
 
-#define CASE_INFIX_EVAL(TYPE, NAME, OP)                          \
-  case TokenType::NAME: {                                        \
-    return std::make_shared<TYPE>(left_val->GetValue()           \
-                                      OP right_val->GetValue()); \
+#define CASE_INFIX_EVAL(RESULT_TYPE, NAME, OP)                          \
+  case TokenType::NAME: {                                               \
+    return std::make_shared<RESULT_TYPE>(left_val->GetValue()           \
+                                             OP right_val->GetValue()); \
   } break;
 
 std::shared_ptr<IObject> EvalBoolInfixExpression(
@@ -67,7 +67,30 @@ std::shared_ptr<IObject> EvalIntInfixExpression(
     CASE_INFIX_EVAL(Integer, ASTERISK, *)
     CASE_INFIX_EVAL(Integer, SLASH, /)
     default:
-      CHECK(false, "expect TokenType to be EQ or NE, but got " + op.ToString());
+      CHECK(false, "unexpected TokenType for Integer infix expression: " +
+                       op.ToString());
+  }
+  return nullptr;
+}
+
+std::shared_ptr<IObject> EvalStringInfixExpression(
+    Token op,
+    std::shared_ptr<IObject> left,
+    std::shared_ptr<IObject> right,
+    std::shared_ptr<Environment> env) {
+  auto left_val  = std::dynamic_pointer_cast<String>(left);
+  auto right_val = std::dynamic_pointer_cast<String>(right);
+  CHECK(left_val != nullptr && right_val != nullptr,
+        "expect both to be String");
+  switch (op.type) {
+    CASE_INFIX_EVAL(Boolean, EQ, ==)
+    CASE_INFIX_EVAL(Boolean, NE, !=)
+    CASE_INFIX_EVAL(Boolean, GT, >)
+    CASE_INFIX_EVAL(Boolean, LT, <)
+    CASE_INFIX_EVAL(String, PLUS, +)
+    default:
+      CHECK(false, "unexpected TokenType for String infix expression: " +
+                       op.ToString());
   }
   return nullptr;
 }
@@ -155,6 +178,9 @@ std::shared_ptr<IObject> Eval(const INode &node,
   else if (auto bool_lit = dynamic_cast<const BooleanLiteral *>(&node)) {
     return std::make_shared<Boolean>(bool_lit->GetValue());
   }
+  else if (auto str_lit = dynamic_cast<const StringLiteral *>(&node)) {
+    return std::make_shared<String>(str_lit->GetValue());
+  }
   else if (auto prefix_exp = dynamic_cast<const PrefixExpression *>(&node)) {
     auto right = Eval(*(prefix_exp->GetRight()), env);
     return EvalPrefixExpression(prefix_exp->GetOperator(), right, env);
@@ -162,17 +188,16 @@ std::shared_ptr<IObject> Eval(const INode &node,
   else if (auto infix_exp = dynamic_cast<const InfixExpression *>(&node)) {
     auto left  = Eval(*(infix_exp->GetLeft()), env);
     auto right = Eval(*(infix_exp->GetRight()), env);
-    if (auto left_bool_val = std::dynamic_pointer_cast<Boolean>(left)) {
-      auto right_bool_val = std::dynamic_pointer_cast<Boolean>(right);
-      CHECK(right_bool_val != nullptr, "expect Boolean");
+    if (std::dynamic_pointer_cast<Boolean>(left) != nullptr) {
       return EvalBoolInfixExpression(infix_exp->GetOperator(), left, right,
                                      env);
-    } else if (auto left_int_val = std::dynamic_pointer_cast<Integer>(left)) {
-      auto right_int_val = std::dynamic_pointer_cast<Integer>(right);
-      CHECK(right_int_val != nullptr, "expect Integer");
+    } else if (std::dynamic_pointer_cast<Integer>(left) != nullptr) {
       return EvalIntInfixExpression(infix_exp->GetOperator(), left, right, env);
+    } else if (std::dynamic_pointer_cast<String>(left) != nullptr) {
+      return EvalStringInfixExpression(infix_exp->GetOperator(), left, right,
+                                       env);
     } else {
-      CHECK(false, "expect Boolean or Integer");
+      CHECK(false, "expect Boolean, Integer or String");
     }
   }
   else if (auto if_exp = dynamic_cast<const IfExpression *>(&node)) {

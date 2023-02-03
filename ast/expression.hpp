@@ -53,6 +53,19 @@ class BooleanLiteral : public Expression<BooleanLiteral> {
   bool value_;
 };
 
+class StringLiteral : public Expression<StringLiteral> {
+ public:
+  StringLiteral(const Token &tok) : tok_(std::make_shared<Token>(tok)) {}
+  virtual ~StringLiteral() {}
+
+  DECL_DUMP_FUNCS(StringLiteral)
+
+  std::string GetValue() const { return tok_->literal; }
+
+ private:
+  std::shared_ptr<Token> tok_;  // TokenType::STRING
+};
+
 class PrefixExpression : public Expression<PrefixExpression> {
  public:
   PrefixExpression(const Token &tok, const IExpression &right)

@@ -11,6 +11,7 @@
 enum class ObjectType {
   INT,
   BOOL,
+  STRING,
   NUL,
   RET,
   ERR,
@@ -65,6 +66,20 @@ class Boolean : public IObject {
 
  private:
   bool value_;
+};
+
+class String : public IObject {
+ public:
+  String(const std::string &value) : value_(value) {}
+  virtual ~String() {}
+
+  virtual ObjectType Type() const override;
+  virtual std::string Inspect() const override;
+
+  std::string GetValue() const { return value_; }
+
+ private:
+  std::string value_;
 };
 
 class Null : public IObject {

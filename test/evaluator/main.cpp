@@ -361,6 +361,36 @@ static void Test23() {
   Test("evaluate Test23", res, expected, Printer);
 }
 
+static void Test24() {
+  std::string input    = R"(
+  let app = fn(a, b) {return a + b;};
+  app("Hello ", "World");
+  )";
+  std::string expected = "Hello World";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto env     = std::make_shared<Environment>();
+  auto obj     = Eval(program, env);
+  auto res     = obj->Inspect();
+  Test("evaluate Test24", res, expected, Printer);
+}
+
+static void Test25() {
+  std::string input    = R"(
+  let greater = fn(a, b) {return a > b;};
+  greater("Hello ", "World");
+  )";
+  std::string expected = "false";
+  Lexer lexer(input);
+  Parser parser(lexer);
+  auto program = parser.ParseProgram();
+  auto env     = std::make_shared<Environment>();
+  auto obj     = Eval(program, env);
+  auto res     = obj->Inspect();
+  Test("evaluate Test25", res, expected, Printer);
+}
+
 int main() {
   Test1();
   Test2();
@@ -385,4 +415,6 @@ int main() {
   Test21();
   Test22();
   Test23();
+  Test24();
+  Test25();
 }

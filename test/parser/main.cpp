@@ -331,6 +331,19 @@ fn(x, y) {
   TestBase("parse expression statement Test17", input, expected);
 }
 
+static void Test18() {
+  std::string input    = R"(
+  "abc" + abc;
+  add(str / "scd", "123");
+  )";
+  std::string expected = R"(Program{
+("abc" + abc);
+add((str / "scd"), "123");
+}
+)";
+  TestBase("parse expression statement Test17", input, expected);
+}
+
 int main() {
   Test1();
   Test2();
@@ -349,4 +362,5 @@ int main() {
   Test15();
   Test16();
   Test17();
+  Test18();
 }

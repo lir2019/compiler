@@ -209,8 +209,14 @@ std::shared_ptr<IExpression> Parser::ParseBooleanLiteral() {
   CHECK(cur_tok_.type == TokenType::TRUE || cur_tok_.type == TokenType::FALSE,
         "expect current TokenType to be TRUE or FALSE, but got " +
             cur_tok_.ToString());
-  auto tok = cur_tok_;
-  return std::make_shared<BooleanLiteral>(tok);
+  return std::make_shared<BooleanLiteral>(cur_tok_);
+}
+
+std::shared_ptr<IExpression> Parser::ParseStringLiteral() {
+  CHECK(
+      cur_tok_.type == TokenType::STRING,
+      "expect current TokenType to be STRING, but got " + cur_tok_.ToString());
+  return std::make_shared<StringLiteral>(cur_tok_);
 }
 
 std::shared_ptr<IExpression> Parser::ParsePrefixExpression() {
