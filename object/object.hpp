@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <functional>
 
 #include "../common/utils.hpp"
 #include "../ast/program.hpp"
@@ -16,6 +17,7 @@ enum class ObjectType {
   RET,
   ERR,
   FUNC,
+  BUILTIN,
 };
 
 class IObject {
@@ -139,6 +141,20 @@ class Function : public IObject {
   std::vector<Identifier> parameters_;
   std::shared_ptr<IStatement> body_;
   std::shared_ptr<Environment> env_;
+};
+
+class Builtin : public IObject {
+ public:
+  using BuiltinFunction = std::function<std::shared_ptr<IObject>(std::vector<std::shared_ptr<IObject>>)>;
+
+  Builtin(BuiltinFunction func) : func_(func) {}
+  virtual ~Builtin() {}
+
+  virtual ObjectType Type() const override;
+  virtual std::string Inspect() const override;
+
+ private:
+  BuiltinFunction func_;
 };
 
 #ifndef RETURN_IF_ERROR

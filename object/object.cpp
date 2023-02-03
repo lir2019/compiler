@@ -127,3 +127,15 @@ std::string Function::Inspect() const {
   ret += ss.str();
   return ret;
 }
+
+//===----------------------------------------------------------------------===//
+// Builtin
+//===----------------------------------------------------------------------===//
+
+ObjectType Builtin::Type() const {
+  return ObjectType::BUILTIN;
+}
+
+std::string Builtin::Inspect() const {
+  return "builtin function";
+}
